@@ -403,6 +403,14 @@
     font-size: 12.5px; font-weight: 700; color: var(--text-2); cursor: pointer; transition: .15s; }
   .chip:hover { border-color: var(--sky); color: var(--text); }
   .chip.active { background: var(--sky-pale); border-color: var(--sky); color: var(--sky-2); }
+  .style-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(88px, 1fr)); gap: 8px; }
+  .style-card { border: 1.5px solid var(--line); border-radius: 10px; padding: 5px 5px 2px; background: var(--surface);
+    cursor: pointer; text-align: center; transition: border-color .15s, background .15s, transform .1s; }
+  .style-card img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 6px; display: block; }
+  .style-card .sl { font-size: 11px; font-weight: 700; color: var(--text-2); padding: 5px 0 3px; display: block; }
+  .style-card:hover { border-color: var(--sky); transform: translateY(-1px); }
+  .style-card.active { border-color: var(--sky); background: var(--sky-pale); box-shadow: 0 0 0 3px var(--sky-pale); }
+  .style-card.active .sl { color: var(--sky-2); }
   .spinner { width: 34px; height: 34px; border-radius: 50%; border: 3px solid var(--sky-pale);
     border-top-color: var(--sky); animation: spin 1s linear infinite; margin: 0 auto 12px; }
   @keyframes spin { to { transform: rotate(1turn); } }
@@ -1343,11 +1351,11 @@
                 </select>
               </div>
               <div class="field"><label>Stile immagini</label>
-                <div class="chip-row" id="img-style">
-                  <button type="button" class="chip active" data-style="foto" onclick="setImgStyle(this)">Foto</button>
-                  <button type="button" class="chip" data-style="illustrazione" onclick="setImgStyle(this)">Illustrazione</button>
-                  <button type="button" class="chip" data-style="astratto" onclick="setImgStyle(this)">Astratto</button>
-                  <button type="button" class="chip" data-style="lineart" onclick="setImgStyle(this)">Line art</button>
+                <div class="style-cards" id="img-style">
+                  <button type="button" class="style-card active" data-style="foto" onclick="setImgStyle(this)"><img src="assets/styles/style-foto.jpg" alt="Esempio stile foto"><span class="sl">Foto</span></button>
+                  <button type="button" class="style-card" data-style="illustrazione" onclick="setImgStyle(this)"><img src="assets/styles/style-illustrazione.jpg" alt="Esempio stile illustrazione"><span class="sl">Illustrazione</span></button>
+                  <button type="button" class="style-card" data-style="astratto" onclick="setImgStyle(this)"><img src="assets/styles/style-astratto.jpg" alt="Esempio stile astratto"><span class="sl">Astratto</span></button>
+                  <button type="button" class="style-card" data-style="lineart" onclick="setImgStyle(this)"><img src="assets/styles/style-lineart.jpg" alt="Esempio stile line art"><span class="sl">Line art</span></button>
                 </div>
               </div>
               <div class="field"><label>Modello immagini AI</label>
@@ -1507,11 +1515,11 @@
                 <textarea class="inp ai-prompt" id="img-prompt" style="min-height:110px">Un ufficio moderno con un team che analizza grafici Excel su un grande schermo, luce naturale, colori caldi</textarea>
               </div>
               <div class="field"><label>Stile</label>
-                <div class="chip-row" id="img-style2">
-                  <button type="button" class="chip active" data-style="foto" onclick="setImgStyle2(this)">Foto</button>
-                  <button type="button" class="chip" data-style="illustrazione" onclick="setImgStyle2(this)">Illustrazione</button>
-                  <button type="button" class="chip" data-style="astratto" onclick="setImgStyle2(this)">Astratto</button>
-                  <button type="button" class="chip" data-style="lineart" onclick="setImgStyle2(this)">Line art</button>
+                <div class="style-cards" id="img-style2">
+                  <button type="button" class="style-card active" data-style="foto" onclick="setImgStyle2(this)"><img src="assets/styles/style-foto.jpg" alt="Esempio stile foto"><span class="sl">Foto</span></button>
+                  <button type="button" class="style-card" data-style="illustrazione" onclick="setImgStyle2(this)"><img src="assets/styles/style-illustrazione.jpg" alt="Esempio stile illustrazione"><span class="sl">Illustrazione</span></button>
+                  <button type="button" class="style-card" data-style="astratto" onclick="setImgStyle2(this)"><img src="assets/styles/style-astratto.jpg" alt="Esempio stile astratto"><span class="sl">Astratto</span></button>
+                  <button type="button" class="style-card" data-style="lineart" onclick="setImgStyle2(this)"><img src="assets/styles/style-lineart.jpg" alt="Esempio stile line art"><span class="sl">Line art</span></button>
                 </div>
               </div>
               <div class="field"><label>Formato</label>
@@ -1822,7 +1830,7 @@
   } };
   let imgStyle = 'foto';
   function setImgStyle(btn) {
-    document.querySelectorAll('#img-style .chip').forEach(c => c.classList.toggle('active', c === btn));
+    document.querySelectorAll('#img-style .style-card').forEach(c => c.classList.toggle('active', c === btn));
     imgStyle = btn.dataset.style;
     onThemeChange();
   }
@@ -2051,13 +2059,13 @@
   let imgBusy = false;
   const imgHistory = [];
   function setImgStyle2(btn) {
-    document.querySelectorAll('#img-style2 .chip').forEach(c => c.classList.toggle('active', c === btn));
+    document.querySelectorAll('#img-style2 .style-card').forEach(c => c.classList.toggle('active', c === btn));
   }
   function generateImage() {
     if (imgBusy) return;
     const prompt = document.getElementById('img-prompt').value.trim();
     if (!prompt) { toast('Scrivi prima un prompt'); return; }
-    const style = document.querySelector('#img-style2 .chip.active').dataset.style;
+    const style = document.querySelector('#img-style2 .style-card.active').dataset.style;
     const fmt = document.getElementById('img-format').value.split('x');
     const seed = Math.floor(Math.random() * 1000000);
     const url = 'https://image.pollinations.ai/prompt/' + encodeURIComponent(prompt + ', ' + imgStylePrompts[style]) +
