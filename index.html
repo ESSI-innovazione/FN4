@@ -1389,7 +1389,7 @@
           <div>
             <div class="card card-pad">
               <div style="font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:10px">Sorgente — slide del Passo 2</div>
-              <div class="doc-row" style="padding-left:0;padding-right:0"><div class="doc-ic" style="background:var(--sky)">24</div><div><div class="nm" id="vd-source">Excel avanzato per l'ufficio</div><div class="mt">24 slide · generate con Gamma</div></div><div class="act"><span class="pill good"><span class="dot"></span> Pronte</span></div></div>
+              <div class="doc-row" style="padding-left:0;padding-right:0"><div class="doc-ic" style="background:var(--sky)">24</div><div><div class="nm" id="vd-source">Excel avanzato per l'ufficio</div><div class="mt" id="vd-source-mt">24 slide · generate con Gamma</div></div><div class="act"><span class="pill good"><span class="dot"></span> Pronte</span></div></div>
               <div class="divider"></div>
               <div class="field"><label>Voce narrante</label>
                 <select class="inp" id="ai-voice">
@@ -1435,9 +1435,7 @@
           <div class="res-stage">
             <video id="vd-video" controls preload="metadata" hidden
               poster="https://cdn.gamma.app/kowrmrub467uda9/generated-images/Lu4p-aIIhsV-wKqmRrD2i.png"
-              style="width:100%;border-radius:var(--r-md);border:1px solid var(--line);box-shadow:var(--shadow-sm);background:#14090a;aspect-ratio:16/9">
-              <source src="media/corso-excel-avanzato.mp4" type="video/mp4">
-            </video>
+              style="width:100%;border-radius:var(--r-md);border:1px solid var(--line);box-shadow:var(--shadow-sm);background:#14090a;aspect-ratio:16/9"></video>
             <div class="vplayer" id="vplayer">
               <img class="vp-poster" src="https://cdn.gamma.app/kowrmrub467uda9/generated-images/Lu4p-aIIhsV-wKqmRrD2i.png" alt="Anteprima videolezione — Excel avanzato per l'ufficio">
               <div class="vp-grad"></div>
@@ -1863,6 +1861,14 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  // Video reali per tema (stesso audio TTS, slide del deck Gamma corrispondente)
+  const themeNames = { light: 'Basic Light', timevision: 'Tema TIMEVISION', wine: 'Wine' };
+  const courseVideos = { excel: {
+    light: { src: 'media/corso-excel-avanzato.mp4', poster: 'https://cdn.gamma.app/kowrmrub467uda9/generated-images/Lu4p-aIIhsV-wKqmRrD2i.png' },
+    timevision: { src: 'media/corso-excel-avanzato-timevision.mp4', poster: 'https://cdn.gamma.app/kowrmrub467uda9/generated-images/3qFenL_iXAR6yeq33ODMX.png' },
+    wine: { src: 'media/corso-excel-avanzato-wine.mp4', poster: 'https://cdn.gamma.app/kowrmrub467uda9/generated-images/3-EYSiplTJkBmHWiwe7i9.png' }
+  } };
+
   // Passo 3 — video del corso
   function generateVideo() {
     const btn = document.getElementById('ai-video-go');
@@ -1878,8 +1884,18 @@
         const key = document.getElementById('ai-corso').value;
         document.getElementById('vd-title').textContent = 'Video del corso — ' + corsoNames[key];
         document.getElementById('vd-source').textContent = corsoNames[key];
-        // per il corso Excel esiste un video reale (slide Gamma + voce TTS); per gli altri il player simulato
-        const realVideo = key === 'excel';
+        // per il corso Excel esistono video reali (slide Gamma + voce TTS), uno per tema; per gli altri il player simulato
+        const theme = document.getElementById('ai-theme').value;
+        const vids = courseVideos[key];
+        const realVideo = !!(vids && vids[theme]);
+        if (realVideo) {
+          const v = document.getElementById('vd-video');
+          if (v.dataset.src !== vids[theme].src) {
+            v.src = vids[theme].src; v.poster = vids[theme].poster;
+            v.dataset.src = vids[theme].src; v.load();
+          }
+          document.getElementById('vd-source-mt').textContent = '24 slide · Gamma · ' + themeNames[theme];
+        }
         document.getElementById('vd-video').hidden = !realVideo;
         document.getElementById('vplayer').hidden = realVideo;
         document.getElementById('vd-pill').innerHTML = '<span class="dot"></span> ' + (realVideo ? '6:44 min · video reale' : '12:18 min · demo');
