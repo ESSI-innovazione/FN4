@@ -278,6 +278,7 @@
   .card-head .hint { font-size: 12px; color: var(--text-3); font-weight: 600; }
 
   .grid { display: grid; gap: 16px; }
+  [hidden] { display: none !important; }
   .g-4 { grid-template-columns: repeat(4, 1fr); }
   .g-3 { grid-template-columns: repeat(3, 1fr); }
   .g-2 { grid-template-columns: repeat(2, 1fr); }
@@ -413,6 +414,10 @@
   .asm-row.run { background: var(--sky-pale); }
   .asm-row.run .asm-check { border-color: var(--sky); color: var(--sky-2); animation: aiPulse 1.1s ease-in-out infinite; }
   @keyframes aiPulse { 50% { box-shadow: 0 0 0 5px var(--sky-pale-2); } }
+  .res-bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+  .res-bar h2 { font-size: 17px; letter-spacing: -.01em; }
+  .res-actions { margin-left: auto; display: flex; gap: 10px; flex-wrap: wrap; }
+  .res-stage { max-width: 1100px; }
   .gamma-embed { position: relative; width: 100%; aspect-ratio: 16 / 10; border: 1px solid var(--line);
     border-radius: var(--r-md); overflow: hidden; background: var(--surface-2); box-shadow: var(--shadow-sm); }
   .gamma-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
@@ -1294,7 +1299,7 @@
           <div class="wz"><span class="n">3</span> Video del corso</div>
         </div>
 
-        <div class="grid g-1-2">
+        <div class="grid g-1-2" id="sl-setup">
           <div>
             <div class="card card-pad">
               <div style="font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:10px">Sorgente — contenuto del Passo 1</div>
@@ -1321,21 +1326,25 @@
               </div>
             </div>
 
-            <div class="card section-gap" id="ai-result" hidden>
-              <div class="card-head"><h3 id="deck-title">Slide generate</h3><span class="pill good"><span class="dot"></span> 24 slide</span></div>
-              <div class="card-pad">
-                <div class="gamma-embed" id="gamma-embed" hidden>
-                  <iframe id="gamma-frame" title="Slide generate con Gamma" allow="fullscreen" loading="lazy"></iframe>
-                </div>
-                <div class="ai-deck" id="ai-deck"></div>
-                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;align-items:center">
-                  <button class="btn primary" data-view="ai-video">Continua → Passo 3 · Video</button>
-                  <button class="btn accent" id="open-gamma" onclick="openGamma()">Apri in Gamma</button>
-                  <button class="btn" onclick="toast('Slide esportate in PPTX (demo)')">Esporta PPTX</button>
-                  <span class="muted" style="font-size:12px;margin-left:auto">≈ 2 minuti vs. 2 giorni manuali</span>
-                </div>
-              </div>
+          </div>
+        </div>
+
+        <div id="ai-result" hidden>
+          <div class="res-bar">
+            <button class="btn ghost" onclick="showSetup('sl-setup','ai-result')">← Impostazioni</button>
+            <h2 id="deck-title">Slide generate</h2>
+            <span class="pill good"><span class="dot"></span> 24 slide</span>
+            <span class="res-actions">
+              <button class="btn accent" id="open-gamma" onclick="openGamma()">Apri in Gamma</button>
+              <button class="btn" onclick="toast('Slide esportate in PPTX (demo)')">Esporta PPTX</button>
+              <button class="btn primary" data-view="ai-video">Continua → Passo 3 · Video</button>
+            </span>
+          </div>
+          <div class="res-stage">
+            <div class="gamma-embed" id="gamma-embed" hidden>
+              <iframe id="gamma-frame" title="Slide generate con Gamma" allow="fullscreen" loading="lazy"></iframe>
             </div>
+            <div class="ai-deck" id="ai-deck"></div>
           </div>
         </div>
       </section>
@@ -1361,7 +1370,7 @@
           <div class="wz cur"><span class="n">3</span> Video del corso</div>
         </div>
 
-        <div class="grid g-1-2">
+        <div class="grid g-1-2" id="vd-setup">
           <div>
             <div class="card card-pad">
               <div style="font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:10px">Sorgente — slide del Passo 2</div>
@@ -1395,34 +1404,38 @@
               </div>
             </div>
 
-            <div class="card section-gap" id="vd-result" hidden>
-              <div class="card-head"><h3 id="vd-title">Video del corso</h3><span class="pill good"><span class="dot"></span> 12:18 min · 1080p</span></div>
-              <div class="card-pad">
-                <div class="vplayer" id="vplayer">
-                  <img class="vp-poster" src="https://cdn.gamma.app/kowrmrub467uda9/generated-images/Lu4p-aIIhsV-wKqmRrD2i.png" alt="Anteprima videolezione — Excel avanzato per l'ufficio">
-                  <div class="vp-grad"></div>
-                  <span class="vp-badge">Videolezione · anteprima demo</span>
-                  <button class="vp-play" id="vp-play" onclick="toggleVideo()" title="Riproduci anteprima">▶</button>
-                  <div class="vp-ui">
-                    <div class="bar"><i id="vp-fill"></i></div>
-                    <span class="tm" id="vp-time">0:00 / 12:18</span>
-                  </div>
-                </div>
-                <div class="section-gap" style="margin-top:14px">
-                  <div style="font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:4px">Capitoli</div>
-                  <div class="chap"><span class="cn">0:00</span><span class="tt">Introduzione al corso</span><span class="du">1:12</span></div>
-                  <div class="chap"><span class="cn">1:12</span><span class="tt">Modulo 1 · Fogli di calcolo avanzati</span><span class="du">2:53</span></div>
-                  <div class="chap"><span class="cn">4:05</span><span class="tt">Modulo 2 · Analisi dati e tabelle pivot</span><span class="du">2:41</span></div>
-                  <div class="chap"><span class="cn">6:46</span><span class="tt">Modulo 3 · Automazione con macro</span><span class="du">2:37</span></div>
-                  <div class="chap"><span class="cn">9:23</span><span class="tt">Modulo 4 · Reportistica aziendale</span><span class="du">2:12</span></div>
-                  <div class="chap"><span class="cn">11:35</span><span class="tt">Quiz finale del corso</span><span class="du">0:43</span></div>
-                </div>
-                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;align-items:center">
-                  <button class="btn accent" onclick="toast('Video MP4 scaricato (demo)')">Scarica MP4</button>
-                  <button class="btn" onclick="toast('Videolezione pubblicata nella FAD con tracciamento (demo)')">Pubblica nella FAD</button>
-                  <span class="muted" style="font-size:12px;margin-left:auto">≈ 5 minuti vs. 1 giorno di registrazione</span>
-                </div>
+          </div>
+        </div>
+
+        <div id="vd-result" hidden>
+          <div class="res-bar">
+            <button class="btn ghost" onclick="showSetup('vd-setup','vd-result')">← Impostazioni</button>
+            <h2 id="vd-title">Video del corso</h2>
+            <span class="pill good"><span class="dot"></span> 12:18 min · 1080p</span>
+            <span class="res-actions">
+              <button class="btn accent" onclick="toast('Video MP4 scaricato (demo)')">Scarica MP4</button>
+              <button class="btn primary" onclick="toast('Videolezione pubblicata nella FAD con tracciamento (demo)')">Pubblica nella FAD</button>
+            </span>
+          </div>
+          <div class="res-stage">
+            <div class="vplayer" id="vplayer">
+              <img class="vp-poster" src="https://cdn.gamma.app/kowrmrub467uda9/generated-images/Lu4p-aIIhsV-wKqmRrD2i.png" alt="Anteprima videolezione — Excel avanzato per l'ufficio">
+              <div class="vp-grad"></div>
+              <span class="vp-badge">Videolezione · anteprima demo</span>
+              <button class="vp-play" id="vp-play" onclick="toggleVideo()" title="Riproduci anteprima">▶</button>
+              <div class="vp-ui">
+                <div class="bar"><i id="vp-fill"></i></div>
+                <span class="tm" id="vp-time">0:00 / 12:18</span>
               </div>
+            </div>
+            <div class="card card-pad section-gap">
+              <div style="font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:4px">Capitoli</div>
+              <div class="chap"><span class="cn">0:00</span><span class="tt">Introduzione al corso</span><span class="du">1:12</span></div>
+              <div class="chap"><span class="cn">1:12</span><span class="tt">Modulo 1 · Fogli di calcolo avanzati</span><span class="du">2:53</span></div>
+              <div class="chap"><span class="cn">4:05</span><span class="tt">Modulo 2 · Analisi dati e tabelle pivot</span><span class="du">2:41</span></div>
+              <div class="chap"><span class="cn">6:46</span><span class="tt">Modulo 3 · Automazione con macro</span><span class="du">2:37</span></div>
+              <div class="chap"><span class="cn">9:23</span><span class="tt">Modulo 4 · Reportistica aziendale</span><span class="du">2:12</span></div>
+              <div class="chap"><span class="cn">11:35</span><span class="tt">Quiz finale del corso</span><span class="du">0:43</span></div>
             </div>
           </div>
         </div>
@@ -1779,12 +1792,18 @@
             '<span class="sn">' + s.n + '</span><span class="st">' + s.t + '</span>' +
             '<span class="ln" style="width:88%;margin-top:auto"></span><span class="ln" style="width:64%"></span></div>').join('');
         }
-        const result = document.getElementById('ai-result');
-        result.hidden = false;
-        result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        document.getElementById('sl-setup').hidden = true;
+        document.getElementById('ai-result').hidden = false;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         toast('24 slide generate con ' + engine + ' — demo');
         btn.disabled = false;
       });
+  }
+
+  function showSetup(setupId, resultId) {
+    document.getElementById(setupId).hidden = false;
+    document.getElementById(resultId).hidden = true;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   // Passo 3 — video del corso
@@ -1802,9 +1821,9 @@
         const key = document.getElementById('ai-corso').value;
         document.getElementById('vd-title').textContent = 'Video del corso — ' + corsoNames[key];
         document.getElementById('vd-source').textContent = corsoNames[key];
-        const result = document.getElementById('vd-result');
-        result.hidden = false;
-        result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        document.getElementById('vd-setup').hidden = true;
+        document.getElementById('vd-result').hidden = false;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         toast('Videolezione generata con voce ' + voice + ' — demo');
         btn.disabled = false;
       });
