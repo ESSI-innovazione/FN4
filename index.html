@@ -367,10 +367,47 @@
   .asm-row.on .asm-check { background: var(--good); border-color: var(--good); }
   .asm-row .src { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--text-3); }
 
-  .ai-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 34px 0 6px; }
-  .ai-head h2 { font-size: 17px; letter-spacing: -.01em; }
-  .ai-head + p { font-size: 13px; color: var(--text-2); max-width: 720px; line-height: 1.55; margin-bottom: 16px; }
+  .nav-item.sub { padding: 8px 13px 8px 25px; font-size: 13.5px; }
+  .nav-item.sub .sub-tick { width: 14px; height: 14px; flex: none; border-left: 1.5px solid rgba(255,255,255,.28);
+    border-bottom: 1.5px solid rgba(255,255,255,.28); border-radius: 0 0 0 6px; margin: -8px 0 6px 3px; }
+  .nav-item.sub.active .sub-tick { border-color: var(--merlot-ink); opacity: .45; }
+
+  .ai-banner { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; margin-top: 26px;
+    background: linear-gradient(155deg, var(--merlot), var(--merlot-2)); color: #fff; border: none;
+    border-radius: var(--r-lg); padding: 18px 22px; cursor: pointer; box-shadow: var(--shadow);
+    transition: transform .15s, box-shadow .15s; }
+  .ai-banner:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+  .ai-banner .bi { width: 40px; height: 40px; flex: none; border-radius: 12px; background: rgba(255,255,255,.14);
+    display: grid; place-items: center; font-size: 19px; }
+  .ai-banner .bt { flex: 1; min-width: 0; }
+  .ai-banner .bt b { display: block; font-size: 14.5px; }
+  .ai-banner .bt span { font-size: 12.5px; opacity: .85; }
+  .ai-banner .go { font-size: 13px; font-weight: 800; white-space: nowrap; }
+
+  .wiz { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 22px; }
+  .wz { display: flex; align-items: center; gap: 10px; padding: 11px 18px; border: 1px solid var(--line);
+    border-radius: var(--r-pill); background: var(--surface); font-size: 13px; font-weight: 700; color: var(--text-2); }
+  .wz .n { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; flex: none;
+    background: var(--surface-2); border: 1.5px solid var(--line-strong); font-size: 11.5px; font-weight: 800; }
+  .wz.cur { background: linear-gradient(155deg, var(--merlot), var(--merlot-2)); border-color: transparent; color: #fff;
+    box-shadow: 0 8px 18px -8px color-mix(in srgb, var(--merlot) 60%, transparent); }
+  .wz.cur .n { background: rgba(255,255,255,.16); border-color: transparent; color: #fff; }
+  .wz.done { border-color: color-mix(in srgb, var(--sky) 45%, var(--line)); color: var(--sky-2); }
+  .wz.done .n { background: var(--sky); border-color: transparent; color: #fff; }
+  .wiz .sep { color: var(--text-3); font-weight: 800; }
+
   .ai-prompt { min-height: 150px; resize: vertical; font: inherit; font-size: 13px; line-height: 1.55; }
+  .ai-empty { border: 1.5px dashed var(--line-strong); border-radius: var(--r-md); padding: 34px 20px;
+    text-align: center; color: var(--text-3); font-size: 13px; line-height: 1.6; }
+  .ai-empty .big { font-size: 22px; display: block; margin-bottom: 6px; }
+  .mod-row { display: flex; align-items: center; gap: 13px; padding: 13px 15px; border: 1px solid var(--line);
+    border-radius: var(--r-md); margin-bottom: 9px; opacity: 0; transform: translateY(10px);
+    animation: aiSlideIn .45s cubic-bezier(.2,.7,.3,1) forwards; }
+  .mod-row .mn { width: 32px; height: 32px; border-radius: 9px; flex: none; display: grid; place-items: center;
+    background: var(--sky-pale); color: var(--sky-2); font-size: 13px; font-weight: 800; }
+  .mod-row .mtx { flex: 1; min-width: 0; }
+  .mod-row .mtx b { display: block; font-size: 13.5px; }
+  .mod-row .mtx small { font-size: 11.5px; color: var(--text-3); }
   #ai-steps .asm-check { color: var(--text-3); }
   #ai-steps .asm-row.on .asm-check { color: #fff; }
   .asm-row.run { background: var(--sky-pale); }
@@ -769,6 +806,11 @@
         <span class="lbl">Progettazione</span>
         <span class="wf-badge teal" title="1 documento in corso" aria-label="1 documento in corso">1</span>
       </button>
+      <button class="nav-item sub" data-view="ai-contenuti">
+        <span class="sub-tick" aria-hidden="true"></span>
+        <span class="lbl">Contenuti corso · AI</span>
+        <span class="wf-badge amber" title="Funzionalità futura">✦</span>
+      </button>
       <button class="nav-item" data-view="governo">
         <span class="wf-num">4</span>
         <span class="lbl">Upload Governo</span>
@@ -1125,43 +1167,131 @@
           </div>
         </div>
 
-        <!-- ---- Sottosezione: creazione contenuti AI (funzionalità futura) ---- -->
-        <div class="ai-head">
-          <h2>Creazione contenuti del corso con AI</h2>
-          <span class="pill warn"><span class="dot"></span> Funzionalità futura · anteprima</span>
+        <!-- ---- Rimando alla sottosezione Contenuti AI ---- -->
+        <button class="ai-banner" data-view="ai-contenuti">
+          <span class="bi">✦</span>
+          <span class="bt">
+            <b>Creazione contenuti del corso con AI</b>
+            <span>Dal prompt dell'amministratore al contenuto didattico e alle slide — Gamma / NotebookLM</span>
+          </span>
+          <span class="pill mute" style="background:rgba(255,255,255,.14);color:#fff;border:none"><span class="dot" style="background:var(--cream)"></span> Funzionalità futura</span>
+          <span class="go">Prova la demo →</span>
+        </button>
+      </section>
+
+      <!-- ========== CONTENUTI AI · PASSO 1: CONTENUTO ========== -->
+      <section class="view" id="view-ai-contenuti">
+        <div class="page-head">
+          <div class="eyebrow-pg">
+            <div class="icon-badge merlot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3.2"/></svg></div>
+            <div class="tx">
+              <div class="ey">Progettazione · Creazione contenuti AI <span class="pill warn" style="margin-left:8px;vertical-align:middle"><span class="dot"></span> Funzionalità futura · demo</span></div>
+              <h1>Passo 1 · Genera il contenuto didattico</h1>
+              <p>Scrivi un prompt: l'AI struttura il corso in <b>moduli, lezioni e quiz</b>. Il contenuto approvato diventa la base per le slide del Passo 2.</p>
+            </div>
+          </div>
         </div>
-        <p>L'amministratore scrive un prompt: la piattaforma genera prima il <b>contenuto didattico</b> (moduli, lezioni, quiz) e poi le <b>slide del corso</b> tramite Gamma o NotebookLM, pronte per essere pubblicate nella FAD. Qui sotto una simulazione con un esempio reale.</p>
+
+        <div class="wiz">
+          <div class="wz cur" id="wz1a"><span class="n">1</span> Contenuto didattico</div>
+          <span class="sep">→</span>
+          <div class="wz" id="wz2a"><span class="n">2</span> Slide del corso</div>
+        </div>
 
         <div class="grid g-1-2">
           <div>
             <div class="card card-pad">
-              <div class="field"><label>Prompt — descrivi il corso da generare</label>
-                <textarea class="inp ai-prompt" id="ai-prompt">Crea il corso "Excel avanzato per l'ufficio" per 12 dipendenti amministrativi: 4 moduli (formule avanzate, tabelle pivot, macro, reportistica), esempi pratici su dati aziendali reali e un quiz di verifica per ogni modulo. Slide in italiano, tono professionale, grafica Time Vision.</textarea>
-              </div>
-              <div class="field"><label>Motore di generazione</label>
-                <select class="inp" id="ai-engine">
-                  <option value="Gamma">Gamma — slide da prompt</option>
-                  <option value="NotebookLM">NotebookLM — slide dai documenti caricati</option>
+              <div class="field"><label>Corso di riferimento</label>
+                <select class="inp" id="ai-corso">
+                  <option value="excel">Excel avanzato per l'ufficio</option>
+                  <option value="tinteggiatura">Tecniche di tinteggiatura pareti</option>
+                  <option value="logistica">Gestione magazzino e logistica</option>
+                  <option value="digital">Digital marketing per PMI</option>
                 </select>
               </div>
-              <button class="btn primary" style="width:100%" id="ai-go" onclick="generateAI()">✦ Genera contenuti e slide</button>
-              <div class="muted" style="font-size:11.5px;margin-top:10px;line-height:1.5">Simulazione dimostrativa: nella versione finale il prompt verrà inviato all'API del motore scelto e le slide salvate automaticamente nella FAD del corso.</div>
+              <div class="field"><label>Prompt dell'amministratore</label>
+                <textarea class="inp ai-prompt" id="ai-prompt">Crea il corso per 12 dipendenti amministrativi: 4 moduli con esempi pratici su dati aziendali reali e un quiz di verifica per ogni modulo. Contenuti in italiano, tono professionale, livello intermedio.</textarea>
+              </div>
+              <button class="btn primary" style="width:100%" id="ai-gen-content" onclick="generateContent()">✦ Genera contenuto didattico</button>
+              <div class="muted" style="font-size:11.5px;margin-top:10px;line-height:1.5">Simulazione dimostrativa: nella versione finale il prompt e i dati del corso (Atlante del Lavoro, ISTAT) verranno inviati all'AI, e il contenuto potrà essere rivisto prima di generare le slide.</div>
             </div>
           </div>
 
           <div>
             <div class="card">
-              <div class="card-head"><h3>Pipeline di generazione</h3><span class="pill mute" id="ai-status"><span class="dot"></span> In attesa del prompt</span></div>
+              <div class="card-head"><h3>Contenuto generato</h3><span class="pill mute" id="ct-status"><span class="dot"></span> In attesa del prompt</span></div>
+              <div class="card-pad">
+                <div class="ai-empty" id="ct-empty"><span class="big">📄</span>Il contenuto didattico apparirà qui:<br>moduli, lezioni e quiz generati dal tuo prompt.</div>
+                <div class="assembling" id="ct-steps" hidden>
+                  <div class="asm-row" id="ct-s1"><div class="asm-check">1</div> Analisi del prompt e dei dati del corso <span class="src">AI</span></div>
+                  <div class="asm-row" id="ct-s2"><div class="asm-check">2</div> Struttura dei moduli formativi <span class="src">AI</span></div>
+                  <div class="asm-row" id="ct-s3"><div class="asm-check">3</div> Redazione lezioni e quiz di verifica <span class="src">AI</span></div>
+                </div>
+                <div id="ct-result" hidden>
+                  <div id="mod-list"></div>
+                  <div class="divider"></div>
+                  <div class="kv"><span class="k">Moduli</span><span class="v tnum">4</span></div>
+                  <div class="kv"><span class="k">Lezioni totali</span><span class="v tnum">20</span></div>
+                  <div class="kv"><span class="k">Quiz di verifica</span><span class="v tnum">4 (uno per modulo)</span></div>
+                </div>
+              </div>
+              <div class="card-pad" style="border-top:1px solid var(--line);display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+                <button class="btn primary" id="to-step2" data-view="ai-slide" disabled style="opacity:.45">Continua → Passo 2 · Genera le slide</button>
+                <span class="muted" style="font-size:12px;margin-left:auto" id="ct-hint">Genera prima il contenuto</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== CONTENUTI AI · PASSO 2: SLIDE ========== -->
+      <section class="view" id="view-ai-slide">
+        <div class="page-head">
+          <div class="eyebrow-pg">
+            <div class="icon-badge merlot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M12 17v4M8 21h8"/></svg></div>
+            <div class="tx">
+              <div class="ey">Progettazione · Creazione contenuti AI <span class="pill warn" style="margin-left:8px;vertical-align:middle"><span class="dot"></span> Funzionalità futura · demo</span></div>
+              <h1>Passo 2 · Genera le slide del corso</h1>
+              <p>Il contenuto didattico approvato viene inviato a <b>Gamma</b> o <b>NotebookLM</b>, che crea le slide pronte per la pubblicazione nella FAD.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="wiz">
+          <button class="wz done" data-view="ai-contenuti" style="cursor:pointer"><span class="n">✓</span> Contenuto didattico</button>
+          <span class="sep">→</span>
+          <div class="wz cur"><span class="n">2</span> Slide del corso</div>
+        </div>
+
+        <div class="grid g-1-2">
+          <div>
+            <div class="card card-pad">
+              <div style="font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:10px">Sorgente — contenuto del Passo 1</div>
+              <div class="doc-row" style="padding-left:0;padding-right:0"><div class="doc-ic" style="background:var(--sky)">AI</div><div><div class="nm" id="sl-source">Excel avanzato per l'ufficio</div><div class="mt">4 moduli · 20 lezioni · 4 quiz</div></div><div class="act"><span class="pill good"><span class="dot"></span> Pronto</span></div></div>
+              <div class="divider"></div>
+              <div class="field"><label>Motore di generazione slide</label>
+                <select class="inp" id="ai-engine">
+                  <option value="Gamma">Gamma — slide dal contenuto generato</option>
+                  <option value="NotebookLM">NotebookLM — slide dai documenti caricati</option>
+                </select>
+              </div>
+              <button class="btn primary" style="width:100%" id="ai-go" onclick="generateAI()">✦ Genera le slide</button>
+              <div class="muted" style="font-size:11.5px;margin-top:10px;line-height:1.5">Simulazione dimostrativa: nella versione finale il contenuto verrà inviato all'API del motore scelto e le slide salvate automaticamente nella FAD del corso.</div>
+            </div>
+          </div>
+
+          <div>
+            <div class="card">
+              <div class="card-head"><h3>Pipeline di generazione</h3><span class="pill mute" id="ai-status"><span class="dot"></span> In attesa dell'avvio</span></div>
               <div class="card-pad assembling" id="ai-steps">
-                <div class="asm-row" id="ai-s1"><div class="asm-check">1</div> Analisi del prompt e del corso selezionato <span class="src">AI</span></div>
-                <div class="asm-row" id="ai-s2"><div class="asm-check">2</div> Generazione contenuto didattico (moduli e lezioni) <span class="src">AI</span></div>
-                <div class="asm-row" id="ai-s3"><div class="asm-check">3</div> Creazione slide dal contenuto <span class="src" id="ai-s3-src">Gamma</span></div>
-                <div class="asm-row" id="ai-s4"><div class="asm-check">4</div> Pubblicazione nella FAD del corso <span class="src">FAD Manager</span></div>
+                <div class="asm-row" id="ai-s1"><div class="asm-check">1</div> Invio del contenuto al motore <span class="src" id="ai-s1-src">Gamma</span></div>
+                <div class="asm-row" id="ai-s2"><div class="asm-check">2</div> Creazione slide e grafica Time Vision <span class="src" id="ai-s2-src">Gamma</span></div>
+                <div class="asm-row" id="ai-s3"><div class="asm-check">3</div> Pubblicazione nella FAD del corso <span class="src">FAD Manager</span></div>
               </div>
             </div>
 
             <div class="card section-gap" id="ai-result" hidden>
-              <div class="card-head"><h3>Slide generate — Excel avanzato per l'ufficio</h3><span class="pill good"><span class="dot"></span> 24 slide</span></div>
+              <div class="card-head"><h3 id="deck-title">Slide generate</h3><span class="pill good"><span class="dot"></span> 24 slide</span></div>
               <div class="card-pad">
                 <div class="ai-deck" id="ai-deck"></div>
                 <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;align-items:center">
@@ -1289,13 +1419,16 @@
 <script>
   // ---- Navigation (shared by sidebar nav + dashboard section cards) ----
   const titles = { dashboard:'Home', consulente:'Portale Consulente', commerciale:'Proposta Commerciale',
-    progettazione:'Progettazione', governo:'Upload Governo', monitoraggio:'Monitoraggio' };
+    progettazione:'Progettazione', governo:'Upload Governo', monitoraggio:'Monitoraggio',
+    'ai-contenuti':'Progettazione · Contenuti AI', 'ai-slide':'Progettazione · Contenuti AI' };
   function navigate(v) {
-    document.querySelectorAll('.nav-item[data-view]').forEach(x => x.classList.toggle('active', x.dataset.view === v));
+    const nav = v === 'ai-slide' ? 'ai-contenuti' : v;
+    const step = (v === 'ai-contenuti' || v === 'ai-slide') ? 'progettazione' : v;
+    document.querySelectorAll('.nav-item[data-view]').forEach(x => x.classList.toggle('active', x.dataset.view === nav));
     document.querySelectorAll('.view').forEach(x => x.classList.remove('active'));
     document.getElementById('view-' + v).classList.add('active');
     document.getElementById('crumb-view').textContent = titles[v];
-    document.querySelectorAll('.step').forEach(s => s.classList.toggle('current', s.dataset.step === v));
+    document.querySelectorAll('.step').forEach(s => s.classList.toggle('current', s.dataset.step === step));
     document.getElementById('hero').hidden = (v !== 'dashboard');
     document.getElementById('sidebar').classList.remove('open');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1425,59 +1558,90 @@
   }
   loadCourse();
 
-  // ---- Creazione contenuti AI (Progettazione — demo funzionalità futura) ----
-  const aiSlides = [
-    { cover: true, n: '01 · Copertina', t: 'Excel avanzato per l’ufficio' },
-    { n: '02 · Modulo 1', t: 'Formule avanzate' },
-    { n: '07 · Modulo 2', t: 'Tabelle pivot' },
-    { n: '12 · Modulo 3', t: 'Macro e automazione' },
-    { n: '17 · Modulo 4', t: 'Reportistica aziendale' },
-    { n: '22 · Verifica', t: 'Quiz finale del corso' }
-  ];
-  function generateAI() {
-    const btn = document.getElementById('ai-go');
-    if (btn.disabled) return;
-    btn.disabled = true;
-    const engine = document.getElementById('ai-engine').value;
-    document.getElementById('ai-s3-src').textContent = engine;
-    const status = document.getElementById('ai-status');
-    const steps = ['ai-s1', 'ai-s2', 'ai-s3', 'ai-s4'];
-    const labels = ['Analisi del prompt…', 'Generazione contenuti…', 'Creazione slide con ' + engine + '…', 'Pubblicazione nella FAD…'];
-    document.getElementById('ai-result').hidden = true;
-    steps.forEach((id, i) => {
+  // ---- Creazione contenuti AI (sottosezione Progettazione — demo funzionalità futura) ----
+  const corsoNames = { excel: "Excel avanzato per l'ufficio", tinteggiatura: 'Tecniche di tinteggiatura pareti',
+    logistica: 'Gestione magazzino e logistica', digital: 'Digital marketing per PMI' };
+
+  function finishRow(id) {
+    const r = document.getElementById(id);
+    r.classList.remove('run'); r.classList.add('on');
+    r.querySelector('.asm-check').textContent = '✓';
+  }
+  function runPipeline(stepIds, labels, status, onDone) {
+    const STEP_MS = 1200;
+    stepIds.forEach((id, i) => {
       const r = document.getElementById(id);
       r.classList.remove('on', 'run');
       r.querySelector('.asm-check').textContent = i + 1;
     });
-    const STEP_MS = 1300;
-    steps.forEach((id, i) => {
+    stepIds.forEach((id, i) => {
       setTimeout(() => {
-        if (i > 0) {
-          const prev = document.getElementById(steps[i - 1]);
-          prev.classList.remove('run'); prev.classList.add('on');
-          prev.querySelector('.asm-check').textContent = '✓';
-        }
+        if (i > 0) finishRow(stepIds[i - 1]);
         document.getElementById(id).classList.add('run');
         status.className = 'pill info';
         status.innerHTML = '<span class="dot"></span> ' + labels[i];
       }, i * STEP_MS);
     });
-    setTimeout(() => {
-      const last = document.getElementById('ai-s4');
-      last.classList.remove('run'); last.classList.add('on');
-      last.querySelector('.asm-check').textContent = '✓';
-      status.className = 'pill good';
-      status.innerHTML = '<span class="dot"></span> Completato';
-      const deck = document.getElementById('ai-deck');
-      deck.innerHTML = aiSlides.map((s, i) =>
-        '<div class="ai-slide' + (s.cover ? ' cover' : '') + '" style="animation-delay:' + (i * .12) + 's">' +
-        '<span class="sn">' + s.n + '</span><span class="st">' + s.t + '</span>' +
-        '<span class="ln" style="width:88%;margin-top:auto"></span><span class="ln" style="width:64%"></span></div>').join('');
-      const result = document.getElementById('ai-result');
-      result.hidden = false;
-      result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      toast('24 slide generate con ' + engine + ' — demo');
-      btn.disabled = false;
-    }, steps.length * STEP_MS + 500);
+    setTimeout(() => { finishRow(stepIds[stepIds.length - 1]); onDone(); }, stepIds.length * STEP_MS + 400);
+  }
+
+  // Passo 1 — contenuto didattico
+  function generateContent() {
+    const btn = document.getElementById('ai-gen-content');
+    if (btn.disabled) return;
+    btn.disabled = true;
+    document.getElementById('ct-empty').hidden = true;
+    document.getElementById('ct-result').hidden = true;
+    document.getElementById('ct-steps').hidden = false;
+    const status = document.getElementById('ct-status');
+    runPipeline(['ct-s1', 'ct-s2', 'ct-s3'],
+      ['Analisi del prompt…', 'Struttura dei moduli…', 'Redazione lezioni e quiz…'], status, () => {
+        status.className = 'pill good';
+        status.innerHTML = '<span class="dot"></span> Contenuto pronto';
+        const key = document.getElementById('ai-corso').value;
+        document.getElementById('mod-list').innerHTML = courses[key].comps.map((m, i) =>
+          '<div class="mod-row" style="animation-delay:' + (i * .12) + 's"><span class="mn">M' + (i + 1) + '</span>' +
+          '<span class="mtx"><b>' + m[0] + '</b><small>5 lezioni · 1 quiz di verifica · ' + m[1] + '</small></span>' +
+          '<span class="pill good"><span class="dot"></span> Generato</span></div>').join('');
+        document.getElementById('ct-steps').hidden = true;
+        document.getElementById('ct-result').hidden = false;
+        const go = document.getElementById('to-step2');
+        go.disabled = false; go.style.opacity = '1';
+        document.getElementById('ct-hint').textContent = 'Contenuto pronto · continua con le slide';
+        document.getElementById('sl-source').textContent = corsoNames[key];
+        toast('Contenuto didattico generato — demo');
+        btn.disabled = false;
+      });
+  }
+
+  // Passo 2 — slide del corso
+  function generateAI() {
+    const btn = document.getElementById('ai-go');
+    if (btn.disabled) return;
+    btn.disabled = true;
+    const engine = document.getElementById('ai-engine').value;
+    document.getElementById('ai-s1-src').textContent = engine;
+    document.getElementById('ai-s2-src').textContent = engine;
+    const status = document.getElementById('ai-status');
+    document.getElementById('ai-result').hidden = true;
+    runPipeline(['ai-s1', 'ai-s2', 'ai-s3'],
+      ['Invio del contenuto a ' + engine + '…', 'Creazione slide con ' + engine + '…', 'Pubblicazione nella FAD…'], status, () => {
+        status.className = 'pill good';
+        status.innerHTML = '<span class="dot"></span> Completato';
+        const key = document.getElementById('ai-corso').value;
+        document.getElementById('deck-title').textContent = 'Slide generate — ' + corsoNames[key];
+        const slides = [{ cover: true, n: '01 · Copertina', t: corsoNames[key] }]
+          .concat(courses[key].comps.map((m, i) => ({ n: String(i * 5 + 2).padStart(2, '0') + ' · Modulo ' + (i + 1), t: m[0] })))
+          .concat([{ n: '22 · Verifica', t: 'Quiz finale del corso' }]);
+        document.getElementById('ai-deck').innerHTML = slides.map((s, i) =>
+          '<div class="ai-slide' + (s.cover ? ' cover' : '') + '" style="animation-delay:' + (i * .12) + 's">' +
+          '<span class="sn">' + s.n + '</span><span class="st">' + s.t + '</span>' +
+          '<span class="ln" style="width:88%;margin-top:auto"></span><span class="ln" style="width:64%"></span></div>').join('');
+        const result = document.getElementById('ai-result');
+        result.hidden = false;
+        result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        toast('24 slide generate con ' + engine + ' — demo');
+        btn.disabled = false;
+      });
   }
 </script>
