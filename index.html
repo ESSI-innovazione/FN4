@@ -417,6 +417,12 @@
   #img-gallery img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 8px;
     border: 1px solid var(--line); cursor: pointer; transition: transform .15s; }
   #img-gallery img:hover { transform: scale(1.05); }
+  .asg-row { display: flex; align-items: center; gap: 11px; padding: 8px 0; border-bottom: 1px dashed var(--line); }
+  .asg-row:last-child { border-bottom: none; }
+  .asg-row img { width: 58px; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 6px;
+    border: 1px solid var(--line); flex: none; }
+  .asg-row .at { flex: 1; min-width: 0; font-size: 12.5px; font-weight: 700; }
+  .asg-row .at small { display: block; font-size: 11px; font-weight: 600; color: var(--text-3); }
   .ai-empty { border: 1.5px dashed var(--line-strong); border-radius: var(--r-md); padding: 34px 20px;
     text-align: center; color: var(--text-3); font-size: 13px; line-height: 1.6; }
   .ai-empty .big { font-size: 22px; display: block; margin-bottom: 6px; }
@@ -1559,10 +1565,19 @@
                 <div id="img-result" hidden>
                   <img id="img-out" alt="Immagine generata dall'AI" style="width:100%;border-radius:var(--r-md);border:1px solid var(--line);box-shadow:var(--shadow-sm)">
                   <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;align-items:center">
-                    <button class="btn accent" onclick="toast('Immagine inserita nella slide del corso (demo)')">Usa nella slide</button>
-                    <button class="btn" onclick="window.open(document.getElementById('img-out').src,'_blank')">Apri in grande</button>
+                    <select class="inp" id="img-slide-target" style="flex:1;min-width:220px"></select>
+                    <button class="btn accent" onclick="assignImage()">Assegna alla slide</button>
+                    <button class="btn" onclick="window.open(document.getElementById('img-out').src,'_blank')">Apri</button>
                     <button class="btn" id="img-again" onclick="generateImage()">↻ Rigenera</button>
                   </div>
+                </div>
+                <div id="img-assigned-wrap" hidden>
+                  <div class="divider"></div>
+                  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+                    <span style="font-size:12px;font-weight:700;color:var(--text-2)">Immagini assegnate alle slide</span>
+                    <span class="pill good" id="img-assigned-count"><span class="dot"></span> 0</span>
+                  </div>
+                  <div id="img-assigned"></div>
                 </div>
                 <div id="img-gallery-wrap" hidden>
                   <div class="divider"></div>
@@ -2072,6 +2087,42 @@
   const imgHistory = [];
   function setImgStyle2(btn) {
     document.querySelectorAll('#img-style2 .style-card').forEach(c => c.classList.toggle('active', c === btn));
+  }
+
+  // Assegnazione delle immagini generate alle slide del corso (titoli del deck Excel)
+  const slideTitles = [
+    'Copertina — Excel avanzato per l\'ufficio', 'Obiettivi del corso', 'Modulo 1 · Introduzione',
+    'Formule condizionali: SE e PIÙ.SE', 'CERCA.X e CERCA.VERT', 'Convalida dati e casi pratici',
+    'Quiz · Modulo 1', 'Modulo 2 · Introduzione', 'Creare una tabella pivot',
+    'Raggruppamenti, filtri e grafici pivot', 'Caso pratico: analisi vendite trimestrali', 'Quiz · Modulo 2',
+    'Modulo 3 · Introduzione', 'Registrazione di una macro', 'Introduzione a VBA',
+    'Caso pratico: report mensile automatizzato', 'Quiz · Modulo 3', 'Modulo 4 · Introduzione',
+    'Dashboard in Excel', 'Formattazione condizionale e KPI', 'Caso pratico: cruscotto direzionale',
+    'Quiz · Modulo 4', 'Riepilogo competenze', 'Quiz finale'
+  ];
+  const slideImages = {};
+  document.getElementById('img-slide-target').innerHTML = slideTitles.map((t, i) =>
+    '<option value="' + i + '">Slide ' + String(i + 1).padStart(2, '0') + ' — ' + t + '</option>').join('');
+  function assignImage() {
+    const url = document.getElementById('img-out').src;
+    if (!url) return;
+    const idx = +document.getElementById('img-slide-target').value;
+    slideImages[idx] = url;
+    renderAssigned();
+    toast('Immagine assegnata alla slide ' + String(idx + 1).padStart(2, '0') + ' — demo');
+  }
+  function removeAssigned(idx) {
+    delete slideImages[idx];
+    renderAssigned();
+  }
+  function renderAssigned() {
+    const keys = Object.keys(slideImages).map(Number).sort((a, b) => a - b);
+    document.getElementById('img-assigned-wrap').hidden = keys.length === 0;
+    document.getElementById('img-assigned-count').innerHTML = '<span class="dot"></span> ' + keys.length;
+    document.getElementById('img-assigned').innerHTML = keys.map(i =>
+      '<div class="asg-row"><img src="' + slideImages[i] + '" alt="Immagine assegnata">' +
+      '<span class="at">Slide ' + String(i + 1).padStart(2, '0') + '<small>' + slideTitles[i] + '</small></span>' +
+      '<button class="btn ghost" style="padding:4px 10px" onclick="removeAssigned(' + i + ')" title="Rimuovi assegnazione">✕</button></div>').join('');
   }
   function generateImage() {
     if (imgBusy) return;
