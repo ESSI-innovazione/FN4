@@ -1541,14 +1541,14 @@
               </div>
               <div class="field"><label>Formato</label>
                 <select class="inp" id="img-format">
-                  <option value="1280x720">Panoramica 16:9 — per slide</option>
-                  <option value="896x896">Quadrata 1:1 — per schede</option>
-                  <option value="720x1280">Verticale 9:16 — per social</option>
+                  <option value="1024x576">Panoramica 16:9 — per slide</option>
+                  <option value="1024x1024">Quadrata 1:1 — per schede</option>
+                  <option value="576x1024">Verticale 9:16 — per social</option>
                 </select>
               </div>
               <button class="btn primary" style="width:100%" id="img-go" onclick="generateImage()">✦ Genera immagine</button>
               <button class="btn" style="width:100%;margin-top:10px" data-view="ai-video">Continua → Passo 4 · Video del corso</button>
-              <div class="muted" style="font-size:11.5px;margin-top:10px;line-height:1.5">Demo con generazione reale (modello Flux, API gratuita, ~20 secondi). Nella versione finale il motore sarà a scelta: Flux, Imagen, Ideogram — come in Gamma.</div>
+              <div class="muted" style="font-size:11.5px;margin-top:10px;line-height:1.5">Demo con generazione reale (API gratuita, qualità alta, ~20 secondi). Nella versione finale il motore sarà a scelta — Flux, Imagen, Ideogram come in Gamma — con risoluzione piena 2K.</div>
             </div>
           </div>
 
@@ -1563,7 +1563,7 @@
                   <div class="muted" style="font-size:12px;margin-top:4px">L'AI sta creando l'immagine (~20 secondi)</div>
                 </div>
                 <div id="img-result" hidden>
-                  <img id="img-out" alt="Immagine generata dall'AI" style="width:100%;border-radius:var(--r-md);border:1px solid var(--line);box-shadow:var(--shadow-sm)">
+                  <img id="img-out" alt="Immagine generata dall'AI" style="display:block;width:100%;max-width:820px;margin:0 auto;border-radius:var(--r-md);border:1px solid var(--line);box-shadow:var(--shadow-sm)">
                   <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;align-items:center">
                     <select class="inp" id="img-slide-target" style="flex:1;min-width:220px"></select>
                     <button class="btn accent" onclick="assignImage()">Assegna alla slide</button>
@@ -2132,7 +2132,7 @@
     const fmt = document.getElementById('img-format').value.split('x');
     const seed = Math.floor(Math.random() * 1000000);
     const url = 'https://image.pollinations.ai/prompt/' + encodeURIComponent(prompt + ', ' + imgStylePrompts[style]) +
-      '?width=' + fmt[0] + '&height=' + fmt[1] + '&nologo=true&seed=' + seed;
+      '?width=' + fmt[0] + '&height=' + fmt[1] + '&nologo=true&quality=high&enhance=true&seed=' + seed;
     imgBusy = true;
     document.getElementById('img-go').disabled = true;
     document.getElementById('img-empty').hidden = true;
