@@ -489,10 +489,13 @@
   .inp.cf { text-transform: uppercase; }
   .int-note { font-size: 13.5px; color: #F0CCC0; text-align: center; margin: 10px 0 20px; line-height: 1.55; }
 
-  .art3d { position: absolute; left: -6%; right: -6%; bottom: -7%; height: 56%; z-index: 1;
-    opacity: .5; perspective: 900px; pointer-events: none; }
+  .art3d { position: absolute; left: -14%; right: -14%; top: 50%; transform: translateY(-50%);
+    height: 78%; z-index: 1; opacity: .5; perspective: 1100px; pointer-events: none; }
   .art3d svg { width: 100%; height: 100%; transform-style: preserve-3d;
+    will-change: transform; contain: paint;
     animation: art-float 10s ease-in-out infinite alternate; }
+  .login-left::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: linear-gradient(180deg, rgba(58,7,9,.6) 0%, rgba(58,7,9,.15) 42%, rgba(58,7,9,.62) 100%); }
   @keyframes art-float {
     from { transform: rotateX(7deg) rotateY(-6deg) translateY(0); }
     to   { transform: rotateX(2deg) rotateY(6deg) translateY(-16px); }
@@ -547,7 +550,7 @@
         <div><div class="f-t">Velocit&agrave;</div><div class="f-s">Dal corso al documento in 30 secondi</div></div>
       </div>
     </div>
-    <div class="art3d" aria-hidden="true"><svg preserveAspectRatio="xMidYMax meet" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+    <div class="art3d" aria-hidden="true"><svg preserveAspectRatio="xMidYMid meet" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 3181.172 2100" style="enable-background:new 0 0 3181.172 2100;" xml:space="preserve">
 <title>Business team assembling colorful puzzle pieces in collaboration scene</title>
 <desc>Illustration of business professionals collaborating to fit puzzle pieces together. Represents teamwork and problem-solving. Ideal for corporate and business contexts.</desc>
