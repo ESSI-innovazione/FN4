@@ -1898,7 +1898,7 @@
         }
         document.getElementById('vd-video').hidden = !realVideo;
         document.getElementById('vplayer').hidden = realVideo;
-        document.getElementById('vd-pill').innerHTML = '<span class="dot"></span> ' + (realVideo ? '6:44 min · video reale' : '12:18 min · demo');
+        document.getElementById('vd-pill').innerHTML = '<span class="dot"></span> ' + (realVideo ? '6:51 min · video reale' : '12:18 min · demo');
         renderChapters(realVideo);
         document.getElementById('vd-setup').hidden = true;
         document.getElementById('vd-result').hidden = false;
@@ -1910,9 +1910,9 @@
 
   // Capitoli: reali (video Excel) o dimostrativi (player simulato). [secondi, etichetta, durata]
   const chapterSets = {
-    real: [[0, 'Introduzione al corso', '0:36'], [36, 'Modulo 1 · Fogli di calcolo avanzati', '1:31'],
-      [128, 'Modulo 2 · Analisi dati e tabelle pivot', '1:23'], [212, 'Modulo 3 · Automazione con macro', '1:18'],
-      [290, 'Modulo 4 · Reportistica aziendale', '1:18'], [369, 'Riepilogo e quiz finale', '0:35']],
+    real: [[0, 'Introduzione al corso', '0:39'], [39, 'Modulo 1 · Fogli di calcolo avanzati', '1:31'],
+      [131, 'Modulo 2 · Analisi dati e tabelle pivot', '1:23'], [215, 'Modulo 3 · Automazione con macro', '1:18'],
+      [293, 'Modulo 4 · Reportistica aziendale', '1:18'], [372, 'Riepilogo e quiz finale', '0:40']],
     demo: [[0, 'Introduzione al corso', '1:12'], [72, 'Modulo 1 · Fogli di calcolo avanzati', '2:53'],
       [245, 'Modulo 2 · Analisi dati e tabelle pivot', '2:41'], [406, 'Modulo 3 · Automazione con macro', '2:37'],
       [563, 'Modulo 4 · Reportistica aziendale', '2:12'], [695, 'Quiz finale del corso', '0:43']]
