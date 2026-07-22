@@ -1319,6 +1319,13 @@
                   <option value="NotebookLM">NotebookLM — slide dai documenti caricati</option>
                 </select>
               </div>
+              <div class="field"><label>Tema grafico</label>
+                <select class="inp" id="ai-theme" onchange="onThemeChange()">
+                  <option value="light">Basic Light — chiaro professionale</option>
+                  <option value="timevision">Tema TIMEVISION — brand aziendale</option>
+                  <option value="wine">Wine — scuro merlot</option>
+                </select>
+              </div>
               <button class="btn primary" style="width:100%" id="ai-go" onclick="generateAI()">✦ Genera le slide</button>
               <div class="muted" style="font-size:11.5px;margin-top:10px;line-height:1.5">Simulazione dimostrativa: nella versione finale il contenuto verrà inviato all'API del motore scelto e le slide salvate automaticamente nella FAD del corso.</div>
             </div>
@@ -1706,11 +1713,28 @@
   // ---- Creazione contenuti AI (sottosezione Progettazione — demo funzionalità futura) ----
   const corsoNames = { excel: "Excel avanzato per l'ufficio", tinteggiatura: 'Tecniche di tinteggiatura pareti',
     logistica: 'Gestione magazzino e logistica', digital: 'Digital marketing per PMI' };
-  // Deck reali generati con l'API Gamma dal prompt dell'amministratore (per i corsi senza deck si mostra il mock)
-  const gammaDecks = { excel: { view: 'https://gamma.app/docs/121m80vb4z1mwum', embed: 'https://gamma.app/embed/121m80vb4z1mwum' } };
+  // Deck reali generati con l'API Gamma dal prompt dell'amministratore, uno per tema grafico
+  // (per i corsi senza deck si mostra il mock)
+  const gammaDecks = { excel: {
+    light: { view: 'https://gamma.app/docs/121m80vb4z1mwum', embed: 'https://gamma.app/embed/121m80vb4z1mwum' },
+    timevision: { view: 'https://gamma.app/docs/vtbt0go9situvs7', embed: 'https://gamma.app/embed/vtbt0go9situvs7' },
+    wine: { view: 'https://gamma.app/docs/d6t37vi7nhh7b5o', embed: 'https://gamma.app/embed/d6t37vi7nhh7b5o' }
+  } };
+  function currentDeck() {
+    const c = gammaDecks[document.getElementById('ai-corso').value];
+    return c ? c[document.getElementById('ai-theme').value] : null;
+  }
   function openGamma() {
-    const d = gammaDecks[document.getElementById('ai-corso').value];
+    const d = currentDeck();
     if (d) window.open(d.view, '_blank'); else toast('Presentazione aperta in Gamma (demo)');
+  }
+  function onThemeChange() {
+    const d = currentDeck();
+    if (d && !document.getElementById('ai-result').hidden) {
+      const frame = document.getElementById('gamma-frame');
+      frame.src = d.embed; frame.dataset.url = d.embed;
+      toast('Tema applicato: slide rigenerate con il nuovo stile');
+    }
   }
 
   function finishRow(id) {
@@ -1808,7 +1832,7 @@
         document.getElementById('deck-title').textContent = 'Slide generate — ' + corsoNames[key];
         const embed = document.getElementById('gamma-embed');
         const deckEl = document.getElementById('ai-deck');
-        const real = gammaDecks[key];
+        const real = currentDeck();
         if (real) {
           const frame = document.getElementById('gamma-frame');
           if (frame.dataset.url !== real.embed) { frame.src = real.embed; frame.dataset.url = real.embed; }
