@@ -426,6 +426,30 @@
   .ai-slide.cover { background: linear-gradient(155deg, var(--merlot), var(--merlot-2)); border-color: transparent; color: #fff; }
   .ai-slide.cover .sn { color: var(--cream); } .ai-slide.cover .ln { background: rgba(255,255,255,.28); }
   @keyframes aiSlideIn { to { opacity: 1; transform: none; } }
+  .vplayer { position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: var(--r-md); overflow: hidden;
+    background: #14090a; border: 1px solid var(--line); box-shadow: var(--shadow-sm); }
+  .vplayer .vp-poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .88;
+    transition: opacity .35s, transform .5s; }
+  .vplayer.playing .vp-poster { opacity: .5; transform: scale(1.05); }
+  .vp-grad { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 55%, rgba(0,0,0,.74)); }
+  .vp-badge { position: absolute; top: 12px; left: 12px; font-size: 10.5px; font-weight: 800; letter-spacing: .05em;
+    text-transform: uppercase; color: #fff; background: rgba(0,0,0,.45); backdrop-filter: blur(4px);
+    padding: 4px 10px; border-radius: var(--r-pill); }
+  .vp-play { position: absolute; inset: 0; margin: auto; width: 62px; height: 62px; border-radius: 50%; border: none;
+    background: rgba(255,255,255,.94); color: var(--merlot-2); font-size: 20px; display: grid; place-items: center;
+    cursor: pointer; box-shadow: var(--shadow-lg); transition: transform .15s; }
+  .vp-play:hover { transform: scale(1.09); }
+  .vp-ui { position: absolute; left: 14px; right: 14px; bottom: 12px; display: flex; align-items: center; gap: 10px; color: #fff; }
+  .vp-ui .bar { flex: 1; height: 5px; border-radius: 3px; background: rgba(255,255,255,.26); overflow: hidden; }
+  .vp-ui .bar i { display: block; height: 100%; width: 0; background: var(--cream); border-radius: 3px; }
+  .vp-ui .tm { font-family: var(--mono); font-size: 11px; }
+  .chap { display: flex; align-items: center; gap: 11px; padding: 9px 2px; font-size: 13px; font-weight: 600;
+    border-bottom: 1px dashed var(--line); }
+  .chap:last-child { border-bottom: none; }
+  .chap .cn { font-family: var(--mono); font-size: 11px; color: var(--sky-2); background: var(--sky-pale);
+    padding: 2px 7px; border-radius: 6px; flex: none; }
+  .chap .tt { flex: 1; min-width: 0; }
+  .chap .du { font-family: var(--mono); font-size: 11px; color: var(--text-3); }
 
   .countdown { display: flex; gap: 10px; }
   .cd-unit { background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-md); padding: 10px 15px; text-align: center; min-width: 62px; }
@@ -1196,9 +1220,11 @@
         </div>
 
         <div class="wiz">
-          <div class="wz cur" id="wz1a"><span class="n">1</span> Contenuto didattico</div>
+          <div class="wz cur"><span class="n">1</span> Contenuto didattico</div>
           <span class="sep">→</span>
-          <div class="wz" id="wz2a"><span class="n">2</span> Slide del corso</div>
+          <div class="wz"><span class="n">2</span> Slide del corso</div>
+          <span class="sep">→</span>
+          <div class="wz"><span class="n">3</span> Video del corso</div>
         </div>
 
         <div class="grid g-1-2">
@@ -1264,6 +1290,8 @@
           <button class="wz done" data-view="ai-contenuti" style="cursor:pointer"><span class="n">✓</span> Contenuto didattico</button>
           <span class="sep">→</span>
           <div class="wz cur"><span class="n">2</span> Slide del corso</div>
+          <span class="sep">→</span>
+          <div class="wz"><span class="n">3</span> Video del corso</div>
         </div>
 
         <div class="grid g-1-2">
@@ -1301,10 +1329,98 @@
                 </div>
                 <div class="ai-deck" id="ai-deck"></div>
                 <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;align-items:center">
+                  <button class="btn primary" data-view="ai-video">Continua → Passo 3 · Video</button>
                   <button class="btn accent" id="open-gamma" onclick="openGamma()">Apri in Gamma</button>
                   <button class="btn" onclick="toast('Slide esportate in PPTX (demo)')">Esporta PPTX</button>
-                  <button class="btn" onclick="toast('Slide pubblicate nella FAD del corso (demo)')">Pubblica nella FAD</button>
                   <span class="muted" style="font-size:12px;margin-left:auto">≈ 2 minuti vs. 2 giorni manuali</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== CONTENUTI AI · PASSO 3: VIDEO ========== -->
+      <section class="view" id="view-ai-video">
+        <div class="page-head">
+          <div class="eyebrow-pg">
+            <div class="icon-badge merlot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5l5 2.5-5 2.5v-5z" fill="currentColor" stroke="none"/></svg></div>
+            <div class="tx">
+              <div class="ey">Progettazione · Creazione contenuti AI <span class="pill warn" style="margin-left:8px;vertical-align:middle"><span class="dot"></span> Funzionalità futura · demo</span></div>
+              <h1>Passo 3 · Genera il video del corso</h1>
+              <p>Le slide diventano una <b>videolezione narrata</b>: l'AI scrive lo script di ogni slide, la voce sintetica lo legge in italiano e il video viene montato e pubblicato nella FAD, pronto per i dipendenti.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="wiz">
+          <button class="wz done" data-view="ai-contenuti" style="cursor:pointer"><span class="n">✓</span> Contenuto didattico</button>
+          <span class="sep">→</span>
+          <button class="wz done" data-view="ai-slide" style="cursor:pointer"><span class="n">✓</span> Slide del corso</button>
+          <span class="sep">→</span>
+          <div class="wz cur"><span class="n">3</span> Video del corso</div>
+        </div>
+
+        <div class="grid g-1-2">
+          <div>
+            <div class="card card-pad">
+              <div style="font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:10px">Sorgente — slide del Passo 2</div>
+              <div class="doc-row" style="padding-left:0;padding-right:0"><div class="doc-ic" style="background:var(--sky)">24</div><div><div class="nm" id="vd-source">Excel avanzato per l'ufficio</div><div class="mt">24 slide · generate con Gamma</div></div><div class="act"><span class="pill good"><span class="dot"></span> Pronte</span></div></div>
+              <div class="divider"></div>
+              <div class="field"><label>Voce narrante</label>
+                <select class="inp" id="ai-voice">
+                  <option value="Alessia">Alessia — voce femminile, italiano</option>
+                  <option value="Marco">Marco — voce maschile, italiano</option>
+                </select>
+              </div>
+              <div class="field"><label>Modalità video</label>
+                <select class="inp" id="ai-vmode">
+                  <option>Voce narrante sulle slide</option>
+                  <option>Avatar virtuale in sovraimpressione</option>
+                </select>
+              </div>
+              <button class="btn primary" style="width:100%" id="ai-video-go" onclick="generateVideo()">✦ Genera il video del corso</button>
+              <div class="muted" style="font-size:11.5px;margin-top:10px;line-height:1.5">Simulazione dimostrativa: nella versione finale lo script sarà scritto dall'AI, letto da una voce sintetica (TTS) e montato automaticamente in un MP4 tracciato nella FAD.</div>
+            </div>
+          </div>
+
+          <div>
+            <div class="card">
+              <div class="card-head"><h3>Pipeline di generazione</h3><span class="pill mute" id="vd-status"><span class="dot"></span> In attesa dell'avvio</span></div>
+              <div class="card-pad assembling" id="vd-steps">
+                <div class="asm-row" id="vd-s1"><div class="asm-check">1</div> Redazione script per ogni slide <span class="src">AI</span></div>
+                <div class="asm-row" id="vd-s2"><div class="asm-check">2</div> Sintesi vocale in italiano <span class="src">TTS</span></div>
+                <div class="asm-row" id="vd-s3"><div class="asm-check">3</div> Montaggio video (slide + audio) <span class="src">ffmpeg</span></div>
+                <div class="asm-row" id="vd-s4"><div class="asm-check">4</div> Pubblicazione nella FAD del corso <span class="src">FAD Manager</span></div>
+              </div>
+            </div>
+
+            <div class="card section-gap" id="vd-result" hidden>
+              <div class="card-head"><h3 id="vd-title">Video del corso</h3><span class="pill good"><span class="dot"></span> 12:18 min · 1080p</span></div>
+              <div class="card-pad">
+                <div class="vplayer" id="vplayer">
+                  <img class="vp-poster" src="https://cdn.gamma.app/kowrmrub467uda9/generated-images/Lu4p-aIIhsV-wKqmRrD2i.png" alt="Anteprima videolezione — Excel avanzato per l'ufficio">
+                  <div class="vp-grad"></div>
+                  <span class="vp-badge">Videolezione · anteprima demo</span>
+                  <button class="vp-play" id="vp-play" onclick="toggleVideo()" title="Riproduci anteprima">▶</button>
+                  <div class="vp-ui">
+                    <div class="bar"><i id="vp-fill"></i></div>
+                    <span class="tm" id="vp-time">0:00 / 12:18</span>
+                  </div>
+                </div>
+                <div class="section-gap" style="margin-top:14px">
+                  <div style="font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:4px">Capitoli</div>
+                  <div class="chap"><span class="cn">0:00</span><span class="tt">Introduzione al corso</span><span class="du">1:12</span></div>
+                  <div class="chap"><span class="cn">1:12</span><span class="tt">Modulo 1 · Fogli di calcolo avanzati</span><span class="du">2:53</span></div>
+                  <div class="chap"><span class="cn">4:05</span><span class="tt">Modulo 2 · Analisi dati e tabelle pivot</span><span class="du">2:41</span></div>
+                  <div class="chap"><span class="cn">6:46</span><span class="tt">Modulo 3 · Automazione con macro</span><span class="du">2:37</span></div>
+                  <div class="chap"><span class="cn">9:23</span><span class="tt">Modulo 4 · Reportistica aziendale</span><span class="du">2:12</span></div>
+                  <div class="chap"><span class="cn">11:35</span><span class="tt">Quiz finale del corso</span><span class="du">0:43</span></div>
+                </div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;align-items:center">
+                  <button class="btn accent" onclick="toast('Video MP4 scaricato (demo)')">Scarica MP4</button>
+                  <button class="btn" onclick="toast('Videolezione pubblicata nella FAD con tracciamento (demo)')">Pubblica nella FAD</button>
+                  <span class="muted" style="font-size:12px;margin-left:auto">≈ 5 minuti vs. 1 giorno di registrazione</span>
                 </div>
               </div>
             </div>
@@ -1426,10 +1542,12 @@
   // ---- Navigation (shared by sidebar nav + dashboard section cards) ----
   const titles = { dashboard:'Home', consulente:'Portale Consulente', commerciale:'Proposta Commerciale',
     progettazione:'Progettazione', governo:'Upload Governo', monitoraggio:'Monitoraggio',
-    'ai-contenuti':'Progettazione · Contenuti AI', 'ai-slide':'Progettazione · Contenuti AI' };
+    'ai-contenuti':'Progettazione · Contenuti AI', 'ai-slide':'Progettazione · Contenuti AI',
+    'ai-video':'Progettazione · Contenuti AI' };
+  const aiViews = ['ai-contenuti', 'ai-slide', 'ai-video'];
   function navigate(v) {
-    const nav = v === 'ai-slide' ? 'ai-contenuti' : v;
-    const step = (v === 'ai-contenuti' || v === 'ai-slide') ? 'progettazione' : v;
+    const nav = aiViews.includes(v) ? 'ai-contenuti' : v;
+    const step = aiViews.includes(v) ? 'progettazione' : v;
     document.querySelectorAll('.nav-item[data-view]').forEach(x => x.classList.toggle('active', x.dataset.view === nav));
     document.querySelectorAll('.view').forEach(x => x.classList.remove('active'));
     document.getElementById('view-' + v).classList.add('active');
@@ -1667,5 +1785,49 @@
         toast('24 slide generate con ' + engine + ' — demo');
         btn.disabled = false;
       });
+  }
+
+  // Passo 3 — video del corso
+  function generateVideo() {
+    const btn = document.getElementById('ai-video-go');
+    if (btn.disabled) return;
+    btn.disabled = true;
+    const voice = document.getElementById('ai-voice').value;
+    const status = document.getElementById('vd-status');
+    document.getElementById('vd-result').hidden = true;
+    runPipeline(['vd-s1', 'vd-s2', 'vd-s3', 'vd-s4'],
+      ['Redazione script per ogni slide…', 'Sintesi vocale — voce ' + voice + '…', 'Montaggio video…', 'Pubblicazione nella FAD…'], status, () => {
+        status.className = 'pill good';
+        status.innerHTML = '<span class="dot"></span> Completato';
+        const key = document.getElementById('ai-corso').value;
+        document.getElementById('vd-title').textContent = 'Video del corso — ' + corsoNames[key];
+        document.getElementById('vd-source').textContent = corsoNames[key];
+        const result = document.getElementById('vd-result');
+        result.hidden = false;
+        result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        toast('Videolezione generata con voce ' + voice + ' — demo');
+        btn.disabled = false;
+      });
+  }
+
+  // Player demo (riproduzione simulata, avanzamento accelerato)
+  const VP_DUR = 738; // 12:18
+  let vpT = 0, vpTimer = null;
+  const vpFmt = s => Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+  function toggleVideo() {
+    const pl = document.getElementById('vplayer');
+    const play = document.getElementById('vp-play');
+    if (vpTimer) {
+      clearInterval(vpTimer); vpTimer = null;
+      pl.classList.remove('playing'); play.textContent = '▶';
+      return;
+    }
+    pl.classList.add('playing'); play.textContent = '❚❚';
+    vpTimer = setInterval(() => {
+      vpT += 2;
+      if (vpT >= VP_DUR) { vpT = 0; toggleVideo(); }
+      document.getElementById('vp-fill').style.width = (vpT / VP_DUR * 100) + '%';
+      document.getElementById('vp-time').textContent = vpFmt(vpT) + ' / ' + vpFmt(VP_DUR);
+    }, 250);
   }
 </script>
