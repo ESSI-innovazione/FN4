@@ -980,7 +980,7 @@
 
         <div class="grid g-1-2">
           <div>
-            <div class="card card-pad">
+            <div class="card card-pad" style="background:#F0EBD8">
               <div class="co" style="gap:13px"><span class="av" style="width:44px;height:44px;border-radius:13px;background:var(--sky);font-size:15px">AL</span>
                 <div><div style="font-weight:700;font-size:15px">Alfa Logistica S.r.l.</div><div class="muted" style="font-size:12.5px">P.IVA 0289 4410 727 · Napoli</div></div>
               </div>
@@ -999,7 +999,7 @@
           </div>
 
           <div>
-            <div class="card">
+            <div class="card" style="background:#F0EBD8">
               <div class="card-head"><h3>Checklist documenti</h3><span class="pill warn"><span class="dot"></span> 6 / 8 completati</span></div>
               <div class="doc-row"><div class="doc-ic" style="background:var(--good)">PDF</div><div><div class="nm">Visura camerale</div><div class="mt">Caricato · 2,1 MB</div></div><div class="act"><span class="pill good"><span class="dot"></span> Verificato</span></div></div>
               <div class="doc-row"><div class="doc-ic" style="background:var(--good)">PDF</div><div><div class="nm">Documento identità legale rappresentante</div><div class="mt">Caricato · 0,8 MB</div></div><div class="act"><span class="pill good"><span class="dot"></span> Verificato</span></div></div>
@@ -1424,4 +1424,60 @@
     document.getElementById('page-pill').innerHTML = '<span class="dot"></span> ' + c.pages + ' pagine';
   }
   loadCourse();
+
+  // ---- Creazione contenuti AI (Progettazione — demo funzionalità futura) ----
+  const aiSlides = [
+    { cover: true, n: '01 · Copertina', t: 'Excel avanzato per l’ufficio' },
+    { n: '02 · Modulo 1', t: 'Formule avanzate' },
+    { n: '07 · Modulo 2', t: 'Tabelle pivot' },
+    { n: '12 · Modulo 3', t: 'Macro e automazione' },
+    { n: '17 · Modulo 4', t: 'Reportistica aziendale' },
+    { n: '22 · Verifica', t: 'Quiz finale del corso' }
+  ];
+  function generateAI() {
+    const btn = document.getElementById('ai-go');
+    if (btn.disabled) return;
+    btn.disabled = true;
+    const engine = document.getElementById('ai-engine').value;
+    document.getElementById('ai-s3-src').textContent = engine;
+    const status = document.getElementById('ai-status');
+    const steps = ['ai-s1', 'ai-s2', 'ai-s3', 'ai-s4'];
+    const labels = ['Analisi del prompt…', 'Generazione contenuti…', 'Creazione slide con ' + engine + '…', 'Pubblicazione nella FAD…'];
+    document.getElementById('ai-result').hidden = true;
+    steps.forEach((id, i) => {
+      const r = document.getElementById(id);
+      r.classList.remove('on', 'run');
+      r.querySelector('.asm-check').textContent = i + 1;
+    });
+    const STEP_MS = 1300;
+    steps.forEach((id, i) => {
+      setTimeout(() => {
+        if (i > 0) {
+          const prev = document.getElementById(steps[i - 1]);
+          prev.classList.remove('run'); prev.classList.add('on');
+          prev.querySelector('.asm-check').textContent = '✓';
+        }
+        document.getElementById(id).classList.add('run');
+        status.className = 'pill info';
+        status.innerHTML = '<span class="dot"></span> ' + labels[i];
+      }, i * STEP_MS);
+    });
+    setTimeout(() => {
+      const last = document.getElementById('ai-s4');
+      last.classList.remove('run'); last.classList.add('on');
+      last.querySelector('.asm-check').textContent = '✓';
+      status.className = 'pill good';
+      status.innerHTML = '<span class="dot"></span> Completato';
+      const deck = document.getElementById('ai-deck');
+      deck.innerHTML = aiSlides.map((s, i) =>
+        '<div class="ai-slide' + (s.cover ? ' cover' : '') + '" style="animation-delay:' + (i * .12) + 's">' +
+        '<span class="sn">' + s.n + '</span><span class="st">' + s.t + '</span>' +
+        '<span class="ln" style="width:88%;margin-top:auto"></span><span class="ln" style="width:64%"></span></div>').join('');
+      const result = document.getElementById('ai-result');
+      result.hidden = false;
+      result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      toast('24 slide generate con ' + engine + ' — demo');
+      btn.disabled = false;
+    }, steps.length * STEP_MS + 500);
+  }
 </script>
