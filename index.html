@@ -398,6 +398,17 @@
   .wiz .sep { color: var(--text-3); font-weight: 800; }
 
   .ai-prompt { min-height: 150px; resize: vertical; font: inherit; font-size: 13px; line-height: 1.55; }
+  .chip-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip { padding: 7px 14px; border: 1px solid var(--line-strong); border-radius: var(--r-pill); background: var(--surface);
+    font-size: 12.5px; font-weight: 700; color: var(--text-2); cursor: pointer; transition: .15s; }
+  .chip:hover { border-color: var(--sky); color: var(--text); }
+  .chip.active { background: var(--sky-pale); border-color: var(--sky); color: var(--sky-2); }
+  .spinner { width: 34px; height: 34px; border-radius: 50%; border: 3px solid var(--sky-pale);
+    border-top-color: var(--sky); animation: spin 1s linear infinite; margin: 0 auto 12px; }
+  @keyframes spin { to { transform: rotate(1turn); } }
+  #img-gallery img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 8px;
+    border: 1px solid var(--line); cursor: pointer; transition: transform .15s; }
+  #img-gallery img:hover { transform: scale(1.05); }
   .ai-empty { border: 1.5px dashed var(--line-strong); border-radius: var(--r-md); padding: 34px 20px;
     text-align: center; color: var(--text-3); font-size: 13px; line-height: 1.6; }
   .ai-empty .big { font-size: 22px; display: block; margin-bottom: 6px; }
@@ -841,6 +852,11 @@
       <button class="nav-item sub" data-view="ai-contenuti">
         <span class="sub-tick" aria-hidden="true"></span>
         <span class="lbl">Contenuti corso · AI</span>
+        <span class="wf-badge amber" title="Funzionalità futura">✦</span>
+      </button>
+      <button class="nav-item sub" data-view="ai-immagini">
+        <span class="sub-tick" aria-hidden="true"></span>
+        <span class="lbl">Immagini AI</span>
         <span class="wf-badge amber" title="Funzionalità futura">✦</span>
       </button>
       <button class="nav-item" data-view="governo">
@@ -1326,6 +1342,23 @@
                   <option value="wine">Wine — scuro merlot</option>
                 </select>
               </div>
+              <div class="field"><label>Stile immagini</label>
+                <div class="chip-row" id="img-style">
+                  <button type="button" class="chip active" data-style="foto" onclick="setImgStyle(this)">Foto</button>
+                  <button type="button" class="chip" data-style="illustrazione" onclick="setImgStyle(this)">Illustrazione</button>
+                  <button type="button" class="chip" data-style="astratto" onclick="setImgStyle(this)">Astratto</button>
+                  <button type="button" class="chip" data-style="lineart" onclick="setImgStyle(this)">Line art</button>
+                </div>
+              </div>
+              <div class="field"><label>Modello immagini AI</label>
+                <select class="inp" id="ai-imgmodel">
+                  <option>Selezione automatica (consigliato)</option>
+                  <option>Flux 2</option>
+                  <option>Imagen 4 Pro</option>
+                  <option>Ideogram v3</option>
+                  <option>GPT Image</option>
+                </select>
+              </div>
               <button class="btn primary" style="width:100%" id="ai-go" onclick="generateAI()">✦ Genera le slide</button>
               <div class="muted" style="font-size:11.5px;margin-top:10px;line-height:1.5">Simulazione dimostrativa: nella versione finale il contenuto verrà inviato all'API del motore scelto e le slide salvate automaticamente nella FAD del corso.</div>
             </div>
@@ -1454,6 +1487,74 @@
         </div>
       </section>
 
+      <!-- ========== IMMAGINI AI ========== -->
+      <section class="view" id="view-ai-immagini">
+        <div class="page-head">
+          <div class="eyebrow-pg">
+            <div class="icon-badge merlot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-4 4-2-2-7 7"/></svg></div>
+            <div class="tx">
+              <div class="ey">Progettazione · Immagini AI <span class="pill warn" style="margin-left:8px;vertical-align:middle"><span class="dot"></span> Funzionalità futura · demo reale</span></div>
+              <h1>Generatore di immagini AI</h1>
+              <p>Come in Gamma: scrivi un prompt, scegli lo stile e il modello — l'AI genera l'immagine da usare nelle slide, nei corsi o nei materiali. <b>Questa demo genera immagini reali.</b></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid g-1-2">
+          <div>
+            <div class="card card-pad">
+              <div class="field"><label>Prompt — descrivi l'immagine</label>
+                <textarea class="inp ai-prompt" id="img-prompt" style="min-height:110px">Un ufficio moderno con un team che analizza grafici Excel su un grande schermo, luce naturale, colori caldi</textarea>
+              </div>
+              <div class="field"><label>Stile</label>
+                <div class="chip-row" id="img-style2">
+                  <button type="button" class="chip active" data-style="foto" onclick="setImgStyle2(this)">Foto</button>
+                  <button type="button" class="chip" data-style="illustrazione" onclick="setImgStyle2(this)">Illustrazione</button>
+                  <button type="button" class="chip" data-style="astratto" onclick="setImgStyle2(this)">Astratto</button>
+                  <button type="button" class="chip" data-style="lineart" onclick="setImgStyle2(this)">Line art</button>
+                </div>
+              </div>
+              <div class="field"><label>Formato</label>
+                <select class="inp" id="img-format">
+                  <option value="1280x720">Panoramica 16:9 — per slide</option>
+                  <option value="896x896">Quadrata 1:1 — per schede</option>
+                  <option value="720x1280">Verticale 9:16 — per social</option>
+                </select>
+              </div>
+              <button class="btn primary" style="width:100%" id="img-go" onclick="generateImage()">✦ Genera immagine</button>
+              <div class="muted" style="font-size:11.5px;margin-top:10px;line-height:1.5">Demo con generazione reale (modello Flux, API gratuita, ~20 secondi). Nella versione finale il motore sarà a scelta: Flux, Imagen, Ideogram — come in Gamma.</div>
+            </div>
+          </div>
+
+          <div>
+            <div class="card">
+              <div class="card-head"><h3>Immagine generata</h3><span class="pill mute" id="img-status"><span class="dot"></span> In attesa del prompt</span></div>
+              <div class="card-pad">
+                <div class="ai-empty" id="img-empty"><span class="big">🖼</span>L'immagine generata apparirà qui.<br>Scrivi un prompt e clicca "Genera immagine".</div>
+                <div id="img-loading" hidden style="text-align:center;padding:44px 20px">
+                  <div class="spinner"></div>
+                  <div style="font-size:13px;font-weight:700">Generazione in corso…</div>
+                  <div class="muted" style="font-size:12px;margin-top:4px">L'AI sta creando l'immagine (~20 secondi)</div>
+                </div>
+                <div id="img-result" hidden>
+                  <img id="img-out" alt="Immagine generata dall'AI" style="width:100%;border-radius:var(--r-md);border:1px solid var(--line);box-shadow:var(--shadow-sm)">
+                  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;align-items:center">
+                    <button class="btn accent" onclick="toast('Immagine inserita nella slide del corso (demo)')">Usa nella slide</button>
+                    <button class="btn" onclick="window.open(document.getElementById('img-out').src,'_blank')">Apri in grande</button>
+                    <button class="btn" id="img-again" onclick="generateImage()">↻ Rigenera</button>
+                  </div>
+                </div>
+                <div id="img-gallery-wrap" hidden>
+                  <div class="divider"></div>
+                  <div style="font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:8px">Generazioni recenti</div>
+                  <div id="img-gallery" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- ========== GOVERNO ========== -->
       <section class="view" id="view-governo">
         <div class="page-head">
@@ -1569,10 +1670,10 @@
   const titles = { dashboard:'Home', consulente:'Portale Consulente', commerciale:'Proposta Commerciale',
     progettazione:'Progettazione', governo:'Upload Governo', monitoraggio:'Monitoraggio',
     'ai-contenuti':'Progettazione · Contenuti AI', 'ai-slide':'Progettazione · Contenuti AI',
-    'ai-video':'Progettazione · Contenuti AI' };
-  const aiViews = ['ai-contenuti', 'ai-slide', 'ai-video'];
+    'ai-video':'Progettazione · Contenuti AI', 'ai-immagini':'Progettazione · Immagini AI' };
+  const aiViews = ['ai-contenuti', 'ai-slide', 'ai-video', 'ai-immagini'];
   function navigate(v) {
-    const nav = aiViews.includes(v) ? 'ai-contenuti' : v;
+    const nav = (v === 'ai-slide' || v === 'ai-video') ? 'ai-contenuti' : v;
     const step = aiViews.includes(v) ? 'progettazione' : v;
     document.querySelectorAll('.nav-item[data-view]').forEach(x => x.classList.toggle('active', x.dataset.view === nav));
     document.querySelectorAll('.view').forEach(x => x.classList.remove('active'));
@@ -1716,11 +1817,22 @@
   const gammaDecks = { excel: {
     light: { view: 'https://gamma.app/docs/121m80vb4z1mwum', embed: 'https://gamma.app/embed/121m80vb4z1mwum' },
     timevision: { view: 'https://gamma.app/docs/vtbt0go9situvs7', embed: 'https://gamma.app/embed/vtbt0go9situvs7' },
-    wine: { view: 'https://gamma.app/docs/d6t37vi7nhh7b5o', embed: 'https://gamma.app/embed/d6t37vi7nhh7b5o' }
+    wine: { view: 'https://gamma.app/docs/d6t37vi7nhh7b5o', embed: 'https://gamma.app/embed/d6t37vi7nhh7b5o' },
+    illustrazione: { view: 'https://gamma.app/docs/w2skiuva23cl4v3', embed: 'https://gamma.app/embed/w2skiuva23cl4v3' }
   } };
+  let imgStyle = 'foto';
+  function setImgStyle(btn) {
+    document.querySelectorAll('#img-style .chip').forEach(c => c.classList.toggle('active', c === btn));
+    imgStyle = btn.dataset.style;
+    onThemeChange();
+  }
   function currentDeck() {
     const c = gammaDecks[document.getElementById('ai-corso').value];
-    return c ? c[document.getElementById('ai-theme').value] : null;
+    if (!c) return null;
+    const theme = document.getElementById('ai-theme').value;
+    // deck reale in stile Illustrazione disponibile per il tema chiaro; altri stili ricadono sul deck del tema
+    if (imgStyle === 'illustrazione' && theme === 'light' && c.illustrazione) return c.illustrazione;
+    return c[theme];
   }
   function openGamma() {
     const d = currentDeck();
@@ -1927,6 +2039,62 @@
     const v = document.getElementById('vd-video');
     v.currentTime = s;
     v.play();
+  }
+
+  // ---- Generatore immagini AI (generazione reale via API Pollinations/Flux) ----
+  const imgStylePrompts = {
+    foto: 'fotografia professionale, alta qualità, luce naturale',
+    illustrazione: 'illustrazione vettoriale moderna, flat design, colori puliti',
+    astratto: 'arte astratta, forme geometriche, gradienti eleganti',
+    lineart: 'line art minimale, disegno a linee sottili, sfondo bianco'
+  };
+  let imgBusy = false;
+  const imgHistory = [];
+  function setImgStyle2(btn) {
+    document.querySelectorAll('#img-style2 .chip').forEach(c => c.classList.toggle('active', c === btn));
+  }
+  function generateImage() {
+    if (imgBusy) return;
+    const prompt = document.getElementById('img-prompt').value.trim();
+    if (!prompt) { toast('Scrivi prima un prompt'); return; }
+    const style = document.querySelector('#img-style2 .chip.active').dataset.style;
+    const fmt = document.getElementById('img-format').value.split('x');
+    const seed = Math.floor(Math.random() * 1000000);
+    const url = 'https://image.pollinations.ai/prompt/' + encodeURIComponent(prompt + ', ' + imgStylePrompts[style]) +
+      '?width=' + fmt[0] + '&height=' + fmt[1] + '&nologo=true&seed=' + seed;
+    imgBusy = true;
+    document.getElementById('img-go').disabled = true;
+    document.getElementById('img-empty').hidden = true;
+    document.getElementById('img-result').hidden = true;
+    document.getElementById('img-loading').hidden = false;
+    const status = document.getElementById('img-status');
+    status.className = 'pill info';
+    status.innerHTML = '<span class="dot"></span> Generazione in corso…';
+    const im = new Image();
+    const done = ok => {
+      imgBusy = false;
+      document.getElementById('img-go').disabled = false;
+      document.getElementById('img-loading').hidden = true;
+      if (!ok) {
+        document.getElementById('img-empty').hidden = false;
+        status.className = 'pill bad';
+        status.innerHTML = '<span class="dot"></span> Errore — riprova';
+        toast('Generazione non riuscita, riprova');
+        return;
+      }
+      document.getElementById('img-out').src = url;
+      document.getElementById('img-result').hidden = false;
+      status.className = 'pill good';
+      status.innerHTML = '<span class="dot"></span> Immagine pronta';
+      imgHistory.unshift(url);
+      document.getElementById('img-gallery-wrap').hidden = false;
+      document.getElementById('img-gallery').innerHTML = imgHistory.slice(0, 8).map(u =>
+        '<img src="' + u + '" alt="Generazione precedente" onclick="document.getElementById(\'img-out\').src=this.src">').join('');
+      toast('Immagine generata con AI');
+    };
+    im.onload = () => done(true);
+    im.onerror = () => done(false);
+    im.src = url;
   }
 
   // Player demo (riproduzione simulata, avanzamento accelerato)
