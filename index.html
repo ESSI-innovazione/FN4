@@ -1419,13 +1419,18 @@
           <div class="res-bar">
             <button class="btn ghost" onclick="showSetup('vd-setup','vd-result')">← Impostazioni</button>
             <h2 id="vd-title">Video del corso</h2>
-            <span class="pill good"><span class="dot"></span> 12:18 min · 1080p</span>
+            <span class="pill good" id="vd-pill"><span class="dot"></span> 12:18 min · 1080p</span>
             <span class="res-actions">
               <button class="btn accent" onclick="toast('Video MP4 scaricato (demo)')">Scarica MP4</button>
               <button class="btn primary" onclick="toast('Videolezione pubblicata nella FAD con tracciamento (demo)')">Pubblica nella FAD</button>
             </span>
           </div>
           <div class="res-stage">
+            <video id="vd-video" controls preload="metadata" hidden
+              poster="https://cdn.gamma.app/kowrmrub467uda9/generated-images/Lu4p-aIIhsV-wKqmRrD2i.png"
+              style="width:100%;border-radius:var(--r-md);border:1px solid var(--line);box-shadow:var(--shadow-sm);background:#14090a;aspect-ratio:16/9">
+              <source src="media/corso-excel-avanzato.mp4" type="video/mp4">
+            </video>
             <div class="vplayer" id="vplayer">
               <img class="vp-poster" src="https://cdn.gamma.app/kowrmrub467uda9/generated-images/Lu4p-aIIhsV-wKqmRrD2i.png" alt="Anteprima videolezione — Excel avanzato per l'ufficio">
               <div class="vp-grad"></div>
@@ -1438,12 +1443,7 @@
             </div>
             <div class="card card-pad section-gap">
               <div style="font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:4px">Capitoli</div>
-              <div class="chap"><span class="cn">0:00</span><span class="tt">Introduzione al corso</span><span class="du">1:12</span></div>
-              <div class="chap"><span class="cn">1:12</span><span class="tt">Modulo 1 · Fogli di calcolo avanzati</span><span class="du">2:53</span></div>
-              <div class="chap"><span class="cn">4:05</span><span class="tt">Modulo 2 · Analisi dati e tabelle pivot</span><span class="du">2:41</span></div>
-              <div class="chap"><span class="cn">6:46</span><span class="tt">Modulo 3 · Automazione con macro</span><span class="du">2:37</span></div>
-              <div class="chap"><span class="cn">9:23</span><span class="tt">Modulo 4 · Reportistica aziendale</span><span class="du">2:12</span></div>
-              <div class="chap"><span class="cn">11:35</span><span class="tt">Quiz finale del corso</span><span class="du">0:43</span></div>
+              <div id="vd-chapters"></div>
             </div>
           </div>
         </div>
@@ -1854,12 +1854,39 @@
         const key = document.getElementById('ai-corso').value;
         document.getElementById('vd-title').textContent = 'Video del corso — ' + corsoNames[key];
         document.getElementById('vd-source').textContent = corsoNames[key];
+        // per il corso Excel esiste un video reale (slide Gamma + voce TTS); per gli altri il player simulato
+        const realVideo = key === 'excel';
+        document.getElementById('vd-video').hidden = !realVideo;
+        document.getElementById('vplayer').hidden = realVideo;
+        document.getElementById('vd-pill').innerHTML = '<span class="dot"></span> ' + (realVideo ? '6:44 min · video reale' : '12:18 min · demo');
+        renderChapters(realVideo);
         document.getElementById('vd-setup').hidden = true;
         document.getElementById('vd-result').hidden = false;
         window.scrollTo({ top: 0, behavior: 'smooth' });
         toast('Videolezione generata con voce ' + voice + ' — demo');
         btn.disabled = false;
       });
+  }
+
+  // Capitoli: reali (video Excel) o dimostrativi (player simulato). [secondi, etichetta, durata]
+  const chapterSets = {
+    real: [[0, 'Introduzione al corso', '0:36'], [36, 'Modulo 1 · Fogli di calcolo avanzati', '1:31'],
+      [128, 'Modulo 2 · Analisi dati e tabelle pivot', '1:23'], [212, 'Modulo 3 · Automazione con macro', '1:18'],
+      [290, 'Modulo 4 · Reportistica aziendale', '1:18'], [369, 'Riepilogo e quiz finale', '0:35']],
+    demo: [[0, 'Introduzione al corso', '1:12'], [72, 'Modulo 1 · Fogli di calcolo avanzati', '2:53'],
+      [245, 'Modulo 2 · Analisi dati e tabelle pivot', '2:41'], [406, 'Modulo 3 · Automazione con macro', '2:37'],
+      [563, 'Modulo 4 · Reportistica aziendale', '2:12'], [695, 'Quiz finale del corso', '0:43']]
+  };
+  function renderChapters(real) {
+    const fmt = s => Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+    document.getElementById('vd-chapters').innerHTML = chapterSets[real ? 'real' : 'demo'].map(c =>
+      '<div class="chap"' + (real ? ' style="cursor:pointer" onclick="seekVideo(' + c[0] + ')" title="Vai al capitolo"' : '') + '>' +
+      '<span class="cn">' + fmt(c[0]) + '</span><span class="tt">' + c[1] + '</span><span class="du">' + c[2] + '</span></div>').join('');
+  }
+  function seekVideo(s) {
+    const v = document.getElementById('vd-video');
+    v.currentTime = s;
+    v.play();
   }
 
   // Player demo (riproduzione simulata, avanzamento accelerato)
