@@ -1246,8 +1246,16 @@
               <div class="field"><label>Prompt dell'amministratore</label>
                 <textarea class="inp ai-prompt" id="ai-prompt">Crea il corso per 12 dipendenti amministrativi: 4 moduli con esempi pratici su dati aziendali reali e un quiz di verifica per ogni modulo. Contenuti in italiano, tono professionale, livello intermedio.</textarea>
               </div>
+              <div class="field"><label>Documenti di supporto <span style="font-weight:600;color:var(--text-3)">(opzionale — aiutano l'AI a creare contenuti e slide migliori)</span></label>
+                <div class="dropzone" style="padding:18px;border-radius:var(--r-md)" onclick="addRefDoc()">
+                  <svg class="big" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:26px;height:26px"><path d="M12 16V4M6 10l6-6 6 6"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+                  <div style="font-weight:700;color:var(--text);font-size:13px">Trascina qui o clicca per aggiungere</div>
+                  <div style="font-size:11.5px;margin-top:3px">PDF, DOCX, XLSX, PPTX — dispense, manuali, materiale interno</div>
+                </div>
+                <div id="ref-docs"></div>
+              </div>
               <button class="btn primary" style="width:100%" id="ai-gen-content" onclick="generateContent()">✦ Genera contenuto didattico</button>
-              <div class="muted" style="font-size:11.5px;margin-top:10px;line-height:1.5">Simulazione dimostrativa: nella versione finale il prompt e i dati del corso (Atlante del Lavoro, ISTAT) verranno inviati all'AI, e il contenuto potrà essere rivisto prima di generare le slide.</div>
+              <div class="muted" style="font-size:11.5px;margin-top:10px;line-height:1.5">Simulazione dimostrativa: nella versione finale il prompt, i dati del corso (Atlante del Lavoro, ISTAT) e i documenti allegati verranno inviati all'AI come fonti, e il contenuto potrà essere rivisto prima di generare le slide.</div>
             </div>
           </div>
 
@@ -1728,6 +1736,28 @@
     setTimeout(() => { finishRow(stepIds[stepIds.length - 1]); onDone(); }, stepIds.length * STEP_MS + 400);
   }
 
+  // Passo 1 — documenti di supporto (demo: campioni predefiniti)
+  const refDocSamples = [
+    ['PDF', 'Dispensa_Excel_interna_2024.pdf', '2,4 MB', 'var(--merlot)'],
+    ['DOC', 'Manuale_procedure_amministrative.docx', '1,1 MB', 'var(--sky)'],
+    ['XLS', 'Esempi_report_vendite.xlsx', '860 KB', 'var(--good)'],
+    ['PPT', 'Slide_corso_precedente.pptx', '5,2 MB', 'var(--cream-deep)']
+  ];
+  const refDocs = [];
+  function addRefDoc() {
+    if (refDocs.length >= refDocSamples.length) { toast('Demo: tutti i documenti di esempio sono stati aggiunti'); return; }
+    refDocs.push(refDocSamples[refDocs.length]);
+    renderRefDocs();
+    toast('Documento aggiunto alle fonti del corso (demo)');
+  }
+  function removeRefDoc(i) { refDocs.splice(i, 1); renderRefDocs(); }
+  function renderRefDocs() {
+    document.getElementById('ref-docs').innerHTML = refDocs.map((d, i) =>
+      '<div class="doc-row" style="padding-left:0;padding-right:0"><div class="doc-ic" style="background:' + d[3] + '">' + d[0] + '</div>' +
+      '<div><div class="nm">' + d[1] + '</div><div class="mt">' + d[2] + ' · fonte per l\'AI</div></div>' +
+      '<div class="act"><button class="btn ghost" style="padding:4px 10px" onclick="removeRefDoc(' + i + ')" title="Rimuovi documento">✕</button></div></div>').join('');
+  }
+
   // Passo 1 — contenuto didattico
   function generateContent() {
     const btn = document.getElementById('ai-gen-content');
@@ -1737,8 +1767,11 @@
     document.getElementById('ct-result').hidden = true;
     document.getElementById('ct-steps').hidden = false;
     const status = document.getElementById('ct-status');
+    const firstStep = refDocs.length
+      ? 'Analisi del prompt e di ' + refDocs.length + (refDocs.length === 1 ? ' documento…' : ' documenti…')
+      : 'Analisi del prompt…';
     runPipeline(['ct-s1', 'ct-s2', 'ct-s3'],
-      ['Analisi del prompt…', 'Struttura dei moduli…', 'Redazione lezioni e quiz…'], status, () => {
+      [firstStep, 'Struttura dei moduli…', 'Redazione lezioni e quiz…'], status, () => {
         status.className = 'pill good';
         status.innerHTML = '<span class="dot"></span> Contenuto pronto';
         const key = document.getElementById('ai-corso').value;
