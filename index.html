@@ -207,12 +207,8 @@
 
   /* ---- Hero (dashboard) ---- */
   .hero { position: relative; overflow: hidden; border-radius: var(--r-lg);
-    background: linear-gradient(135deg, var(--merlot) 0%, var(--merlot-2) 100%);
-    padding: 30px 32px; margin-bottom: 26px; box-shadow: var(--shadow-lg); }
-  .hero .blob { position: absolute; border-radius: 50%; filter: blur(46px); opacity: .55; pointer-events: none; }
-  .hero .blob.b1 { width: 260px; height: 190px; background: var(--sky-pale-2); top: -70px; right: 40px; }
-  .hero .blob.b2 { width: 220px; height: 160px; background: var(--cream); bottom: -80px; right: 220px; opacity: .35; }
-  .hero .blob.b3 { width: 160px; height: 120px; background: var(--sky); top: 40px; right: -30px; opacity: .3; }
+    background: var(--merlot);
+    padding: 30px 32px; margin: 18px 30px 0; box-shadow: var(--shadow-lg); }
   .hero-inner { position: relative; z-index: 1; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
   .hero .eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: #F0CCC0; font-weight: 800; margin-bottom: 9px; }
   .hero h1 { font-size: 27px; font-weight: 800; color: #fff; letter-spacing: -.02em; }
@@ -220,7 +216,7 @@
   .hero .meta .live { width: 6px; height: 6px; border-radius: 50%; background: #6BE3B0; box-shadow: 0 0 0 3px rgba(107,227,176,.25); }
   .hero-stat { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.14); border-radius: var(--r-md);
     padding: 14px 18px; text-align: right; backdrop-filter: blur(6px); }
-  .hero-stat .v { font-size: 24px; font-weight: 800; color: #fff; font-variant-numeric: tabular-nums; }
+  .hero-stat .v { font-size: 38px; font-weight: 800; color: #fff; font-variant-numeric: tabular-nums; line-height: 1.1; }
   .hero-stat .k { font-size: 11.5px; color: #F0CCC0; margin-top: 2px; }
 
   .sec-label { display: flex; align-items: center; gap: 12px; margin: 4px 0 14px; }
@@ -442,6 +438,7 @@
     .content { padding: 18px 16px 40px; }
     .topbar { padding: 12px 16px; }
     .stepper { padding: 14px 16px 0; }
+    .hero { margin: 14px 16px 0; padding: 22px 20px; }
     .menu-toggle { display: grid !important; }
     .support-fab { right: 14px; bottom: 14px; }
     .toast-wrap { bottom: 80px; right: 14px; }
@@ -794,6 +791,20 @@
       <div class="mock-badge"><span class="dot"></span> Mockup · dati fittizi</div>
     </header>
 
+    <div class="hero" id="hero">
+      <div class="hero-inner">
+        <div>
+          <div class="eyebrow">FAD Manager · Piattaforma Unica FNC</div>
+          <h1>Ciao, Anna</h1>
+          <div class="meta"><span class="live"></span> Martedì 21 Luglio 2026 · 6 pratiche in corso</div>
+        </div>
+        <div class="hero-stat">
+          <div class="v tnum">€ 412k</div>
+          <div class="k">Valore pipeline attiva</div>
+        </div>
+      </div>
+    </div>
+
     <div class="stepper" id="stepper">
       <button class="step done" data-step="consulente" data-view="consulente">
         <span class="s-ic">✓</span>
@@ -821,21 +832,6 @@
 
       <!-- ========== DASHBOARD ========== -->
       <section class="view active" id="view-dashboard">
-        <div class="hero">
-          <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
-          <div class="hero-inner">
-            <div>
-              <div class="eyebrow">FAD Manager · Piattaforma Unica FNC</div>
-              <h1>Ciao, Anna</h1>
-              <div class="meta"><span class="live"></span> Martedì 21 Luglio 2026 · 6 pratiche in corso</div>
-            </div>
-            <div class="hero-stat">
-              <div class="v tnum">€ 412k</div>
-              <div class="k">Valore pipeline attiva</div>
-            </div>
-          </div>
-        </div>
-
         <div class="sec-label"><span>Le tue sezioni</span></div>
         <div class="sec-grid">
           <button class="sec-card" data-view="consulente">
@@ -1230,6 +1226,7 @@
     document.getElementById('view-' + v).classList.add('active');
     document.getElementById('crumb-view').textContent = titles[v];
     document.querySelectorAll('.step').forEach(s => s.classList.toggle('current', s.dataset.step === v));
+    document.getElementById('hero').hidden = (v !== 'dashboard');
     document.getElementById('sidebar').classList.remove('open');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
