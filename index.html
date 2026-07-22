@@ -367,6 +367,26 @@
   .asm-row.on .asm-check { background: var(--good); border-color: var(--good); }
   .asm-row .src { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--text-3); }
 
+  .ai-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 34px 0 6px; }
+  .ai-head h2 { font-size: 17px; letter-spacing: -.01em; }
+  .ai-head + p { font-size: 13px; color: var(--text-2); max-width: 720px; line-height: 1.55; margin-bottom: 16px; }
+  .ai-prompt { min-height: 150px; resize: vertical; font: inherit; font-size: 13px; line-height: 1.55; }
+  #ai-steps .asm-check { color: var(--text-3); }
+  #ai-steps .asm-row.on .asm-check { color: #fff; }
+  .asm-row.run { background: var(--sky-pale); }
+  .asm-row.run .asm-check { border-color: var(--sky); color: var(--sky-2); animation: aiPulse 1.1s ease-in-out infinite; }
+  @keyframes aiPulse { 50% { box-shadow: 0 0 0 5px var(--sky-pale-2); } }
+  .ai-deck { display: grid; grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); gap: 12px; }
+  .ai-slide { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px;
+    aspect-ratio: 16 / 10; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 6px;
+    opacity: 0; transform: translateY(10px); animation: aiSlideIn .45s cubic-bezier(.2,.7,.3,1) forwards; }
+  .ai-slide .sn { font-family: var(--mono); font-size: 9.5px; color: var(--text-3); }
+  .ai-slide .st { font-size: 11.5px; font-weight: 800; line-height: 1.25; }
+  .ai-slide .ln { height: 5px; border-radius: 3px; background: var(--line); }
+  .ai-slide.cover { background: linear-gradient(155deg, var(--merlot), var(--merlot-2)); border-color: transparent; color: #fff; }
+  .ai-slide.cover .sn { color: var(--cream); } .ai-slide.cover .ln { background: rgba(255,255,255,.28); }
+  @keyframes aiSlideIn { to { opacity: 1; transform: none; } }
+
   .countdown { display: flex; gap: 10px; }
   .cd-unit { background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-md); padding: 10px 15px; text-align: center; min-width: 62px; }
   .cd-unit .n { font-size: 25px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
@@ -1012,7 +1032,7 @@
         </div>
 
         <div class="grid g-2-1">
-          <div class="card card-pad">
+          <div class="card card-pad" style="background:#F0EBD8">
             <h3 style="font-size:14.5px;margin-bottom:16px">Parametri del progetto</h3>
             <div class="grid g-2" style="gap:0 18px">
               <div class="field"><label>Numero dipendenti coinvolti</label><input class="inp calc" id="c-emp" type="number" value="18"></div>
@@ -1101,6 +1121,56 @@
             <div class="doc-preview section-gap" style="display:flex">
               <div class="dp-page" style="flex:1"><div class="dp-line t"></div><div class="dp-line" style="width:90%"></div><div class="dp-line" style="width:80%"></div><div class="dp-line" style="width:88%"></div><div class="dp-line" style="width:60%"></div><div class="dp-line" style="width:83%"></div></div>
               <div class="dp-page" style="flex:1"><div class="dp-line t" style="width:40%"></div><div class="dp-line" style="width:85%"></div><div class="dp-line" style="width:78%"></div><div class="dp-line" style="width:90%"></div><div class="dp-line" style="width:55%"></div><div class="dp-line" style="width:80%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ---- Sottosezione: creazione contenuti AI (funzionalità futura) ---- -->
+        <div class="ai-head">
+          <h2>Creazione contenuti del corso con AI</h2>
+          <span class="pill warn"><span class="dot"></span> Funzionalità futura · anteprima</span>
+        </div>
+        <p>L'amministratore scrive un prompt: la piattaforma genera prima il <b>contenuto didattico</b> (moduli, lezioni, quiz) e poi le <b>slide del corso</b> tramite Gamma o NotebookLM, pronte per essere pubblicate nella FAD. Qui sotto una simulazione con un esempio reale.</p>
+
+        <div class="grid g-1-2">
+          <div>
+            <div class="card card-pad">
+              <div class="field"><label>Prompt — descrivi il corso da generare</label>
+                <textarea class="inp ai-prompt" id="ai-prompt">Crea il corso "Excel avanzato per l'ufficio" per 12 dipendenti amministrativi: 4 moduli (formule avanzate, tabelle pivot, macro, reportistica), esempi pratici su dati aziendali reali e un quiz di verifica per ogni modulo. Slide in italiano, tono professionale, grafica Time Vision.</textarea>
+              </div>
+              <div class="field"><label>Motore di generazione</label>
+                <select class="inp" id="ai-engine">
+                  <option value="Gamma">Gamma — slide da prompt</option>
+                  <option value="NotebookLM">NotebookLM — slide dai documenti caricati</option>
+                </select>
+              </div>
+              <button class="btn primary" style="width:100%" id="ai-go" onclick="generateAI()">✦ Genera contenuti e slide</button>
+              <div class="muted" style="font-size:11.5px;margin-top:10px;line-height:1.5">Simulazione dimostrativa: nella versione finale il prompt verrà inviato all'API del motore scelto e le slide salvate automaticamente nella FAD del corso.</div>
+            </div>
+          </div>
+
+          <div>
+            <div class="card">
+              <div class="card-head"><h3>Pipeline di generazione</h3><span class="pill mute" id="ai-status"><span class="dot"></span> In attesa del prompt</span></div>
+              <div class="card-pad assembling" id="ai-steps">
+                <div class="asm-row" id="ai-s1"><div class="asm-check">1</div> Analisi del prompt e del corso selezionato <span class="src">AI</span></div>
+                <div class="asm-row" id="ai-s2"><div class="asm-check">2</div> Generazione contenuto didattico (moduli e lezioni) <span class="src">AI</span></div>
+                <div class="asm-row" id="ai-s3"><div class="asm-check">3</div> Creazione slide dal contenuto <span class="src" id="ai-s3-src">Gamma</span></div>
+                <div class="asm-row" id="ai-s4"><div class="asm-check">4</div> Pubblicazione nella FAD del corso <span class="src">FAD Manager</span></div>
+              </div>
+            </div>
+
+            <div class="card section-gap" id="ai-result" hidden>
+              <div class="card-head"><h3>Slide generate — Excel avanzato per l'ufficio</h3><span class="pill good"><span class="dot"></span> 24 slide</span></div>
+              <div class="card-pad">
+                <div class="ai-deck" id="ai-deck"></div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;align-items:center">
+                  <button class="btn accent" onclick="toast('Presentazione aperta in Gamma (demo)')">Apri in Gamma</button>
+                  <button class="btn" onclick="toast('Slide esportate in PPTX (demo)')">Esporta PPTX</button>
+                  <button class="btn" onclick="toast('Slide pubblicate nella FAD del corso (demo)')">Pubblica nella FAD</button>
+                  <span class="muted" style="font-size:12px;margin-left:auto">≈ 2 minuti vs. 2 giorni manuali</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
