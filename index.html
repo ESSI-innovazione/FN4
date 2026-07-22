@@ -862,11 +862,6 @@
         <span class="lbl">Contenuti corso · AI</span>
         <span class="wf-badge amber" title="Funzionalità futura">✦</span>
       </button>
-      <button class="nav-item sub" data-view="ai-immagini">
-        <span class="sub-tick" aria-hidden="true"></span>
-        <span class="lbl">Immagini AI</span>
-        <span class="wf-badge amber" title="Funzionalità futura">✦</span>
-      </button>
       <button class="nav-item" data-view="governo">
         <span class="wf-num">4</span>
         <span class="lbl">Upload Governo</span>
@@ -1253,7 +1248,9 @@
           <span class="sep">→</span>
           <div class="wz"><span class="n">2</span> Slide del corso</div>
           <span class="sep">→</span>
-          <div class="wz"><span class="n">3</span> Video del corso</div>
+          <div class="wz"><span class="n">3</span> Immagini</div>
+          <span class="sep">→</span>
+          <div class="wz"><span class="n">4</span> Video del corso</div>
         </div>
 
         <div class="grid g-1-2">
@@ -1328,7 +1325,9 @@
           <span class="sep">→</span>
           <div class="wz cur"><span class="n">2</span> Slide del corso</div>
           <span class="sep">→</span>
-          <div class="wz"><span class="n">3</span> Video del corso</div>
+          <div class="wz"><span class="n">3</span> Immagini</div>
+          <span class="sep">→</span>
+          <div class="wz"><span class="n">4</span> Video del corso</div>
         </div>
 
         <div class="grid g-1-2" id="sl-setup">
@@ -1393,7 +1392,7 @@
             <span class="res-actions">
               <button class="btn accent" id="open-gamma" onclick="openGamma()">Apri in Gamma</button>
               <button class="btn" onclick="toast('Slide esportate in PPTX (demo)')">Esporta PPTX</button>
-              <button class="btn primary" data-view="ai-video">Continua → Passo 3 · Video</button>
+              <button class="btn primary" data-view="ai-immagini">Continua → Passo 3 · Immagini</button>
             </span>
           </div>
           <div class="res-stage">
@@ -1412,7 +1411,7 @@
             <div class="icon-badge merlot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5l5 2.5-5 2.5v-5z" fill="currentColor" stroke="none"/></svg></div>
             <div class="tx">
               <div class="ey">Progettazione · Creazione contenuti AI <span class="pill warn" style="margin-left:8px;vertical-align:middle"><span class="dot"></span> Funzionalità futura · demo</span></div>
-              <h1>Passo 3 · Genera il video del corso</h1>
+              <h1>Passo 4 · Genera il video del corso</h1>
               <p>Le slide diventano una <b>videolezione narrata</b>: l'AI scrive lo script di ogni slide, la voce sintetica lo legge in italiano e il video viene montato e pubblicato nella FAD, pronto per i dipendenti.</p>
             </div>
           </div>
@@ -1423,7 +1422,9 @@
           <span class="sep">→</span>
           <button class="wz done" data-view="ai-slide" style="cursor:pointer"><span class="n">✓</span> Slide del corso</button>
           <span class="sep">→</span>
-          <div class="wz cur"><span class="n">3</span> Video del corso</div>
+          <button class="wz done" data-view="ai-immagini" style="cursor:pointer"><span class="n">✓</span> Immagini</button>
+          <span class="sep">→</span>
+          <div class="wz cur"><span class="n">4</span> Video del corso</div>
         </div>
 
         <div class="grid g-1-2" id="vd-setup">
@@ -1501,11 +1502,21 @@
           <div class="eyebrow-pg">
             <div class="icon-badge merlot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-4 4-2-2-7 7"/></svg></div>
             <div class="tx">
-              <div class="ey">Progettazione · Immagini AI <span class="pill warn" style="margin-left:8px;vertical-align:middle"><span class="dot"></span> Funzionalità futura · demo reale</span></div>
-              <h1>Generatore di immagini AI</h1>
-              <p>Come in Gamma: scrivi un prompt, scegli lo stile e il modello — l'AI genera l'immagine da usare nelle slide, nei corsi o nei materiali. <b>Questa demo genera immagini reali.</b></p>
+              <div class="ey">Progettazione · Creazione contenuti AI <span class="pill warn" style="margin-left:8px;vertical-align:middle"><span class="dot"></span> Funzionalità futura · demo reale</span></div>
+              <h1>Passo 3 · Immagini del corso</h1>
+              <p>Come in Gamma: scrivi un prompt, scegli lo stile e il modello — l'AI genera immagini da inserire nelle slide e nei materiali del corso. <b>Questa demo genera immagini reali.</b> Passaggio opzionale: puoi saltare direttamente al video.</p>
             </div>
           </div>
+        </div>
+
+        <div class="wiz">
+          <button class="wz done" data-view="ai-contenuti" style="cursor:pointer"><span class="n">✓</span> Contenuto didattico</button>
+          <span class="sep">→</span>
+          <button class="wz done" data-view="ai-slide" style="cursor:pointer"><span class="n">✓</span> Slide del corso</button>
+          <span class="sep">→</span>
+          <div class="wz cur"><span class="n">3</span> Immagini</div>
+          <span class="sep">→</span>
+          <div class="wz"><span class="n">4</span> Video del corso</div>
         </div>
 
         <div class="grid g-1-2">
@@ -1530,6 +1541,7 @@
                 </select>
               </div>
               <button class="btn primary" style="width:100%" id="img-go" onclick="generateImage()">✦ Genera immagine</button>
+              <button class="btn" style="width:100%;margin-top:10px" data-view="ai-video">Continua → Passo 4 · Video del corso</button>
               <div class="muted" style="font-size:11.5px;margin-top:10px;line-height:1.5">Demo con generazione reale (modello Flux, API gratuita, ~20 secondi). Nella versione finale il motore sarà a scelta: Flux, Imagen, Ideogram — come in Gamma.</div>
             </div>
           </div>
@@ -1678,10 +1690,10 @@
   const titles = { dashboard:'Home', consulente:'Portale Consulente', commerciale:'Proposta Commerciale',
     progettazione:'Progettazione', governo:'Upload Governo', monitoraggio:'Monitoraggio',
     'ai-contenuti':'Progettazione · Contenuti AI', 'ai-slide':'Progettazione · Contenuti AI',
-    'ai-video':'Progettazione · Contenuti AI', 'ai-immagini':'Progettazione · Immagini AI' };
-  const aiViews = ['ai-contenuti', 'ai-slide', 'ai-video', 'ai-immagini'];
+    'ai-video':'Progettazione · Contenuti AI', 'ai-immagini':'Progettazione · Contenuti AI' };
+  const aiViews = ['ai-contenuti', 'ai-slide', 'ai-immagini', 'ai-video'];
   function navigate(v) {
-    const nav = (v === 'ai-slide' || v === 'ai-video') ? 'ai-contenuti' : v;
+    const nav = aiViews.includes(v) ? 'ai-contenuti' : v;
     const step = aiViews.includes(v) ? 'progettazione' : v;
     document.querySelectorAll('.nav-item[data-view]').forEach(x => x.classList.toggle('active', x.dataset.view === nav));
     document.querySelectorAll('.view').forEach(x => x.classList.remove('active'));
@@ -1989,7 +2001,7 @@
     wine: { src: 'media/corso-excel-avanzato-wine.mp4', poster: 'https://cdn.gamma.app/kowrmrub467uda9/generated-images/3-EYSiplTJkBmHWiwe7i9.png' }
   } };
 
-  // Passo 3 — video del corso
+  // Passo 4 — video del corso
   function generateVideo() {
     const btn = document.getElementById('ai-video-go');
     if (btn.disabled) return;
