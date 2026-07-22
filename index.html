@@ -413,6 +413,9 @@
   .asm-row.run { background: var(--sky-pale); }
   .asm-row.run .asm-check { border-color: var(--sky); color: var(--sky-2); animation: aiPulse 1.1s ease-in-out infinite; }
   @keyframes aiPulse { 50% { box-shadow: 0 0 0 5px var(--sky-pale-2); } }
+  .gamma-embed { position: relative; width: 100%; aspect-ratio: 16 / 10; border: 1px solid var(--line);
+    border-radius: var(--r-md); overflow: hidden; background: var(--surface-2); box-shadow: var(--shadow-sm); }
+  .gamma-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
   .ai-deck { display: grid; grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); gap: 12px; }
   .ai-slide { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px;
     aspect-ratio: 16 / 10; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 6px;
@@ -1293,9 +1296,12 @@
             <div class="card section-gap" id="ai-result" hidden>
               <div class="card-head"><h3 id="deck-title">Slide generate</h3><span class="pill good"><span class="dot"></span> 24 slide</span></div>
               <div class="card-pad">
+                <div class="gamma-embed" id="gamma-embed" hidden>
+                  <iframe id="gamma-frame" title="Slide generate con Gamma" allow="fullscreen" loading="lazy"></iframe>
+                </div>
                 <div class="ai-deck" id="ai-deck"></div>
                 <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;align-items:center">
-                  <button class="btn accent" onclick="toast('Presentazione aperta in Gamma (demo)')">Apri in Gamma</button>
+                  <button class="btn accent" id="open-gamma" onclick="openGamma()">Apri in Gamma</button>
                   <button class="btn" onclick="toast('Slide esportate in PPTX (demo)')">Esporta PPTX</button>
                   <button class="btn" onclick="toast('Slide pubblicate nella FAD del corso (demo)')">Pubblica nella FAD</button>
                   <span class="muted" style="font-size:12px;margin-left:auto">≈ 2 minuti vs. 2 giorni manuali</span>
@@ -1561,6 +1567,12 @@
   // ---- Creazione contenuti AI (sottosezione Progettazione — demo funzionalità futura) ----
   const corsoNames = { excel: "Excel avanzato per l'ufficio", tinteggiatura: 'Tecniche di tinteggiatura pareti',
     logistica: 'Gestione magazzino e logistica', digital: 'Digital marketing per PMI' };
+  // Deck reali generati con l'API Gamma dal prompt dell'amministratore (per i corsi senza deck si mostra il mock)
+  const gammaDecks = { excel: { view: 'https://gamma.app/docs/121m80vb4z1mwum', embed: 'https://gamma.app/embed/121m80vb4z1mwum' } };
+  function openGamma() {
+    const d = gammaDecks[document.getElementById('ai-corso').value];
+    if (d) window.open(d.view, '_blank'); else toast('Presentazione aperta in Gamma (demo)');
+  }
 
   function finishRow(id) {
     const r = document.getElementById(id);
@@ -1630,13 +1642,25 @@
         status.innerHTML = '<span class="dot"></span> Completato';
         const key = document.getElementById('ai-corso').value;
         document.getElementById('deck-title').textContent = 'Slide generate — ' + corsoNames[key];
-        const slides = [{ cover: true, n: '01 · Copertina', t: corsoNames[key] }]
-          .concat(courses[key].comps.map((m, i) => ({ n: String(i * 5 + 2).padStart(2, '0') + ' · Modulo ' + (i + 1), t: m[0] })))
-          .concat([{ n: '22 · Verifica', t: 'Quiz finale del corso' }]);
-        document.getElementById('ai-deck').innerHTML = slides.map((s, i) =>
-          '<div class="ai-slide' + (s.cover ? ' cover' : '') + '" style="animation-delay:' + (i * .12) + 's">' +
-          '<span class="sn">' + s.n + '</span><span class="st">' + s.t + '</span>' +
-          '<span class="ln" style="width:88%;margin-top:auto"></span><span class="ln" style="width:64%"></span></div>').join('');
+        const embed = document.getElementById('gamma-embed');
+        const deckEl = document.getElementById('ai-deck');
+        const real = gammaDecks[key];
+        if (real) {
+          const frame = document.getElementById('gamma-frame');
+          if (frame.dataset.url !== real.embed) { frame.src = real.embed; frame.dataset.url = real.embed; }
+          embed.hidden = false;
+          deckEl.hidden = true;
+        } else {
+          embed.hidden = true;
+          deckEl.hidden = false;
+          const slides = [{ cover: true, n: '01 · Copertina', t: corsoNames[key] }]
+            .concat(courses[key].comps.map((m, i) => ({ n: String(i * 5 + 2).padStart(2, '0') + ' · Modulo ' + (i + 1), t: m[0] })))
+            .concat([{ n: '22 · Verifica', t: 'Quiz finale del corso' }]);
+          deckEl.innerHTML = slides.map((s, i) =>
+            '<div class="ai-slide' + (s.cover ? ' cover' : '') + '" style="animation-delay:' + (i * .12) + 's">' +
+            '<span class="sn">' + s.n + '</span><span class="st">' + s.t + '</span>' +
+            '<span class="ln" style="width:88%;margin-top:auto"></span><span class="ln" style="width:64%"></span></div>').join('');
+        }
         const result = document.getElementById('ai-result');
         result.hidden = false;
         result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
