@@ -392,8 +392,17 @@
   .mail-draft textarea { display: block; width: 100%; border: 0; background: transparent; font: inherit; font-size: 12px;
     color: var(--text); padding: 10px 12px; min-height: 168px; resize: vertical; line-height: 1.55; }
   .mail-draft textarea:focus { outline: none; background: var(--sky-pale); }
-  .mail-actions { display: flex; gap: 8px; padding: 10px 12px; border-top: 1px solid var(--line); }
+  .mail-actions { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 12px; border-top: 1px solid var(--line); }
   .mail-preview { max-height: 340px; overflow: auto; background: #FFFAE0; }
+  #az-tbody tr { cursor: pointer; }
+  #az-tbody tr:hover td { background: var(--sky-pale); }
+  .az-mini { width: 64px; height: 5px; border-radius: 99px; background: var(--line); overflow: hidden; display: inline-block; vertical-align: middle; margin-right: 8px; }
+  .az-mini i { display: block; height: 100%; background: var(--sky); border-radius: 99px; }
+  .az-pagination { display: flex; align-items: center; gap: 6px; padding: 12px 22px; border-top: 1px solid var(--line); font-size: 12px; color: var(--text-3); font-weight: 600; flex-wrap: wrap; }
+  .az-pagination .pg { margin-left: auto; display: flex; gap: 5px; }
+  .az-pagination button { border: 1px solid var(--line-strong); background: var(--surface); border-radius: 8px; padding: 5px 11px; font: inherit; font-size: 12px; font-weight: 700; color: var(--text-2); cursor: pointer; }
+  .az-pagination button.on { background: linear-gradient(155deg, var(--merlot), var(--merlot-2)); color: #fff; border-color: transparent; }
+  .az-pagination button:disabled { opacity: .35; cursor: default; }
   .mail-hint { font-size: 10.5px; color: var(--text-3); padding: 0 12px 10px; line-height: 1.5; }
   .mail-field .seg { padding: 2px; }
   .mail-field .seg button { padding: 4px 11px; font-size: 11px; }
@@ -948,7 +957,7 @@
       <div class="nav-label">Flusso di lavoro</div>
       <button class="nav-item" data-view="consulente">
         <span class="wf-num">1</span>
-        <span class="lbl">Portale Consulente</span>
+        <span class="lbl">Portale Aziende</span>
         <span class="wf-badge red" title="2 documenti mancanti" aria-label="2 documenti mancanti">2</span>
       </button>
       <button class="nav-item" data-view="commerciale">
@@ -1012,11 +1021,6 @@
       <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
       <div class="crumb"><span>FNC 4</span> <span>›</span> <b id="crumb-view">Home</b></div>
       <div class="spacer"></div>
-      <div class="company-pick">
-        <span class="av">AL</span>
-        <span>Azienda: <b>Alfa Logistica S.r.l.</b></span>
-        <span style="color:var(--text-3)">▾</span>
-      </div>
       <div class="mock-badge"><span class="dot"></span> Mockup · dati fittizi</div>
     </header>
 
@@ -1067,7 +1071,7 @@
             <div class="top-row">
               <div class="icon-badge merlot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><path d="M9 13h6M9 17h4"/></svg></div>
             </div>
-            <div class="ttl">Portale Consulente</div>
+            <div class="ttl">Portale Aziende</div>
             <div class="sub">Raccolta documenti e notifiche automatiche di completamento</div>
             <div class="foot"><span class="pill bad"><span class="dot"></span> 2 doc mancanti</span><span class="go">Apri <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
           </button>
@@ -1180,23 +1184,49 @@
             <div class="icon-badge merlot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><path d="M9 13h6M9 17h4"/></svg></div>
             <div class="tx">
               <div class="ey">Fase 1 · Raccolta documentale</div>
-              <h1>Portale Consulente</h1>
+              <h1>Portale Aziende</h1>
               <p>Il consulente accede, vede la sua azienda e carica i documenti. La piattaforma verifica automaticamente cosa manca e invia le notifiche — senza più rincorrere i documenti.</p>
             </div>
           </div>
           <button class="btn" onclick="toast('Invito consulente inviato via email')">Invita consulente</button>
         </div>
 
+        <!-- Panoramica: situazione documentale di tutte le aziende -->
+        <div id="az-panoramica">
+          <div class="card" style="background:#F0EBD8">
+            <div class="card-head"><h3>Panoramica aziende</h3><span class="pill mute" id="az-count"><span class="dot"></span> — aziende</span></div>
+            <div style="padding:12px 22px;border-bottom:1px solid var(--line)">
+              <input class="inp" id="az-search" placeholder="Cerca azienda, consulente o città…" oninput="azPage=1;azRenderTable()">
+            </div>
+            <div style="overflow-x:auto">
+              <table>
+                <thead><tr><th>Azienda</th><th>Fondo</th><th>Documenti</th><th class="r">Mancanti</th><th>Stato</th><th></th></tr></thead>
+                <tbody id="az-tbody"></tbody>
+              </table>
+            </div>
+            <div class="az-pagination" id="az-pagination"></div>
+          </div>
+        </div>
+
+        <!-- Dettaglio azienda selezionata -->
+        <div id="az-dettaglio" style="display:none">
+          <div class="card card-pad" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px">
+            <button class="btn ghost" onclick="azBack()">← Tutte le aziende</button>
+            <span style="font-size:12px;font-weight:700;color:var(--text-2)">Azienda</span>
+            <select class="inp" id="az-select" style="max-width:360px;flex:1;min-width:220px" onchange="azSelect(+this.value)"></select>
+          </div>
+
         <div class="grid g-1-2">
           <div>
             <div class="card card-pad" style="background:#F0EBD8">
-              <div class="co" style="gap:13px"><span class="av" style="width:44px;height:44px;border-radius:13px;background:var(--sky);font-size:15px">AL</span>
-                <div><div style="font-weight:700;font-size:15px">Alfa Logistica S.r.l.</div><div class="muted" style="font-size:12.5px">P.IVA 0289 4410 727 · Napoli</div></div>
+              <div class="co" style="gap:13px"><span class="av" style="width:44px;height:44px;border-radius:13px;background:var(--sky);font-size:15px" id="az-av">AL</span>
+                <div><div style="font-weight:700;font-size:15px" id="az-nome">Alfa Logistica S.r.l.</div><div class="muted" style="font-size:12.5px" id="az-sub">P.IVA 0289 4410 727 · Napoli</div></div>
               </div>
               <div class="divider"></div>
-              <div class="kv"><span class="k">Consulente</span><span class="v">Marco Rossi</span></div>
-              <div class="kv"><span class="k">Dipendenti</span><span class="v tnum">18</span></div>
-              <div class="kv"><span class="k">Codice ATECO</span><span class="v mono">52.29.22</span></div>
+              <div class="kv"><span class="k">Fondo</span><span class="v" id="az-fondo">—</span></div>
+              <div class="kv"><span class="k">Lavoratori in formazione</span><span class="v tnum" id="az-dip">18</span></div>
+              <div class="kv"><span class="k">Ore di formazione</span><span class="v tnum" id="az-ore">—</span></div>
+              <div class="kv"><span class="k">Beneficio FNC</span><span class="v tnum" id="az-beneficio">—</span></div>
               <div class="kv"><span class="k">Completamento</span><span class="v" style="color:var(--cream-deep)" id="doc-pct">75%</span></div>
               <div class="progress section-gap"><i style="width:75%" id="doc-pct-bar"></i></div>
             </div>
@@ -1209,7 +1239,7 @@
                   Bozza sollecito · Gmail
                 </div>
                 <div class="mail-field"><span class="lbl">Da</span><span class="val">innovazione@timevision.it</span></div>
-                <div class="mail-field"><span class="lbl">A</span><span class="val">espedito.delgaudio@timevision.it</span></div>
+                <div class="mail-field"><span class="lbl">A</span><span class="val" id="doc-mail-to">espedito.delgaudio@timevision.it</span></div>
                 <div class="mail-field"><span class="lbl">Oggetto</span><span class="val" id="doc-mail-subj">FNC 4 — Documenti mancanti</span></div>
                 <div class="mail-field" style="align-items:center">
                   <span class="lbl">Corpo</span>
@@ -1221,10 +1251,11 @@
                 <div id="doc-mail-preview" class="mail-preview"></div>
                 <textarea id="doc-mail-body" spellcheck="false" oninput="docMailEdited=true" style="display:none"></textarea>
                 <div class="mail-actions">
-                  <button class="btn" style="flex:1" onclick="docMailGmail()" title="Apre Gmail con la bozza precompilata">Apri in Gmail e invia</button>
+                  <button class="btn" style="flex:1" onclick="docMailGmail()" title="Apre Gmail già indirizzata e copia la versione grafica negli appunti">Apri in Gmail e invia</button>
+                  <button class="btn ghost" onclick="docMailCopy()" title="Copia la versione grafica negli appunti">Copia grafica</button>
                   <button class="btn ghost" onclick="docMailSend()" title="Invio automatico simulato dalla piattaforma">Invio automatico</button>
                 </div>
-                <div class="mail-hint">Aprendo Gmail, la versione grafica viene copiata negli appunti: nel corpo del messaggio premi <b>Ctrl+V</b> per incollarla con i colori della piattaforma, poi Invia.</div>
+                <div class="mail-hint">In Gmail il messaggio arriva già indirizzato con il corpo vuoto: clicca nel corpo e premi <b>Ctrl+V</b> — la versione grafica è già copiata negli appunti — poi Invia. Se cambi finestra e perdi la copia, usa <b>Copia grafica</b>.</div>
               </div>
             </div>
           </div>
@@ -1236,6 +1267,7 @@
             </div>
             <input type="file" id="doc-file" accept=".pdf,.xls,.xlsx,.jpg,.jpeg,.png,.doc,.docx" style="display:none" onchange="docFilesChosen(this.files)">
           </div>
+        </div>
         </div>
       </section>
 
@@ -1260,6 +1292,7 @@
                 <h3 style="font-size:14.5px">Parametri del progetto</h3>
                 <div class="seg" id="fnc-seg">
                   <button class="on" data-mode="xml" onclick="fncSetMode('xml')">Upload UNIEMENS</button>
+                  <button data-mode="archivio" onclick="fncSetMode('archivio')">Archivio FNC3</button>
                   <button data-mode="manual" onclick="fncSetMode('manual')">Inserimento manuale</button>
                 </div>
               </div>
@@ -1272,6 +1305,19 @@
                 <div class="divider"></div>
                 <div class="kv"><span class="k">Monte ore totale formazione</span><span class="v tnum" id="r-hours">— h</span></div>
                 <div class="kv"><span class="k">Costo orario medio applicato</span><span class="v tnum" id="r-cmo">—</span></div>
+              </div>
+              <div id="fnc-mode-archivio" style="display:none">
+                <div class="field"><label>Azienda (archivio FNC3 2023/24)</label>
+                  <select class="inp" id="fnc-az-select" onchange="fncArchSelect(+this.value)"><option value="-1">Seleziona azienda…</option></select>
+                </div>
+                <div id="fnc-arch-info" style="display:none">
+                  <div class="divider"></div>
+                  <div class="kv"><span class="k">P.IVA</span><span class="v mono" id="fnc-arch-piva">—</span></div>
+                  <div class="kv"><span class="k">Fondo</span><span class="v" id="fnc-arch-fondo">—</span></div>
+                  <div class="kv"><span class="k">Lavoratori in formazione</span><span class="v tnum" id="fnc-arch-lav">—</span></div>
+                  <div class="kv"><span class="k">Ore di formazione</span><span class="v tnum" id="fnc-arch-ore">—</span></div>
+                  <div class="muted" style="font-size:11.5px;margin-top:10px">Beneficio e percentuale provengono dal foglio FNC3 2023/24 importato: la percentuale resta modificabile con lo slider.</div>
+                </div>
               </div>
               <div id="fnc-mode-xml">
               <div class="dropzone" id="fnc-dz" onclick="document.getElementById('fnc-file').click()">
@@ -1872,9 +1918,10 @@
 
 <div class="toast-wrap" id="toasts"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
   // ---- Navigation (shared by sidebar nav + dashboard section cards) ----
-  const titles = { dashboard:'Home', consulente:'Portale Consulente', commerciale:'Proposta Commerciale',
+  const titles = { dashboard:'Home', consulente:'Portale Aziende', commerciale:'Proposta Commerciale',
     progettazione:'Progettazione', governo:'Upload Governo', monitoraggio:'Monitoraggio',
     'ai-contenuti':'Progettazione · Contenuti AI', 'ai-slide':'Progettazione · Contenuti AI',
     'ai-video':'Progettazione · Contenuti AI', 'ai-immagini':'Progettazione · Contenuti AI' };
@@ -1962,15 +2009,81 @@
     setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateX(30px)'; el.style.transition = '.3s'; setTimeout(() => el.remove(), 300); }, 2600);
   }
 
-  // ---- Fase 1: checklist documenti (upload/sostituzione per riga + dropzone globale) ----
-  const docChecklist = [
-    { name: 'Visura camerale', ext: 'PDF', status: 'verified', meta: 'Caricato · 2,1 MB' },
-    { name: 'Documento identità legale rappresentante', ext: 'PDF', status: 'verified', meta: 'Caricato · 0,8 MB' },
-    { name: 'Elenco dipendenti + mansioni', ext: 'XLS', status: 'verified', meta: 'Caricato · 0,3 MB' },
-    { name: 'Ultimo bilancio depositato', ext: 'PDF', status: 'checking', meta: 'Caricato 5 min fa · in verifica' },
-    { name: 'Accordo sindacale firmato', ext: null, status: 'missing', meta: 'Non ancora caricato' },
-    { name: 'Piano orario formativo', ext: null, status: 'missing', meta: 'Non ancora caricato' },
+  // ---- Fase 1: Portale Aziende — panoramica di tutte le aziende + checklist per azienda ----
+  const DOC_TYPES = [
+    { name: 'Visura camerale', ext: 'PDF' },
+    { name: 'Documento identità legale rappresentante', ext: 'PDF' },
+    { name: 'Elenco dipendenti + mansioni', ext: 'XLS' },
+    { name: 'Ultimo bilancio depositato', ext: 'PDF' },
+    { name: 'Accordo sindacale firmato', ext: 'PDF' },
+    { name: 'Piano orario formativo', ext: 'PDF' },
   ];
+
+  // Backend Supabase (chiave publishable: pensata per l'uso nel client)
+  const SUPA_URL = 'https://bqxwubmrpsrrfdygyejd.supabase.co';
+  const SUPA_KEY = 'sb_publishable_S7hopa2KjfPzIif45DcZiA_0cRrclg9';
+  const supa = window.supabase ? window.supabase.createClient(SUPA_URL, SUPA_KEY) : null;
+
+  // Dataset demo deterministico: usato solo se il database non è raggiungibile
+  const azDemoData = (() => {
+    let seed = 42;
+    const rnd = () => { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; };
+    const W1 = ['Meccanica', 'Tessile', 'Trasporti', 'Edilizia', 'Agritech', 'Tecno', 'Metalmeccanica', 'Food', 'Digital', 'Logistica', 'Chimica', 'Plastica', 'Elettronica', 'Arredo', 'Vetreria', 'Cartiera', 'Marmi', 'Nautica', 'Ottica', 'Farmaceutica'];
+    const W2 = ['Italia', 'Sud', 'Partenope', 'Vesuvio', 'Campania', 'Group', 'Service', 'Solutions', 'Industrie', 'Esposito', 'Mediterranea', 'Adriatica', 'Tirrena', 'Duemila', 'Prima', 'Futura', 'Verde', 'Centro', 'Pro', 'Hub'];
+    const FORME = ['S.r.l.', 'S.p.A.', 'S.n.c.', 'S.a.s.'];
+    const CITTA = ['Napoli', 'Salerno', 'Caserta', 'Avellino', 'Benevento', 'Roma', 'Milano', 'Torino', 'Bari', 'Bologna'];
+    const CONS = ['Marco Rossi', 'Lucia Ferrara', 'Giulia Bianchi', 'Antonio Esposito', 'Paola Romano', 'Davide Greco', 'Sara Conti', 'Luca De Luca'];
+    const REF = ['Anna Russo', 'Giovanni Costa', 'Maria Rinaldi', 'Piero Gallo', 'Elena Ricci', 'Franco Marino', 'Silvia Longo', 'Carlo Vitale'];
+    const size = () => (Math.round((0.2 + rnd() * 3.6) * 10) / 10).toFixed(1).replace('.', ',');
+    const mkDocs = () => {
+      const r = rnd();
+      const nMissing = r < 0.35 ? 0 : 1 + Math.floor(rnd() * 3);
+      const missingIdx = new Set();
+      while (missingIdx.size < nMissing) missingIdx.add(Math.floor(rnd() * DOC_TYPES.length));
+      return DOC_TYPES.map((t, i) => missingIdx.has(i)
+        ? { name: t.name, ext: null, status: 'missing', meta: 'Non ancora caricato' }
+        : (rnd() < 0.15
+          ? { name: t.name, ext: t.ext, status: 'checking', meta: 'Caricato oggi · in verifica' }
+          : { name: t.name, ext: t.ext, status: 'verified', meta: 'Caricato · ' + size() + ' MB' }));
+    };
+    const list = [{
+      nome: 'Alfa Logistica S.r.l.', citta: 'Napoli', piva: '0289 4410 727', ateco: '52.29.22', dipendenti: 18,
+      consulente: 'Marco Rossi', referente: 'Espedito Del Gaudio', email: 'espedito.delgaudio@timevision.it',
+      docs: [
+        { name: 'Visura camerale', ext: 'PDF', status: 'verified', meta: 'Caricato · 2,1 MB' },
+        { name: 'Documento identità legale rappresentante', ext: 'PDF', status: 'verified', meta: 'Caricato · 0,8 MB' },
+        { name: 'Elenco dipendenti + mansioni', ext: 'XLS', status: 'verified', meta: 'Caricato · 0,3 MB' },
+        { name: 'Ultimo bilancio depositato', ext: 'PDF', status: 'checking', meta: 'Caricato 5 min fa · in verifica' },
+        { name: 'Accordo sindacale firmato', ext: null, status: 'missing', meta: 'Non ancora caricato' },
+        { name: 'Piano orario formativo', ext: null, status: 'missing', meta: 'Non ancora caricato' },
+      ],
+    }];
+    for (let i = 0; i < 119; i++) {
+      const nome = W1[i % W1.length] + ' ' + W2[Math.floor(i / W1.length) % W2.length] + ' ' + FORME[Math.floor(rnd() * FORME.length)];
+      const ref = REF[Math.floor(rnd() * REF.length)];
+      list.push({
+        nome, citta: CITTA[Math.floor(rnd() * CITTA.length)],
+        piva: String(Math.floor(rnd() * 9e10) + 1e10).replace(/(\d{4})(\d{4})(\d{3})/, '$1 $2 $3').slice(0, 13),
+        ateco: (10 + Math.floor(rnd() * 85)) + '.' + (10 + Math.floor(rnd() * 89)) + '.' + (10 + Math.floor(rnd() * 89)),
+        dipendenti: 5 + Math.floor(rnd() * 120),
+        consulente: CONS[Math.floor(rnd() * CONS.length)],
+        referente: ref,
+        email: ref.toLowerCase().replace(' ', '.') + '@' + nome.split(' ')[0].toLowerCase() + '.it',
+        docs: mkDocs(),
+      });
+    }
+    return () => list;
+  })();
+
+  let aziende = [];
+  let azSelected = 0;
+  let azPage = 1;
+  const AZ_PER_PAGE = 50;
+  const azCur = () => aziende[azSelected];
+  const azStats = a => {
+    const done = a.docs.filter(d => d.status !== 'missing').length;
+    return { done, tot: a.docs.length, missing: a.docs.length - done, checking: a.docs.some(d => d.status === 'checking') };
+  };
   let docTarget = -1; // riga destinataria del prossimo file scelto
 
   const docFmtSize = b => b < 102400 ? Math.max(1, Math.round(b / 1024)) + ' KB'
@@ -1981,6 +2094,7 @@
   };
 
   function docRender() {
+    if (!aziende.length) return;
     const pills = {
       verified: '<span class="pill good"><span class="dot"></span> Verificato</span>',
       checking: '<span class="pill info"><span class="dot"></span> In verifica</span>',
@@ -1988,7 +2102,7 @@
     };
     const icUp = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 15V4M7 8.5 12 3.5l5 5"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>';
     const icRep = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 3v5h-5"/></svg>';
-    document.getElementById('doc-list').innerHTML = docChecklist.map((d, i) => {
+    document.getElementById('doc-list').innerHTML = azCur().docs.map((d, i) => {
       const ic = d.status === 'missing'
         ? '<div class="doc-ic" style="background:var(--line-strong)">—</div>'
         : `<div class="doc-ic" style="background:var(--${d.status === 'verified' ? 'good' : 'info'})">${d.ext}</div>`;
@@ -2002,7 +2116,7 @@
         <div class="act">${pills[d.status]}${btn}</div></div>`;
     }).join('');
 
-    const done = docChecklist.filter(d => d.status !== 'missing').length, tot = docChecklist.length;
+    const done = azCur().docs.filter(d => d.status !== 'missing').length, tot = azCur().docs.length;
     const counter = document.getElementById('doc-counter');
     counter.className = 'pill ' + (done === tot ? 'good' : 'warn');
     counter.innerHTML = `<span class="dot"></span> ${done} / ${tot} completati`;
@@ -2017,26 +2131,28 @@
   }
 
   // Bozza email sollecito (aggiornata automaticamente finché l'admin non la modifica a mano)
-  const DOC_MAIL = { from: 'innovazione@timevision.it', to: 'espedito.delgaudio@timevision.it', nome: 'Espedito Del Gaudio' };
   let docMailEdited = false;
-  const docMissingNames = () => docChecklist.filter(d => d.status === 'missing').map(d => d.name);
+  const azSaluto = () => azCur().referente ? 'Gentile ' + azCur().referente : 'Spett.le ' + azCur().nome;
+  const azSalutoHtml = () => azCur().referente ? 'Gentile <b>' + azCur().referente + '</b>' : 'Spett.le <b>' + azCur().nome + '</b>';
+  const docMissingNames = () => azCur().docs.filter(d => d.status === 'missing').map(d => d.name);
 
   function docMailRefresh() {
     const missing = docMissingNames();
     document.getElementById('doc-mail').style.display = missing.length ? '' : 'none';
     if (!missing.length) return;
     document.getElementById('doc-mail-subj').textContent =
-      `FNC 4 — ${missing.length === 1 ? 'Documento mancante' : missing.length + ' documenti mancanti'} · Alfa Logistica S.r.l.`;
+      `FNC 4 — ${missing.length === 1 ? 'Documento mancante' : missing.length + ' documenti mancanti'} · ${azCur().nome}`;
+    document.getElementById('doc-mail-to').textContent = azCur().email || 'indirizzo email non disponibile';
     document.getElementById('doc-mail-preview').innerHTML = docMailHtml(missing);
     if (docMailEdited) return;
     document.getElementById('doc-mail-body').value =
-`Gentile ${DOC_MAIL.nome},
+`${azSaluto()},
 
-per completare la pratica FNC di Alfa Logistica S.r.l. ${missing.length === 1 ? 'manca ancora il seguente documento' : 'mancano ancora i seguenti documenti'}:
+per completare la pratica FNC di ${azCur().nome} ${missing.length === 1 ? 'manca ancora il seguente documento' : 'mancano ancora i seguenti documenti'}:
 
 ${missing.map(n => ' • ' + n).join('\n')}
 
-La invitiamo a caricarl${missing.length === 1 ? 'o' : 'i'} dal Portale Consulente entro 3 giorni lavorativi, così da poter procedere con la presentazione della domanda.
+La invitiamo a caricarl${missing.length === 1 ? 'o' : 'i'} dal Portale Aziende entro 3 giorni lavorativi, così da poter procedere con la presentazione della domanda.
 
 Per qualsiasi dubbio restiamo a disposizione.
 
@@ -2057,10 +2173,10 @@ FNC 4 · Time Vision`;
           <div style="color:#FFFFFF;font-size:19px;font-weight:bold;margin-top:4px">Documenti mancanti per la pratica FNC</div>
         </div>
         <div style="padding:22px 26px">
-          <p style="margin:0 0 14px;font-size:14px;color:#271119;line-height:1.6">Gentile <b>${DOC_MAIL.nome}</b>,<br>per completare la pratica <b>FNC di Alfa Logistica S.r.l.</b> ${missing.length === 1 ? 'manca ancora il seguente documento' : 'mancano ancora i seguenti documenti'}:</p>
+          <p style="margin:0 0 14px;font-size:14px;color:#271119;line-height:1.6">${azSalutoHtml()},<br>per completare la pratica <b>FNC di ${azCur().nome}</b> ${missing.length === 1 ? 'manca ancora il seguente documento' : 'mancano ancora i seguenti documenti'}:</p>
           <table style="width:100%;border-collapse:collapse;border:1px solid #F0E6C8;border-radius:10px">${rows}</table>
-          <p style="margin:16px 0 0;font-size:14px;color:#271119;line-height:1.6">La invitiamo a caricarl${missing.length === 1 ? 'o' : 'i'} dal <b>Portale Consulente</b> entro <b>3 giorni lavorativi</b>, così da poter procedere con la presentazione della domanda.</p>
-          <div style="text-align:center;margin:22px 0"><a href="https://fn4.vercel.app" style="background:#9E2A2B;color:#FFFFFF;text-decoration:none;font-size:14px;font-weight:bold;padding:12px 28px;border-radius:10px;display:inline-block">Vai al Portale Consulente</a></div>
+          <p style="margin:16px 0 0;font-size:14px;color:#271119;line-height:1.6">La invitiamo a caricarl${missing.length === 1 ? 'o' : 'i'} dal <b>Portale Aziende</b> entro <b>3 giorni lavorativi</b>, così da poter procedere con la presentazione della domanda.</p>
+          <div style="text-align:center;margin:22px 0"><a href="https://fn4.vercel.app" style="background:#9E2A2B;color:#FFFFFF;text-decoration:none;font-size:14px;font-weight:bold;padding:12px 28px;border-radius:10px;display:inline-block">Vai al Portale Aziende</a></div>
           <p style="margin:0;font-size:13px;color:#7a6a70;line-height:1.6">Per qualsiasi dubbio restiamo a disposizione.<br>Cordiali saluti,<br><b style="color:#271119">Anna Colombo</b> · FNC 4 · Time Vision</p>
         </div>
         <div style="background:#FFFAE0;padding:11px 26px;font-size:11px;color:#8A771B;border-top:1px solid #EADFC0">Email automatica generata dalla piattaforma FNC 4 — Fase 1 · Raccolta documentale</div>
@@ -2075,22 +2191,52 @@ FNC 4 · Time Vision`;
   }
 
   function docMailSend() {
-    toast('Sollecito inviato a ' + DOC_MAIL.to + ' (invio simulato)');
+    toast('Sollecito inviato a ' + azCur().email + ' (invio simulato)');
   }
 
-  async function docMailGmail() {
-    const subj = document.getElementById('doc-mail-subj').textContent;
-    const body = document.getElementById('doc-mail-body').value;
-    try {
-      const html = docMailHtml(docMissingNames());
-      await navigator.clipboard.write([new ClipboardItem({
+  // Copia la versione grafica negli appunti come contenuto ricco (text/html):
+  // incollata in Gmail mantiene colori e layout. Fallback execCommand per i
+  // browser che bloccano l'API Clipboard moderna.
+  function docMailCopyHtml() {
+    const html = docMailHtml(docMissingNames());
+    const plain = document.getElementById('doc-mail-body').value;
+    if (navigator.clipboard && window.ClipboardItem) {
+      return navigator.clipboard.write([new ClipboardItem({
         'text/html': new Blob([html], { type: 'text/html' }),
-        'text/plain': new Blob([body], { type: 'text/plain' }),
-      })]);
-      toast('Versione grafica copiata: in Gmail premi Ctrl+V nel corpo del messaggio');
-    } catch (e) { /* clipboard non disponibile: resta il testo precompilato */ }
-    window.open('https://mail.google.com/mail/?view=cm&fs=1&to=' + DOC_MAIL.to
-      + '&su=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body), '_blank');
+        'text/plain': new Blob([plain], { type: 'text/plain' }),
+      })]).then(() => true).catch(() => docMailCopyFallback(html));
+    }
+    return Promise.resolve(docMailCopyFallback(html));
+  }
+
+  function docMailCopyFallback(html) {
+    const div = document.createElement('div');
+    div.contentEditable = 'true';
+    div.style.cssText = 'position:fixed;left:-9999px;top:0;opacity:0';
+    div.innerHTML = html;
+    document.body.appendChild(div);
+    const range = document.createRange();
+    range.selectNodeContents(div);
+    const sel = getSelection();
+    sel.removeAllRanges(); sel.addRange(range);
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) {}
+    sel.removeAllRanges(); div.remove();
+    return ok;
+  }
+
+  function docMailCopy() {
+    docMailCopyHtml().then(ok => toast(ok
+      ? 'Versione grafica copiata: incollala nel corpo del messaggio con Ctrl+V'
+      : 'Copia non riuscita: passa alla vista Testo e copia manualmente'));
+  }
+
+  function docMailGmail() {
+    const subj = document.getElementById('doc-mail-subj').textContent;
+    // Corpo lasciato vuoto di proposito: un solo Ctrl+V incolla la versione grafica
+    window.open('https://mail.google.com/mail/?view=cm&fs=1&to=' + azCur().email
+      + '&su=' + encodeURIComponent(subj), '_blank');
+    docMailCopy();
   }
 
   function docPick(i) {
@@ -2104,42 +2250,224 @@ FNC 4 · Time Vision`;
     if (files && files.length && docTarget >= 0) { docUpload(docTarget, files[0]); docTarget = -1; }
   }
 
-  function docUpload(i, file) {
+  async function docUpload(i, file) {
     if (!file) return;
     if (file.size > 20 * 1048576) { toast('"' + file.name + '" supera il limite di 20 MB'); return; }
-    const d = docChecklist[i];
+    const az = azCur();
+    const d = az.docs[i];
     d.ext = docExt(file);
     d.status = 'checking';
     d.meta = file.name + ' · ' + docFmtSize(file.size) + ' · in verifica';
     docRender();
     toast('"' + file.name + '" caricato per "' + d.name + '"');
-    setTimeout(() => {
+
+    // Persistenza: file nello Storage + stato nel database
+    let salvato = false;
+    if (supa && d.id) {
+      try {
+        const path = az.dbId + '/' + (i + 1) + '-' + Date.now() + '-' + file.name.replace(/[^\w.\-]/g, '_');
+        const up = await supa.storage.from('fn4-documenti').upload(path, file);
+        if (up.error) throw up.error;
+        const upd = await supa.from('fn4_documenti')
+          .update({ status: 'checking', ext: d.ext, meta: d.meta, file_path: path, file_size: file.size, updated_at: new Date().toISOString() })
+          .eq('id', d.id);
+        if (upd.error) throw upd.error;
+        d.file_path = path;
+        salvato = true;
+      } catch (e) {
+        toast('⚠ Salvataggio non riuscito: ' + (e.message || e));
+      }
+    }
+
+    setTimeout(async () => {
       if (d.status !== 'checking') return;
       d.status = 'verified';
       d.meta = 'Caricato · ' + docFmtSize(file.size);
       docRender();
       toast('"' + d.name + '" verificato automaticamente');
+      if (salvato) {
+        try { await supa.from('fn4_documenti').update({ status: 'verified', meta: d.meta }).eq('id', d.id); } catch (e) {}
+      }
     }, 2600);
   }
-  docRender();
+  // ---- Panoramica aziende: tabella con ricerca, paginazione e apertura dettaglio ----
+  function azFiltered() {
+    const q = (document.getElementById('az-search').value || '').toLowerCase().trim();
+    return aziende.map((a, i) => ({ a, i })).filter(({ a }) =>
+      !q || (a.nome + ' ' + (a.fondo || '') + ' ' + a.piva + ' ' + (a.email || '')).toLowerCase().includes(q));
+  }
+
+  function azRenderTable() {
+    const rows = azFiltered();
+    const pages = Math.max(1, Math.ceil(rows.length / AZ_PER_PAGE));
+    azPage = Math.min(Math.max(1, azPage), pages);
+    const slice = rows.slice((azPage - 1) * AZ_PER_PAGE, azPage * AZ_PER_PAGE);
+    const AV_BG = ['var(--sky)', 'var(--merlot)', 'var(--cream-deep)', 'var(--good)'];
+    document.getElementById('az-tbody').innerHTML = slice.map(({ a, i }) => {
+      const s = azStats(a);
+      const stato = s.missing > 0
+        ? '<span class="pill bad"><span class="dot"></span> Mancanti</span>'
+        : s.checking
+          ? '<span class="pill info"><span class="dot"></span> In verifica</span>'
+          : '<span class="pill good"><span class="dot"></span> Completa</span>';
+      const ini = a.nome.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+      return `<tr onclick="azSelect(${i})" title="Apri la situazione documentale di ${a.nome.replace(/"/g, '&quot;')}">
+        <td><div class="co"><span class="av" style="background:${AV_BG[i % AV_BG.length]}">${ini}</span><div>${a.nome}<small>${a.piva} · ${a.dipendenti} lav.</small></div></div></td>
+        <td>${a.fondo || '—'}</td>
+        <td><span class="az-mini"><i style="width:${Math.round(s.done / s.tot * 100)}%"></i></span><span class="tnum">${s.done} / ${s.tot}</span></td>
+        <td class="r tnum">${s.missing || '—'}</td>
+        <td>${stato}</td>
+        <td class="r"><button class="btn ghost" onclick="event.stopPropagation();azSelect(${i})">Apri →</button></td></tr>`;
+    }).join('');
+    document.getElementById('az-count').innerHTML = `<span class="dot"></span> ${aziende.length} aziende · ${aziende.filter(a => azStats(a).missing > 0).length} con documenti mancanti`;
+    const from = rows.length ? (azPage - 1) * AZ_PER_PAGE + 1 : 0;
+    const to = Math.min(azPage * AZ_PER_PAGE, rows.length);
+    const pgBtns = [];
+    let lastShown = 0;
+    for (let p = 1; p <= pages; p++) {
+      if (p === 1 || p === pages || Math.abs(p - azPage) <= 1) {
+        if (p - lastShown > 1) pgBtns.push('<span style="padding:0 2px">…</span>');
+        pgBtns.push(`<button class="${p === azPage ? 'on' : ''}" onclick="azPage=${p};azRenderTable()">${p}</button>`);
+        lastShown = p;
+      }
+    }
+    document.getElementById('az-pagination').innerHTML =
+      `<span>Mostrate ${from}–${to} di ${rows.length} aziende</span><div class="pg">
+       <button ${azPage === 1 ? 'disabled' : ''} onclick="azPage--;azRenderTable()">←</button>
+       ${pgBtns.join('')}
+       <button ${azPage === pages ? 'disabled' : ''} onclick="azPage++;azRenderTable()">→</button></div>`;
+  }
+
+  const azEur = n => '€ ' + Math.round(n).toLocaleString('it-IT');
+
+  function azFillCard() {
+    if (!aziende.length) return;
+    const a = azCur();
+    document.getElementById('az-av').textContent = a.nome.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+    document.getElementById('az-nome').textContent = a.nome;
+    document.getElementById('az-sub').textContent = 'P.IVA ' + a.piva
+      + (a.matricola ? ' · Matr. INPS ' + a.matricola : (a.citta ? ' · ' + a.citta : ''));
+    document.getElementById('az-fondo').textContent = a.fondo || '—';
+    document.getElementById('az-dip').textContent = a.dipendenti;
+    document.getElementById('az-ore').textContent = a.ore ? Math.round(a.ore).toLocaleString('it-IT') : '—';
+    document.getElementById('az-beneficio').textContent = a.beneficio ? azEur(a.beneficio) : '—';
+    const sel = document.getElementById('az-select');
+    sel.innerHTML = aziende.map((x, i) => `<option value="${i}" ${i === azSelected ? 'selected' : ''}>${x.nome} · ${x.piva}</option>`).join('');
+  }
+
+  function azSelect(i) {
+    azSelected = i;
+    docMailEdited = false;
+    azFillCard();
+    docRender();
+    document.getElementById('az-panoramica').style.display = 'none';
+    document.getElementById('az-dettaglio').style.display = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function azBack() {
+    document.getElementById('az-dettaglio').style.display = 'none';
+    document.getElementById('az-panoramica').style.display = '';
+    azRenderTable();
+  }
+
+  // Nomi azienda dal CSV sono in maiuscolo: resa leggibile mantenendo le forme societarie
+  function azTitleCase(s) {
+    return s.toLowerCase().replace(/\S+/g, w =>
+      /^(srl|spa|snc|sas|sc|scarl|sne|di|e|&|il|la|del|della)$/.test(w)
+        ? (w.length <= 2 && w !== '&' ? w : w.toUpperCase())
+        : w[0].toUpperCase() + w.slice(1))
+      .replace(/\b(srl|spa|snc|sas|sc|scarl)\b/gi, m => m.toUpperCase())
+      .replace(/\b(di|e|il|la|del|della)\b/g, m => m.toLowerCase());
+  }
+
+  async function azInit() {
+    document.getElementById('az-tbody').innerHTML =
+      '<tr><td colspan="6" style="text-align:center;color:var(--text-3);padding:26px">Caricamento aziende dal database…</td></tr>';
+    try {
+      if (!supa) throw new Error('client non disponibile');
+      const { data, error } = await supa
+        .from('fn4_aziende')
+        .select('*, fn4_documenti(*)')
+        .order('nome')
+        .limit(2000);
+      if (error) throw error;
+      aziende = data.map(a => ({
+        dbId: a.id,
+        nome: azTitleCase(a.nome),
+        piva: a.piva,
+        citta: a.indirizzo || '',
+        matricola: a.matricola_inps || '',
+        fondo: a.fondo || '',
+        dipendenti: a.n_lavoratori,
+        ore: Number(a.ore_formazione) || 0,
+        beneficio: Number(a.beneficio_totale) || 0,
+        fee: Number(a.fee_percent) || 0,
+        consulente: a.consulente || '',
+        referente: a.referente || '',
+        email: a.email || '',
+        docs: (a.fn4_documenti || []).sort((x, y) => x.ord - y.ord).map(d => ({
+          id: d.id, name: d.tipo, ext: d.ext, status: d.status,
+          meta: d.meta || 'Non ancora caricato', file_path: d.file_path,
+        })),
+      }));
+      toast(aziende.length + ' aziende caricate dal database FNC');
+    } catch (e) {
+      aziende = azDemoData();
+      toast('⚠ Database non raggiungibile: dati demo (' + (e.message || e) + ')');
+    }
+    azSelected = 0;
+    azFillCard();
+    docRender();
+    azRenderTable();
+    fncArchPopulate();
+  }
+  azInit();
 
   // ---- Fase 2: import UNIEMENS/FNC3 + calcolo beneficio (algoritmo FNC3) ----
   const eur = n => '€ ' + Math.round(n).toLocaleString('it-IT');
   const eur2 = n => '€ ' + n.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  const fnc = { companies: [], selected: -1, mode: 'xml' };
+  const fnc = { companies: [], selected: -1, arch: -1, mode: 'xml' };
 
   function fncSetMode(m) {
     fnc.mode = m;
     document.querySelectorAll('#fnc-seg button').forEach(b => b.classList.toggle('on', b.dataset.mode === m));
     document.getElementById('fnc-mode-xml').style.display = m === 'xml' ? '' : 'none';
     document.getElementById('fnc-mode-manual').style.display = m === 'manual' ? '' : 'none';
+    document.getElementById('fnc-mode-archivio').style.display = m === 'archivio' ? '' : 'none';
     document.getElementById('fnc-emp-card').style.display = (m === 'xml' && fnc.selected >= 0) ? '' : 'none';
     document.getElementById('fnc-row-company').style.display = m === 'manual' ? '' : 'none';
-    document.getElementById('r-total-label').textContent = m === 'manual' ? 'Valore progetto (rimborso FNC)' : 'Beneficio totale (rimborso FNC)';
+    document.getElementById('r-total-label').textContent = m === 'manual' ? 'Valore progetto (rimborso FNC)'
+      : m === 'archivio' ? 'Beneficio totale (archivio FNC3)' : 'Beneficio totale (rimborso FNC)';
     const pill = document.getElementById('fnc-pill');
     if (m === 'manual') pill.innerHTML = '<span class="dot"></span> Bozza · Calcolo manuale';
+    else if (m === 'archivio') pill.innerHTML = fnc.arch >= 0
+      ? `<span class="dot"></span> Bozza · ${aziende[fnc.arch].nome}`
+      : '<span class="dot"></span> Seleziona azienda dall\'archivio';
     else pill.innerHTML = fnc.selected >= 0 ? `<span class="dot"></span> Bozza · ${fnc.companies[fnc.selected].nome}` : '<span class="dot"></span> In attesa dati azienda';
     fncCalc();
+  }
+
+  // Modalità archivio: aziende reali FNC3 caricate dal database (stesso elenco della Fase 1)
+  function fncArchPopulate() {
+    const sel = document.getElementById('fnc-az-select');
+    if (!sel) return;
+    sel.innerHTML = '<option value="-1">Seleziona azienda…</option>' +
+      aziende.map((a, i) => `<option value="${i}">${a.nome} · ${a.piva}</option>`).join('');
+  }
+
+  function fncArchSelect(i) {
+    fnc.arch = i;
+    const box = document.getElementById('fnc-arch-info');
+    if (i < 0) { box.style.display = 'none'; fncSetMode('archivio'); return; }
+    const a = aziende[i];
+    document.getElementById('fnc-arch-piva').textContent = a.piva;
+    document.getElementById('fnc-arch-fondo').textContent = a.fondo || '—';
+    document.getElementById('fnc-arch-lav').textContent = a.dipendenti;
+    document.getElementById('fnc-arch-ore').textContent = a.ore ? Math.round(a.ore).toLocaleString('it-IT') + ' h' : '—';
+    box.style.display = '';
+    if (a.fee >= 8 && a.fee <= 30) document.getElementById('c-fee').value = a.fee;
+    fncSetMode('archivio');
   }
 
   // "€ 10,50" / "1.234,56" / "2298" -> Number
@@ -2326,6 +2654,15 @@ FNC 4 · Time Vision`;
       document.getElementById('r-company').textContent = eur(company);
       document.getElementById('r-fee').textContent = eur(fee);
       document.getElementById('r-benefit').textContent = eur(total - fee - company);
+      return;
+    }
+    if (fnc.mode === 'archivio') {
+      const a = aziende[fnc.arch];
+      const total = a ? (a.beneficio || 0) : 0;
+      const fee = total * feePct / 100;
+      document.getElementById('r-total').textContent = eur(total);
+      document.getElementById('r-fee').textContent = eur(fee);
+      document.getElementById('r-benefit').textContent = eur(total - fee);
       return;
     }
     const c = fnc.companies[fnc.selected];
