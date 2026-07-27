@@ -1946,12 +1946,11 @@
     const list = document.getElementById('fnc-companies');
     const hits = fnc.companies.map((c, i) => ({ c, i }))
       .filter(({ c }) => !f || c.nome.toLowerCase().includes(f) || c.cf.toLowerCase().includes(f));
-    list.innerHTML = hits.slice(0, 40).map(({ c, i }) =>
+    list.innerHTML = hits.map(({ c, i }) =>
       `<div onclick="fncSelect(${i})" style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;cursor:pointer;${i === fnc.selected ? 'background:var(--sky-pale);' : ''}" onmouseover="this.style.background='var(--sky-pale)'" onmouseout="this.style.background='${i === fnc.selected ? 'var(--sky-pale)' : ''}'">
         <div><div style="font-weight:700;font-size:12.5px">${c.nome}</div><div class="muted" style="font-size:11px">CF ${c.cf} · ${c.mese}</div></div>
         <span class="pill mute" style="flex:none">${c.lavoratori.length} lav.</span>
-      </div>`).join('') +
-      (hits.length > 40 ? `<div class="muted" style="padding:8px 12px;font-size:11.5px">… e altre ${hits.length - 40} aziende, affina la ricerca</div>` : '') ||
+      </div>`).join('') ||
       '<div class="muted" style="padding:8px 12px;font-size:12px">Nessuna azienda trovata</div>';
   }
 
