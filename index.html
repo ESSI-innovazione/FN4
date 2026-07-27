@@ -385,17 +385,26 @@
   .ai-banner .bt span { font-size: 12.5px; opacity: .85; }
   .ai-banner .go { font-size: 13px; font-weight: 800; white-space: nowrap; }
 
-  .wiz { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 22px; }
-  .wz { display: flex; align-items: center; gap: 10px; padding: 11px 18px; border: 1px solid var(--line);
-    border-radius: var(--r-pill); background: var(--surface); font-size: 13px; font-weight: 700; color: var(--text-2); }
-  .wz .n { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; flex: none;
-    background: var(--surface-2); border: 1.5px solid var(--line-strong); font-size: 11.5px; font-weight: 800; }
+  .wiz { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; margin: 2px 0 30px; }
+  .wz { display: flex; align-items: center; gap: 11px; padding: 14px 24px; border: 1px solid var(--line);
+    border-radius: var(--r-pill); background: var(--surface); font-size: 15px; font-weight: 800; color: var(--text-2);
+    font-family: inherit; letter-spacing: -.01em; }
+  button.wz[data-view] { cursor: pointer; transition: border-color .15s, color .15s, transform .1s, box-shadow .15s; }
+  button.wz[data-view]:hover { border-color: var(--sky); color: var(--sky-2); transform: translateY(-1px);
+    box-shadow: var(--shadow-sm); }
+  .wz .n { width: 27px; height: 27px; border-radius: 50%; display: grid; place-items: center; flex: none;
+    background: var(--surface-2); border: 1.5px solid var(--line-strong); font-size: 13px; font-weight: 800; }
   .wz.cur { background: linear-gradient(155deg, var(--merlot), var(--merlot-2)); border-color: transparent; color: #fff;
     box-shadow: 0 8px 18px -8px color-mix(in srgb, var(--merlot) 60%, transparent); }
   .wz.cur .n { background: rgba(255,255,255,.16); border-color: transparent; color: #fff; }
   .wz.done { border-color: color-mix(in srgb, var(--sky) 45%, var(--line)); color: var(--sky-2); }
   .wz.done .n { background: var(--sky); border-color: transparent; color: #fff; }
-  .wiz .sep { color: var(--text-3); font-weight: 800; }
+  .wiz .sep { color: var(--text-3); font-weight: 800; font-size: 16px; }
+
+  /* Wizard Contenuti AI: contenuto centrato e più raccolto */
+  #view-ai-contenuti, #view-ai-slide, #view-ai-video, #view-ai-immagini { max-width: 1060px; margin: 0 auto; }
+  #view-ai-contenuti .page-head .eyebrow-pg, #view-ai-slide .page-head .eyebrow-pg,
+  #view-ai-video .page-head .eyebrow-pg, #view-ai-immagini .page-head .eyebrow-pg { justify-content: center; text-align: left; }
 
   .ai-prompt { min-height: 150px; resize: vertical; font: inherit; font-size: 13px; line-height: 1.55; }
   .chip-row { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -591,10 +600,13 @@
     background: linear-gradient(135deg, rgba(255,255,255,.17) 0%, rgba(255,255,255,.05) 100%);
     -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
     border: 1px solid rgba(255,255,255,.24);
-    box-shadow: 0 24px 48px rgba(40,4,5,.38), inset 0 1px 0 rgba(255,255,255,.3); }
-  .g3-a .gcard { width: 176px; transform: rotateX(7deg) rotateY(-13deg); }
-  .g3-b .gcard { width: 150px; transform: rotateX(5deg) rotateY(11deg); }
-  .g3-c .gcard { width: 118px; padding: 12px 13px; transform: rotateX(9deg) rotateY(-22deg); opacity: .72; }
+    box-shadow: 0 24px 48px rgba(40,4,5,.38), inset 0 1px 0 rgba(255,255,255,.3);
+    /* mouse parallax: --mx/--my set on #login by JS, per-card depth via --depth */
+    transform: translate3d(calc(var(--mx, 0) * var(--depth, 16) * 1px), calc(var(--my, 0) * var(--depth, 16) * 1px), 0)
+      rotateX(calc(var(--rx, 0deg) - var(--my, 0) * 5deg)) rotateY(calc(var(--ry, 0deg) + var(--mx, 0) * 5deg)); }
+  .g3-a .gcard { width: 176px; --rx: 7deg; --ry: -13deg; --depth: 18; }
+  .g3-b .gcard { width: 150px; --rx: 5deg; --ry: 11deg; --depth: 11; }
+  .g3-c .gcard { width: 118px; padding: 12px 13px; --rx: 9deg; --ry: -22deg; --depth: 26; opacity: .72; }
   .gl { display: block; height: 7px; border-radius: 4px; background: rgba(255,255,255,.34); margin-top: 9px; }
   .gl.short { width: 58%; }
   .grow { display: flex; align-items: center; gap: 10px; }
@@ -610,8 +622,8 @@
   .gbars i:nth-child(3) { height: 48%; background: #FFF3B0; }
   .gbars i:nth-child(4) { height: 86%; }
   @keyframes g3-float {
-    from { transform: translateY(0); }
-    to   { transform: translateY(-16px); }
+    from { transform: translate3d(0, 0, 0) rotateX(2.4deg) rotateY(-3deg); }
+    to   { transform: translate3d(7px, -16px, 0) rotateX(-2.4deg) rotateY(3deg); }
   }
   @media (prefers-reduced-motion: reduce) { .g3 { animation: none; } }
 
@@ -1252,11 +1264,11 @@
         <div class="wiz">
           <div class="wz cur"><span class="n">1</span> Contenuto didattico</div>
           <span class="sep">→</span>
-          <div class="wz"><span class="n">2</span> Slide del corso</div>
+          <button class="wz" data-view="ai-slide"><span class="n">2</span> Slide del corso</button>
           <span class="sep">→</span>
-          <div class="wz"><span class="n">3</span> Immagini</div>
+          <button class="wz" data-view="ai-immagini"><span class="n">3</span> Immagini</button>
           <span class="sep">→</span>
-          <div class="wz"><span class="n">4</span> Video del corso</div>
+          <button class="wz" data-view="ai-video"><span class="n">4</span> Video del corso</button>
         </div>
 
         <div class="grid g-1-2">
@@ -1327,13 +1339,13 @@
         </div>
 
         <div class="wiz">
-          <button class="wz done" data-view="ai-contenuti" style="cursor:pointer"><span class="n">✓</span> Contenuto didattico</button>
+          <button class="wz done" data-view="ai-contenuti"><span class="n">✓</span> Contenuto didattico</button>
           <span class="sep">→</span>
           <div class="wz cur"><span class="n">2</span> Slide del corso</div>
           <span class="sep">→</span>
-          <div class="wz"><span class="n">3</span> Immagini</div>
+          <button class="wz" data-view="ai-immagini"><span class="n">3</span> Immagini</button>
           <span class="sep">→</span>
-          <div class="wz"><span class="n">4</span> Video del corso</div>
+          <button class="wz" data-view="ai-video"><span class="n">4</span> Video del corso</button>
         </div>
 
         <div class="grid g-1-2" id="sl-setup">
@@ -1424,11 +1436,11 @@
         </div>
 
         <div class="wiz">
-          <button class="wz done" data-view="ai-contenuti" style="cursor:pointer"><span class="n">✓</span> Contenuto didattico</button>
+          <button class="wz done" data-view="ai-contenuti"><span class="n">✓</span> Contenuto didattico</button>
           <span class="sep">→</span>
-          <button class="wz done" data-view="ai-slide" style="cursor:pointer"><span class="n">✓</span> Slide del corso</button>
+          <button class="wz done" data-view="ai-slide"><span class="n">✓</span> Slide del corso</button>
           <span class="sep">→</span>
-          <button class="wz done" data-view="ai-immagini" style="cursor:pointer"><span class="n">✓</span> Immagini</button>
+          <button class="wz done" data-view="ai-immagini"><span class="n">✓</span> Immagini</button>
           <span class="sep">→</span>
           <div class="wz cur"><span class="n">4</span> Video del corso</div>
         </div>
@@ -1516,13 +1528,13 @@
         </div>
 
         <div class="wiz">
-          <button class="wz done" data-view="ai-contenuti" style="cursor:pointer"><span class="n">✓</span> Contenuto didattico</button>
+          <button class="wz done" data-view="ai-contenuti"><span class="n">✓</span> Contenuto didattico</button>
           <span class="sep">→</span>
-          <button class="wz done" data-view="ai-slide" style="cursor:pointer"><span class="n">✓</span> Slide del corso</button>
+          <button class="wz done" data-view="ai-slide"><span class="n">✓</span> Slide del corso</button>
           <span class="sep">→</span>
           <div class="wz cur"><span class="n">3</span> Immagini</div>
           <span class="sep">→</span>
-          <div class="wz"><span class="n">4</span> Video del corso</div>
+          <button class="wz" data-view="ai-video"><span class="n">4</span> Video del corso</button>
         </div>
 
         <div class="grid g-1-2">
@@ -1744,6 +1756,29 @@
     });
     document.getElementById('roleSub').textContent = roleSubs[role];
   }
+  // ---- Login: mouse parallax on the 3D glass cards ----
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const login = document.getElementById('login');
+    if (!login) return;
+    let tx = 0, ty = 0, cx = 0, cy = 0, raf = null;
+    function tick() {
+      cx += (tx - cx) * 0.07;
+      cy += (ty - cy) * 0.07;
+      login.style.setProperty('--mx', cx.toFixed(4));
+      login.style.setProperty('--my', cy.toFixed(4));
+      if (Math.abs(tx - cx) > 0.001 || Math.abs(ty - cy) > 0.001) raf = requestAnimationFrame(tick);
+      else raf = null;
+    }
+    function kick() { if (!raf) raf = requestAnimationFrame(tick); }
+    login.addEventListener('mousemove', function (e) {
+      tx = (e.clientX / window.innerWidth) * 2 - 1;
+      ty = (e.clientY / window.innerHeight) * 2 - 1;
+      kick();
+    });
+    login.addEventListener('mouseleave', function () { tx = 0; ty = 0; kick(); });
+  })();
+
   function doLogin() {
     const login = document.getElementById('login');
     document.getElementById('app').classList.remove('gated');
