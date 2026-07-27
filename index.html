@@ -343,6 +343,18 @@
   .doc-up svg { width: 13px; height: 13px; flex: none; }
   .doc-up.replace { border-style: solid; border-color: var(--line-strong); color: var(--text-2); }
   .doc-up.replace:hover { border-color: var(--sky); color: var(--sky-2); background: var(--sky-pale); }
+  .mail-draft { margin-top: 12px; background: var(--surface); border: 1px solid var(--line-strong); border-radius: 12px; overflow: hidden; text-align: left; }
+  .mail-head { display: flex; align-items: center; gap: 7px; padding: 9px 12px; background: var(--surface-2);
+    border-bottom: 1px solid var(--line); font-size: 11.5px; font-weight: 800; color: var(--text-2);
+    text-transform: uppercase; letter-spacing: .04em; }
+  .mail-head svg { width: 14px; height: 14px; color: var(--merlot); flex: none; }
+  .mail-field { display: flex; gap: 8px; padding: 7px 12px; border-bottom: 1px solid var(--line); font-size: 12px; align-items: baseline; }
+  .mail-field .lbl { color: var(--text-3); font-weight: 700; flex: none; width: 48px; }
+  .mail-field .val { color: var(--text); font-weight: 600; word-break: break-all; }
+  .mail-draft textarea { display: block; width: 100%; border: 0; background: transparent; font: inherit; font-size: 12px;
+    color: var(--text); padding: 10px 12px; min-height: 168px; resize: vertical; line-height: 1.55; }
+  .mail-draft textarea:focus { outline: none; background: var(--sky-pale); }
+  .mail-actions { display: flex; gap: 8px; padding: 10px 12px; border-top: 1px solid var(--line); }
 
   .field { margin-bottom: 16px; }
   .field label { display: block; font-size: 12px; font-weight: 700; color: var(--text-2); margin-bottom: 6px; }
@@ -1116,7 +1128,20 @@
             <div class="card card-pad section-gap" style="border-style:dashed;border-color:var(--cream-deep);background:var(--warn-soft)">
               <div style="font-weight:800;font-size:13px;color:var(--cream-deep);margin-bottom:5px">⚠ Automazione attiva</div>
               <div style="font-size:12.5px" class="muted" id="doc-autom-text">Alle <b>18:00</b> partirà automaticamente una email al consulente con l'elenco dei 2 documenti ancora mancanti.</div>
-              <button class="btn" style="margin-top:11px;width:100%" onclick="toast('Sollecito inviato manualmente al consulente')">Invia sollecito ora</button>
+              <div class="mail-draft" id="doc-mail">
+                <div class="mail-head">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+                  Bozza sollecito · Gmail
+                </div>
+                <div class="mail-field"><span class="lbl">A</span><span class="val">marco.rossi@alfalogistica.it</span></div>
+                <div class="mail-field"><span class="lbl">Cc</span><span class="val">amministrazione@alfalogistica.it</span></div>
+                <div class="mail-field"><span class="lbl">Oggetto</span><span class="val" id="doc-mail-subj">FNC 4 — Documenti mancanti</span></div>
+                <textarea id="doc-mail-body" spellcheck="false" oninput="docMailEdited=true"></textarea>
+                <div class="mail-actions">
+                  <button class="btn" style="flex:1" onclick="docMailSend()">Invia sollecito ora</button>
+                  <button class="btn ghost" onclick="docMailGmail()" title="Apri la bozza precompilata in Gmail">Apri in Gmail</button>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1125,14 +1150,7 @@
               <div class="card-head"><h3>Checklist documenti</h3><span class="pill warn" id="doc-counter"><span class="dot"></span> 4 / 6 completati</span></div>
               <div id="doc-list"></div>
             </div>
-            <input type="file" id="doc-file" multiple accept=".pdf,.xls,.xlsx,.jpg,.jpeg,.png,.doc,.docx" style="display:none" onchange="docFilesChosen(this.files)">
-            <div class="dropzone section-gap" id="doc-dropzone" onclick="docPick(-1)"
-              ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')"
-              ondrop="event.preventDefault();this.classList.remove('dragover');docFilesChosen(event.dataTransfer.files)">
-              <svg class="big" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 16V4M6 10l6-6 6 6"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
-              <div style="font-weight:700;color:var(--text)">Trascina qui i documenti o clicca per caricare</div>
-              <div style="font-size:12px;margin-top:3px">PDF, XLS, JPG — max 20 MB · i file riempiono i documenti ancora mancanti</div>
-            </div>
+            <input type="file" id="doc-file" accept=".pdf,.xls,.xlsx,.jpg,.jpeg,.png,.doc,.docx" style="display:none" onchange="docFilesChosen(this.files)">
           </div>
         </div>
       </section>
@@ -1862,7 +1880,7 @@
     { name: 'Accordo sindacale firmato', ext: null, status: 'missing', meta: 'Non ancora caricato' },
     { name: 'Piano orario formativo', ext: null, status: 'missing', meta: 'Non ancora caricato' },
   ];
-  let docTarget = -1; // riga destinataria del prossimo file scelto; -1 = dropzone globale
+  let docTarget = -1; // riga destinataria del prossimo file scelto
 
   const docFmtSize = b => b < 102400 ? Math.max(1, Math.round(b / 1024)) + ' KB'
     : (b / 1048576).toFixed(1).replace('.', ',') + ' MB';
@@ -1902,25 +1920,57 @@
     document.getElementById('doc-pct-bar').style.width = pct + '%';
     const missing = tot - done;
     document.getElementById('doc-autom-text').innerHTML = missing > 0
-      ? `Alle <b>18:00</b> partirà automaticamente una email al consulente con l'elenco ${missing === 1 ? 'del documento ancora mancante' : 'dei ' + missing + ' documenti ancora mancanti'}.`
+      ? `Alle <b>18:00</b> partirà automaticamente una email al consulente con l'elenco ${missing === 1 ? 'del documento ancora mancante' : 'dei ' + missing + ' documenti ancora mancanti'}. Puoi anticiparla inviando subito la bozza qui sotto.`
       : 'Tutti i documenti sono stati caricati: nessun sollecito in programma.';
+    docMailRefresh();
+  }
+
+  // Bozza email sollecito (aggiornata automaticamente finché l'admin non la modifica a mano)
+  let docMailEdited = false;
+  function docMailRefresh() {
+    const missing = docChecklist.filter(d => d.status === 'missing').map(d => d.name);
+    document.getElementById('doc-mail').style.display = missing.length ? '' : 'none';
+    if (!missing.length) return;
+    document.getElementById('doc-mail-subj').textContent =
+      `FNC 4 — ${missing.length === 1 ? 'Documento mancante' : missing.length + ' documenti mancanti'} · Alfa Logistica S.r.l.`;
+    if (docMailEdited) return;
+    document.getElementById('doc-mail-body').value =
+`Gentile Marco Rossi,
+
+per completare la pratica FNC di Alfa Logistica S.r.l. ${missing.length === 1 ? 'manca ancora il seguente documento' : 'mancano ancora i seguenti documenti'}:
+
+${missing.map(n => ' • ' + n).join('\n')}
+
+La invitiamo a caricarl${missing.length === 1 ? 'o' : 'i'} dal Portale Consulente entro 3 giorni lavorativi, così da poter procedere con la presentazione della domanda.
+
+Per qualsiasi dubbio restiamo a disposizione.
+
+Cordiali saluti,
+Anna Colombo
+FNC 4 · Time Vision`;
+  }
+
+  function docMailSend() {
+    toast('Sollecito inviato a marco.rossi@alfalogistica.it');
+  }
+
+  function docMailGmail() {
+    const subj = document.getElementById('doc-mail-subj').textContent;
+    const body = document.getElementById('doc-mail-body').value;
+    window.open('https://mail.google.com/mail/?view=cm&fs=1&to=marco.rossi@alfalogistica.it'
+      + '&cc=amministrazione@alfalogistica.it'
+      + '&su=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body), '_blank');
   }
 
   function docPick(i) {
     docTarget = i;
     const inp = document.getElementById('doc-file');
-    inp.multiple = i < 0;
     inp.value = '';
     inp.click();
   }
 
   function docFilesChosen(files) {
-    if (!files || !files.length) return;
-    if (docTarget >= 0) { docUpload(docTarget, files[0]); docTarget = -1; return; }
-    const missing = docChecklist.map((d, i) => d.status === 'missing' ? i : -1).filter(i => i >= 0);
-    if (!missing.length) { toast('Nessun documento mancante: usa "Sostituisci" sulla riga da aggiornare'); return; }
-    Array.from(files).slice(0, missing.length).forEach((f, k) => docUpload(missing[k], f));
-    if (files.length > missing.length) toast((files.length - missing.length) + ' file ignorati: checklist già completa');
+    if (files && files.length && docTarget >= 0) { docUpload(docTarget, files[0]); docTarget = -1; }
   }
 
   function docUpload(i, file) {
