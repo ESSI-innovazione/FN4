@@ -376,6 +376,14 @@
   .seg { display: flex; border: 1px solid var(--line-strong); border-radius: var(--r-pill); background: var(--surface); padding: 3px; gap: 2px; }
   .seg button { border: 0; background: transparent; font: inherit; font-size: 12px; font-weight: 800; color: var(--text-2); padding: 6px 13px; border-radius: 999px; cursor: pointer; }
   .seg button.on { background: var(--merlot-2); color: #fff; }
+  /* Fase 2 data-source picker — three separate chips, like the phase stepper */
+  .fnc-modes { display: flex; gap: 10px; flex-wrap: wrap; margin: 0 0 20px; }
+  .fnc-modes button { border: 1px solid var(--line); background: var(--surface); color: var(--text-2);
+    font: inherit; font-size: 13px; font-weight: 800; padding: 11px 20px; border-radius: var(--r-pill);
+    cursor: pointer; box-shadow: var(--shadow-sm); transition: border-color .15s, color .15s, transform .1s; }
+  .fnc-modes button:hover:not(.on) { border-color: var(--sky); color: var(--sky-2); transform: translateY(-1px); }
+  .fnc-modes button.on { background: var(--merlot-2); border-color: transparent; color: #fff; box-shadow: var(--shadow); }
+
   .dropzone { border: 1.5px dashed var(--line-strong); border-radius: var(--r-lg); padding: 28px; text-align: center;
     color: var(--text-2); background: var(--surface-2); transition: .15s; }
   .dropzone:hover, .dropzone.dragover { border-color: var(--sky); color: var(--text); background: var(--sky-pale); cursor: pointer; }
@@ -1217,9 +1225,9 @@
 
         <!-- Dettaglio azienda selezionata -->
         <div id="az-dettaglio" style="display:none">
-          <div class="card card-pad" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px">
-            <button class="btn ghost" onclick="azBack()">← Tutte le aziende</button>
-            <span style="font-size:12px;font-weight:700;color:var(--text-2)">Azienda</span>
+          <div class="card card-pad" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px;background:#376B65;border-color:#376B65">
+            <button class="btn ghost" style="color:#fff;border-color:rgba(255,255,255,.45);background:transparent" onclick="azBack()">← Tutte le aziende</button>
+            <span style="font-size:12px;font-weight:700;color:#D7EAE6">Azienda</span>
             <select class="inp" id="az-select" style="max-width:360px;flex:1;min-width:220px" onchange="azSelect(+this.value)"></select>
           </div>
 
@@ -1292,16 +1300,17 @@
           <span class="pill mute" id="fnc-pill"><span class="dot"></span> In attesa dati azienda</span>
         </div>
 
+        <div class="fnc-modes" id="fnc-seg">
+          <button class="on" data-mode="xml" onclick="fncSetMode('xml')">Upload UNIEMENS</button>
+          <button data-mode="archivio" onclick="fncSetMode('archivio')">Archivio FNC3</button>
+          <button data-mode="manual" onclick="fncSetMode('manual')">Inserimento manuale</button>
+        </div>
+
         <div class="grid g-2-1">
           <div>
             <div class="card card-pad" style="background:#F0EBD8">
               <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px;flex-wrap:wrap">
                 <h3 style="font-size:14.5px">Parametri del progetto</h3>
-                <div class="seg" id="fnc-seg">
-                  <button class="on" data-mode="xml" onclick="fncSetMode('xml')">Upload UNIEMENS</button>
-                  <button data-mode="archivio" onclick="fncSetMode('archivio')">Archivio FNC3</button>
-                  <button data-mode="manual" onclick="fncSetMode('manual')">Inserimento manuale</button>
-                </div>
               </div>
               <div id="fnc-mode-manual" style="display:none">
                 <div class="grid g-2" style="gap:0 18px">
@@ -1383,8 +1392,8 @@
                 <div class="rl"><span class="lab">Beneficio netto azienda</span><span class="num" id="r-benefit">€ 0</span></div>
               </div>
             </div>
-            <button class="btn accent section-gap" style="width:100%" onclick="toast('Bozza di contratto generata e pronta per l\'invio')">Genera bozza contratto</button>
-            <div class="card card-pad section-gap">
+            <button class="btn accent" style="width:100%;justify-content:center;margin-top:18px;padding:15px;border-radius:var(--r-lg);font-size:14px;font-weight:800;box-shadow:var(--shadow)" onclick="toast('Bozza di contratto generata e pronta per l\'invio')">Genera bozza contratto</button>
+            <div class="card card-pad" style="margin-top:18px;border-radius:var(--r-lg);box-shadow:var(--shadow-sm)">
               <div style="font-weight:800;font-size:13px;margin-bottom:8px">Come funziona</div>
               <div class="muted" style="font-size:12.5px;line-height:1.55">Per ogni dipendente il beneficio è <b>ore di formazione × (60% della retribuzione oraria + contribuzione oraria)</b> — l'algoritmo FNC3 applicato ai dati del flusso UNIEMENS. Le ore di formazione non sono nel flusso e si impostano qui.<br><br><em style="color:var(--text-3)">Valori illustrativi a scopo dimostrativo.</em></div>
             </div>
