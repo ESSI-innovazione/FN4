@@ -336,6 +336,13 @@
   .dropzone:hover, .dropzone.dragover { border-color: var(--sky); color: var(--text); background: var(--sky-pale); cursor: pointer; }
   .dropzone .big { width: 30px; height: 30px; margin: 0 auto 8px; color: var(--sky-2); }
   .doc-row.dragover { background: var(--sky-pale); box-shadow: inset 0 0 0 1.5px var(--sky); }
+  .doc-up { display: inline-flex; align-items: center; gap: 7px; font: inherit; font-size: 12px; font-weight: 700;
+    color: var(--sky-2); background: var(--surface); border: 1.5px dashed var(--sky-2); border-radius: 9px;
+    padding: 7px 13px; cursor: pointer; transition: .15s; white-space: nowrap; }
+  .doc-up:hover { border-color: var(--sky); background: var(--sky-pale); transform: translateY(-1px); }
+  .doc-up svg { width: 13px; height: 13px; flex: none; }
+  .doc-up.replace { border-style: solid; border-color: var(--line-strong); color: var(--text-2); }
+  .doc-up.replace:hover { border-color: var(--sky); color: var(--sky-2); background: var(--sky-pale); }
 
   .field { margin-bottom: 16px; }
   .field label { display: block; font-size: 12px; font-weight: 700; color: var(--text-2); margin-bottom: 6px; }
@@ -1870,13 +1877,15 @@
       checking: '<span class="pill info"><span class="dot"></span> In verifica</span>',
       missing:  '<span class="pill bad"><span class="dot"></span> Mancante</span>',
     };
+    const icUp = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 15V4M7 8.5 12 3.5l5 5"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>';
+    const icRep = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 3v5h-5"/></svg>';
     document.getElementById('doc-list').innerHTML = docChecklist.map((d, i) => {
       const ic = d.status === 'missing'
         ? '<div class="doc-ic" style="background:var(--line-strong)">—</div>'
         : `<div class="doc-ic" style="background:var(--${d.status === 'verified' ? 'good' : 'info'})">${d.ext}</div>`;
       const btn = d.status === 'missing'
-        ? `<button class="btn ghost" onclick="docPick(${i})">Carica</button><button class="btn ghost" onclick="toast('Richiesta documento inviata al consulente')">Richiedi</button>`
-        : `<button class="btn ghost" onclick="docPick(${i})">Sostituisci</button>`;
+        ? `<button class="doc-up" onclick="docPick(${i})" title="Carica il documento da questo pulsante o trascinalo sulla riga">${icUp}Carica file</button><button class="btn ghost" onclick="toast('Richiesta documento inviata al consulente')">Richiedi</button>`
+        : `<button class="doc-up replace" onclick="docPick(${i})" title="Sostituisci il file caricato con una nuova versione">${icRep}Sostituisci</button>`;
       return `<div class="doc-row" ondragover="event.preventDefault();this.classList.add('dragover')"
         ondragleave="this.classList.remove('dragover')"
         ondrop="event.preventDefault();this.classList.remove('dragover');docUpload(${i}, event.dataTransfer.files[0])">
