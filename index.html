@@ -328,6 +328,9 @@
   .doc-row .nm { font-weight: 700; font-size: 13.5px; } .doc-row .mt { font-size: 11.5px; color: var(--text-3); font-weight: 500; }
   .doc-row .act { margin-left: auto; display: flex; align-items: center; gap: 10px; }
 
+  .seg { display: flex; border: 1px solid var(--line-strong); border-radius: var(--r-pill); background: var(--surface); padding: 3px; gap: 2px; }
+  .seg button { border: 0; background: transparent; font: inherit; font-size: 12px; font-weight: 800; color: var(--text-2); padding: 6px 13px; border-radius: 999px; cursor: pointer; }
+  .seg button.on { background: linear-gradient(155deg, var(--merlot), var(--merlot-2)); color: #fff; }
   .dropzone { border: 1.5px dashed var(--line-strong); border-radius: var(--r-lg); padding: 28px; text-align: center;
     color: var(--text-2); background: var(--surface-2); transition: .15s; }
   .dropzone:hover { border-color: var(--sky); color: var(--text); background: var(--sky-pale); }
@@ -1145,7 +1148,24 @@
         <div class="grid g-2-1">
           <div>
             <div class="card card-pad" style="background:#F0EBD8">
-              <h3 style="font-size:14.5px;margin-bottom:16px">Dati aziendali — flusso UNIEMENS</h3>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+                <h3 style="font-size:14.5px">Parametri del progetto</h3>
+                <div class="seg" id="fnc-seg">
+                  <button class="on" data-mode="xml" onclick="fncSetMode('xml')">Upload UNIEMENS</button>
+                  <button data-mode="manual" onclick="fncSetMode('manual')">Inserimento manuale</button>
+                </div>
+              </div>
+              <div id="fnc-mode-manual" style="display:none">
+                <div class="grid g-2" style="gap:0 18px">
+                  <div class="field"><label>Numero dipendenti coinvolti</label><input class="inp" id="c-emp" type="number" value="18" oninput="fncCalc()"></div>
+                  <div class="field"><label>Ore di formazione / dipendente</label><input class="inp" id="c-hrs" type="number" value="120" oninput="fncCalc()"></div>
+                </div>
+                <div class="field"><label>Costo Medio Orario — CMO <span class="muted">(€/ora)</span></label><input class="inp" id="c-cmo" type="number" value="24.50" step="0.5" oninput="fncCalc()"></div>
+                <div class="divider"></div>
+                <div class="kv"><span class="k">Monte ore totale formazione</span><span class="v tnum" id="r-hours">— h</span></div>
+                <div class="kv"><span class="k">Costo orario medio applicato</span><span class="v tnum" id="r-cmo">—</span></div>
+              </div>
+              <div id="fnc-mode-xml">
               <div class="dropzone" id="fnc-dz" onclick="document.getElementById('fnc-file').click()">
                 <svg class="big" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
                 <div style="font-weight:800;font-size:13.5px">Carica flusso UNIEMENS (.xml)</div>
@@ -1159,6 +1179,7 @@
                 <div class="kv" style="margin-bottom:10px"><span class="k" id="fnc-import-sum">—</span><span class="v"><span class="pill good"><span class="dot"></span> Importato</span></span></div>
                 <div class="field" style="margin-bottom:8px"><input class="inp" id="fnc-search" type="text" placeholder="Cerca azienda per nome o codice fiscale…" oninput="fncRenderCompanies()"></div>
                 <div id="fnc-companies" style="max-height:240px;overflow-y:auto"></div>
+              </div>
               </div>
             </div>
 
@@ -1189,13 +1210,14 @@
           <div>
             <div class="result-box">
               <span class="blob"></span>
-              <div style="position:relative;color:#F0CCC0;font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:800">Beneficio totale (rimborso FNC)</div>
+              <div style="position:relative;color:#F0CCC0;font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:800" id="r-total-label">Beneficio totale (rimborso FNC)</div>
               <div class="big-num" id="r-total">€ 0</div>
               <div style="margin-top:14px;position:relative">
                 <div class="rl" style="display:block">
                   <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span class="lab">Percentuale Time Vision</span><span class="num" id="c-fee-lbl">25%</span></div>
                   <input type="range" id="c-fee" min="8" max="30" value="25" style="width:100%" oninput="fncCalc()">
                 </div>
+                <div class="rl" id="fnc-row-company" style="display:none"><span class="lab">Quota a carico azienda</span><span class="num" id="r-company">€ 0</span></div>
                 <div class="rl"><span class="lab">Fee Time Vision</span><span class="num fee" id="r-fee">€ 0</span></div>
                 <div class="rl"><span class="lab">Beneficio netto azienda</span><span class="num" id="r-benefit">€ 0</span></div>
               </div>
@@ -1828,7 +1850,21 @@
   // ---- Fase 2: import UNIEMENS/FNC3 + calcolo beneficio (algoritmo FNC3) ----
   const eur = n => '€ ' + Math.round(n).toLocaleString('it-IT');
   const eur2 = n => '€ ' + n.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  const fnc = { companies: [], selected: -1 };
+  const fnc = { companies: [], selected: -1, mode: 'xml' };
+
+  function fncSetMode(m) {
+    fnc.mode = m;
+    document.querySelectorAll('#fnc-seg button').forEach(b => b.classList.toggle('on', b.dataset.mode === m));
+    document.getElementById('fnc-mode-xml').style.display = m === 'xml' ? '' : 'none';
+    document.getElementById('fnc-mode-manual').style.display = m === 'manual' ? '' : 'none';
+    document.getElementById('fnc-emp-card').style.display = (m === 'xml' && fnc.selected >= 0) ? '' : 'none';
+    document.getElementById('fnc-row-company').style.display = m === 'manual' ? '' : 'none';
+    document.getElementById('r-total-label').textContent = m === 'manual' ? 'Valore progetto (rimborso FNC)' : 'Beneficio totale (rimborso FNC)';
+    const pill = document.getElementById('fnc-pill');
+    if (m === 'manual') pill.innerHTML = '<span class="dot"></span> Bozza · Calcolo manuale';
+    else pill.innerHTML = fnc.selected >= 0 ? `<span class="dot"></span> Bozza · ${fnc.companies[fnc.selected].nome}` : '<span class="dot"></span> In attesa dati azienda';
+    fncCalc();
+  }
 
   // "€ 10,50" / "1.234,56" / "2298" -> Number
   function itNum(s) {
@@ -2000,6 +2036,22 @@
   function fncCalc() {
     const feePct = +document.getElementById('c-fee').value || 0;
     document.getElementById('c-fee-lbl').textContent = feePct + '%';
+    if (fnc.mode === 'manual') {
+      const emp = +document.getElementById('c-emp').value || 0;
+      const hrs = +document.getElementById('c-hrs').value || 0;
+      const cmo = +document.getElementById('c-cmo').value || 0;
+      const totalHours = emp * hrs;
+      const total = totalHours * cmo;
+      const fee = total * feePct / 100;
+      const company = total * 0.10;
+      document.getElementById('r-hours').textContent = totalHours.toLocaleString('it-IT') + ' h';
+      document.getElementById('r-cmo').textContent = eur(cmo) + ' / h';
+      document.getElementById('r-total').textContent = eur(total);
+      document.getElementById('r-company').textContent = eur(company);
+      document.getElementById('r-fee').textContent = eur(fee);
+      document.getElementById('r-benefit').textContent = eur(total - fee - company);
+      return;
+    }
     const c = fnc.companies[fnc.selected];
     if (!c) {
       document.getElementById('r-total').textContent = '€ 0';

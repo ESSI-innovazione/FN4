@@ -81,6 +81,16 @@ tabella. Per il CSV FNC3 le ore per riga arrivano precompilate dal file.
    La riga "Quota a carico azienda 10%" viene rimossa (non fa parte dell'algoritmo
    FNC3). Il bottone "Genera bozza contratto" resta.
 
+## Modalità manuale (aggiunta 2026-07-27, richiesta cliente)
+
+Toggle in testa alla card parametri: **Upload UNIEMENS** / **Inserimento manuale**.
+La modalità manuale ripropone il vecchio calcolatore per admin/stagista senza file:
+numero dipendenti, ore/dipendente, CMO €/ora — `valore = dipendenti × ore × CMO`,
+`quota azienda = 10%`, `netto = valore − fee − quota`. Slider fee e pannello
+risultato condivisi; la riga "Quota a carico azienda" e l'etichetta "Valore
+progetto" compaiono solo in modalità manuale. Nota: formula legacy, volutamente
+diversa dall'algoritmo FNC3 della modalità upload.
+
 ## Gestione errori
 - File non riconosciuto / XML malformato → toast di errore, stato invariato.
 - Lavoratori senza dati retributivi (ore lavorabili = 0 o imponibile mancante) →
