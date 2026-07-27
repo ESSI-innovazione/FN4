@@ -948,7 +948,7 @@
       <div class="nav-label">Flusso di lavoro</div>
       <button class="nav-item" data-view="consulente">
         <span class="wf-num">1</span>
-        <span class="lbl">Portale Consulente</span>
+        <span class="lbl">Portale Aziende</span>
         <span class="wf-badge red" title="2 documenti mancanti" aria-label="2 documenti mancanti">2</span>
       </button>
       <button class="nav-item" data-view="commerciale">
@@ -1067,7 +1067,7 @@
             <div class="top-row">
               <div class="icon-badge merlot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><path d="M9 13h6M9 17h4"/></svg></div>
             </div>
-            <div class="ttl">Portale Consulente</div>
+            <div class="ttl">Portale Aziende</div>
             <div class="sub">Raccolta documenti e notifiche automatiche di completamento</div>
             <div class="foot"><span class="pill bad"><span class="dot"></span> 2 doc mancanti</span><span class="go">Apri <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
           </button>
@@ -1180,7 +1180,7 @@
             <div class="icon-badge merlot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><path d="M9 13h6M9 17h4"/></svg></div>
             <div class="tx">
               <div class="ey">Fase 1 · Raccolta documentale</div>
-              <h1>Portale Consulente</h1>
+              <h1>Portale Aziende</h1>
               <p>Il consulente accede, vede la sua azienda e carica i documenti. La piattaforma verifica automaticamente cosa manca e invia le notifiche — senza più rincorrere i documenti.</p>
             </div>
           </div>
@@ -1875,7 +1875,7 @@
 
 <script>
   // ---- Navigation (shared by sidebar nav + dashboard section cards) ----
-  const titles = { dashboard:'Home', consulente:'Portale Consulente', commerciale:'Proposta Commerciale',
+  const titles = { dashboard:'Home', consulente:'Portale Aziende', commerciale:'Proposta Commerciale',
     progettazione:'Progettazione', governo:'Upload Governo', monitoraggio:'Monitoraggio',
     'ai-contenuti':'Progettazione · Contenuti AI', 'ai-slide':'Progettazione · Contenuti AI',
     'ai-video':'Progettazione · Contenuti AI', 'ai-immagini':'Progettazione · Contenuti AI' };
@@ -2037,7 +2037,7 @@ per completare la pratica FNC di Alfa Logistica S.r.l. ${missing.length === 1 ? 
 
 ${missing.map(n => ' • ' + n).join('\n')}
 
-La invitiamo a caricarl${missing.length === 1 ? 'o' : 'i'} dal Portale Consulente entro 3 giorni lavorativi, così da poter procedere con la presentazione della domanda.
+La invitiamo a caricarl${missing.length === 1 ? 'o' : 'i'} dal Portale Aziende entro 3 giorni lavorativi, così da poter procedere con la presentazione della domanda.
 
 Per qualsiasi dubbio restiamo a disposizione.
 
@@ -2060,8 +2060,8 @@ FNC 4 · Time Vision`;
         <div style="padding:22px 26px">
           <p style="margin:0 0 14px;font-size:14px;color:#271119;line-height:1.6">Gentile <b>${DOC_MAIL.nome}</b>,<br>per completare la pratica <b>FNC di Alfa Logistica S.r.l.</b> ${missing.length === 1 ? 'manca ancora il seguente documento' : 'mancano ancora i seguenti documenti'}:</p>
           <table style="width:100%;border-collapse:collapse;border:1px solid #F0E6C8;border-radius:10px">${rows}</table>
-          <p style="margin:16px 0 0;font-size:14px;color:#271119;line-height:1.6">La invitiamo a caricarl${missing.length === 1 ? 'o' : 'i'} dal <b>Portale Consulente</b> entro <b>3 giorni lavorativi</b>, così da poter procedere con la presentazione della domanda.</p>
-          <div style="text-align:center;margin:22px 0"><a href="https://fn4.vercel.app" style="background:#9E2A2B;color:#FFFFFF;text-decoration:none;font-size:14px;font-weight:bold;padding:12px 28px;border-radius:10px;display:inline-block">Vai al Portale Consulente</a></div>
+          <p style="margin:16px 0 0;font-size:14px;color:#271119;line-height:1.6">La invitiamo a caricarl${missing.length === 1 ? 'o' : 'i'} dal <b>Portale Aziende</b> entro <b>3 giorni lavorativi</b>, così da poter procedere con la presentazione della domanda.</p>
+          <div style="text-align:center;margin:22px 0"><a href="https://fn4.vercel.app" style="background:#9E2A2B;color:#FFFFFF;text-decoration:none;font-size:14px;font-weight:bold;padding:12px 28px;border-radius:10px;display:inline-block">Vai al Portale Aziende</a></div>
           <p style="margin:0;font-size:13px;color:#7a6a70;line-height:1.6">Per qualsiasi dubbio restiamo a disposizione.<br>Cordiali saluti,<br><b style="color:#271119">Anna Colombo</b> · FNC 4 · Time Vision</p>
         </div>
         <div style="background:#FFFAE0;padding:11px 26px;font-size:11px;color:#8A771B;border-top:1px solid #EADFC0">Email automatica generata dalla piattaforma FNC 4 — Fase 1 · Raccolta documentale</div>
