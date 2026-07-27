@@ -2078,7 +2078,7 @@
   let aziende = [];
   let azSelected = 0;
   let azPage = 1;
-  const AZ_PER_PAGE = 50;
+  const AZ_PER_PAGE = 20;
   const azCur = () => aziende[azSelected];
   const azStats = a => {
     const done = a.docs.filter(d => d.status !== 'missing').length;
