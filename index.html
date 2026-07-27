@@ -1200,7 +1200,7 @@
             </div>
             <div style="overflow-x:auto">
               <table>
-                <thead><tr><th>Azienda</th><th>Consulente</th><th>Documenti</th><th class="r">Mancanti</th><th>Stato</th><th></th></tr></thead>
+                <thead><tr><th>Azienda</th><th>Fondo</th><th>Documenti</th><th class="r">Mancanti</th><th>Stato</th><th></th></tr></thead>
                 <tbody id="az-tbody"></tbody>
               </table>
             </div>
@@ -1223,9 +1223,10 @@
                 <div><div style="font-weight:700;font-size:15px" id="az-nome">Alfa Logistica S.r.l.</div><div class="muted" style="font-size:12.5px" id="az-sub">P.IVA 0289 4410 727 · Napoli</div></div>
               </div>
               <div class="divider"></div>
-              <div class="kv"><span class="k">Consulente</span><span class="v" id="az-consulente">Marco Rossi</span></div>
-              <div class="kv"><span class="k">Dipendenti</span><span class="v tnum" id="az-dip">18</span></div>
-              <div class="kv"><span class="k">Codice ATECO</span><span class="v mono" id="az-ateco">52.29.22</span></div>
+              <div class="kv"><span class="k">Fondo</span><span class="v" id="az-fondo">—</span></div>
+              <div class="kv"><span class="k">Lavoratori in formazione</span><span class="v tnum" id="az-dip">18</span></div>
+              <div class="kv"><span class="k">Ore di formazione</span><span class="v tnum" id="az-ore">—</span></div>
+              <div class="kv"><span class="k">Beneficio FNC</span><span class="v tnum" id="az-beneficio">—</span></div>
               <div class="kv"><span class="k">Completamento</span><span class="v" style="color:var(--cream-deep)" id="doc-pct">75%</span></div>
               <div class="progress section-gap"><i style="width:75%" id="doc-pct-bar"></i></div>
             </div>
@@ -1903,6 +1904,7 @@
 
 <div class="toast-wrap" id="toasts"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
   // ---- Navigation (shared by sidebar nav + dashboard section cards) ----
   const titles = { dashboard:'Home', consulente:'Portale Aziende', commerciale:'Proposta Commerciale',
@@ -2003,8 +2005,13 @@
     { name: 'Piano orario formativo', ext: 'PDF' },
   ];
 
-  // Dataset demo deterministico (seed fisso: stesse aziende a ogni ricarica)
-  const aziende = (() => {
+  // Backend Supabase (chiave publishable: pensata per l'uso nel client)
+  const SUPA_URL = 'https://bqxwubmrpsrrfdygyejd.supabase.co';
+  const SUPA_KEY = 'sb_publishable_S7hopa2KjfPzIif45DcZiA_0cRrclg9';
+  const supa = window.supabase ? window.supabase.createClient(SUPA_URL, SUPA_KEY) : null;
+
+  // Dataset demo deterministico: usato solo se il database non è raggiungibile
+  const azDemoData = (() => {
     let seed = 42;
     const rnd = () => { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; };
     const W1 = ['Meccanica', 'Tessile', 'Trasporti', 'Edilizia', 'Agritech', 'Tecno', 'Metalmeccanica', 'Food', 'Digital', 'Logistica', 'Chimica', 'Plastica', 'Elettronica', 'Arredo', 'Vetreria', 'Cartiera', 'Marmi', 'Nautica', 'Ottica', 'Farmaceutica'];
@@ -2051,9 +2058,10 @@
         docs: mkDocs(),
       });
     }
-    return list;
+    return () => list;
   })();
 
+  let aziende = [];
   let azSelected = 0;
   let azPage = 1;
   const AZ_PER_PAGE = 50;
@@ -2072,6 +2080,7 @@
   };
 
   function docRender() {
+    if (!aziende.length) return;
     const pills = {
       verified: '<span class="pill good"><span class="dot"></span> Verificato</span>',
       checking: '<span class="pill info"><span class="dot"></span> In verifica</span>',
@@ -2109,6 +2118,8 @@
 
   // Bozza email sollecito (aggiornata automaticamente finché l'admin non la modifica a mano)
   let docMailEdited = false;
+  const azSaluto = () => azCur().referente ? 'Gentile ' + azCur().referente : 'Spett.le ' + azCur().nome;
+  const azSalutoHtml = () => azCur().referente ? 'Gentile <b>' + azCur().referente + '</b>' : 'Spett.le <b>' + azCur().nome + '</b>';
   const docMissingNames = () => azCur().docs.filter(d => d.status === 'missing').map(d => d.name);
 
   function docMailRefresh() {
@@ -2117,11 +2128,11 @@
     if (!missing.length) return;
     document.getElementById('doc-mail-subj').textContent =
       `FNC 4 — ${missing.length === 1 ? 'Documento mancante' : missing.length + ' documenti mancanti'} · ${azCur().nome}`;
-    document.getElementById('doc-mail-to').textContent = azCur().email;
+    document.getElementById('doc-mail-to').textContent = azCur().email || 'indirizzo email non disponibile';
     document.getElementById('doc-mail-preview').innerHTML = docMailHtml(missing);
     if (docMailEdited) return;
     document.getElementById('doc-mail-body').value =
-`Gentile ${azCur().referente},
+`${azSaluto()},
 
 per completare la pratica FNC di ${azCur().nome} ${missing.length === 1 ? 'manca ancora il seguente documento' : 'mancano ancora i seguenti documenti'}:
 
@@ -2148,7 +2159,7 @@ FNC 4 · Time Vision`;
           <div style="color:#FFFFFF;font-size:19px;font-weight:bold;margin-top:4px">Documenti mancanti per la pratica FNC</div>
         </div>
         <div style="padding:22px 26px">
-          <p style="margin:0 0 14px;font-size:14px;color:#271119;line-height:1.6">Gentile <b>${azCur().referente}</b>,<br>per completare la pratica <b>FNC di ${azCur().nome}</b> ${missing.length === 1 ? 'manca ancora il seguente documento' : 'mancano ancora i seguenti documenti'}:</p>
+          <p style="margin:0 0 14px;font-size:14px;color:#271119;line-height:1.6">${azSalutoHtml()},<br>per completare la pratica <b>FNC di ${azCur().nome}</b> ${missing.length === 1 ? 'manca ancora il seguente documento' : 'mancano ancora i seguenti documenti'}:</p>
           <table style="width:100%;border-collapse:collapse;border:1px solid #F0E6C8;border-radius:10px">${rows}</table>
           <p style="margin:16px 0 0;font-size:14px;color:#271119;line-height:1.6">La invitiamo a caricarl${missing.length === 1 ? 'o' : 'i'} dal <b>Portale Aziende</b> entro <b>3 giorni lavorativi</b>, così da poter procedere con la presentazione della domanda.</p>
           <div style="text-align:center;margin:22px 0"><a href="https://fn4.vercel.app" style="background:#9E2A2B;color:#FFFFFF;text-decoration:none;font-size:14px;font-weight:bold;padding:12px 28px;border-radius:10px;display:inline-block">Vai al Portale Aziende</a></div>
@@ -2225,28 +2236,51 @@ FNC 4 · Time Vision`;
     if (files && files.length && docTarget >= 0) { docUpload(docTarget, files[0]); docTarget = -1; }
   }
 
-  function docUpload(i, file) {
+  async function docUpload(i, file) {
     if (!file) return;
     if (file.size > 20 * 1048576) { toast('"' + file.name + '" supera il limite di 20 MB'); return; }
-    const d = azCur().docs[i];
+    const az = azCur();
+    const d = az.docs[i];
     d.ext = docExt(file);
     d.status = 'checking';
     d.meta = file.name + ' · ' + docFmtSize(file.size) + ' · in verifica';
     docRender();
     toast('"' + file.name + '" caricato per "' + d.name + '"');
-    setTimeout(() => {
+
+    // Persistenza: file nello Storage + stato nel database
+    let salvato = false;
+    if (supa && d.id) {
+      try {
+        const path = az.dbId + '/' + (i + 1) + '-' + Date.now() + '-' + file.name.replace(/[^\w.\-]/g, '_');
+        const up = await supa.storage.from('fn4-documenti').upload(path, file);
+        if (up.error) throw up.error;
+        const upd = await supa.from('fn4_documenti')
+          .update({ status: 'checking', ext: d.ext, meta: d.meta, file_path: path, file_size: file.size, updated_at: new Date().toISOString() })
+          .eq('id', d.id);
+        if (upd.error) throw upd.error;
+        d.file_path = path;
+        salvato = true;
+      } catch (e) {
+        toast('⚠ Salvataggio non riuscito: ' + (e.message || e));
+      }
+    }
+
+    setTimeout(async () => {
       if (d.status !== 'checking') return;
       d.status = 'verified';
       d.meta = 'Caricato · ' + docFmtSize(file.size);
       docRender();
       toast('"' + d.name + '" verificato automaticamente');
+      if (salvato) {
+        try { await supa.from('fn4_documenti').update({ status: 'verified', meta: d.meta }).eq('id', d.id); } catch (e) {}
+      }
     }, 2600);
   }
   // ---- Panoramica aziende: tabella con ricerca, paginazione e apertura dettaglio ----
   function azFiltered() {
     const q = (document.getElementById('az-search').value || '').toLowerCase().trim();
     return aziende.map((a, i) => ({ a, i })).filter(({ a }) =>
-      !q || (a.nome + ' ' + a.consulente + ' ' + a.citta).toLowerCase().includes(q));
+      !q || (a.nome + ' ' + (a.fondo || '') + ' ' + a.piva + ' ' + (a.email || '')).toLowerCase().includes(q));
   }
 
   function azRenderTable() {
@@ -2264,8 +2298,8 @@ FNC 4 · Time Vision`;
           : '<span class="pill good"><span class="dot"></span> Completa</span>';
       const ini = a.nome.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
       return `<tr onclick="azSelect(${i})" title="Apri la situazione documentale di ${a.nome.replace(/"/g, '&quot;')}">
-        <td><div class="co"><span class="av" style="background:${AV_BG[i % AV_BG.length]}">${ini}</span><div>${a.nome}<small>${a.citta} · ${a.dipendenti} dip.</small></div></div></td>
-        <td>${a.consulente}</td>
+        <td><div class="co"><span class="av" style="background:${AV_BG[i % AV_BG.length]}">${ini}</span><div>${a.nome}<small>${a.piva} · ${a.dipendenti} lav.</small></div></div></td>
+        <td>${a.fondo || '—'}</td>
         <td><span class="az-mini"><i style="width:${Math.round(s.done / s.tot * 100)}%"></i></span><span class="tnum">${s.done} / ${s.tot}</span></td>
         <td class="r tnum">${s.missing || '—'}</td>
         <td>${stato}</td>
@@ -2274,23 +2308,37 @@ FNC 4 · Time Vision`;
     document.getElementById('az-count').innerHTML = `<span class="dot"></span> ${aziende.length} aziende · ${aziende.filter(a => azStats(a).missing > 0).length} con documenti mancanti`;
     const from = rows.length ? (azPage - 1) * AZ_PER_PAGE + 1 : 0;
     const to = Math.min(azPage * AZ_PER_PAGE, rows.length);
+    const pgBtns = [];
+    let lastShown = 0;
+    for (let p = 1; p <= pages; p++) {
+      if (p === 1 || p === pages || Math.abs(p - azPage) <= 1) {
+        if (p - lastShown > 1) pgBtns.push('<span style="padding:0 2px">…</span>');
+        pgBtns.push(`<button class="${p === azPage ? 'on' : ''}" onclick="azPage=${p};azRenderTable()">${p}</button>`);
+        lastShown = p;
+      }
+    }
     document.getElementById('az-pagination').innerHTML =
       `<span>Mostrate ${from}–${to} di ${rows.length} aziende</span><div class="pg">
        <button ${azPage === 1 ? 'disabled' : ''} onclick="azPage--;azRenderTable()">←</button>
-       ${Array.from({ length: pages }, (_, p) => `<button class="${p + 1 === azPage ? 'on' : ''}" onclick="azPage=${p + 1};azRenderTable()">${p + 1}</button>`).join('')}
+       ${pgBtns.join('')}
        <button ${azPage === pages ? 'disabled' : ''} onclick="azPage++;azRenderTable()">→</button></div>`;
   }
 
+  const azEur = n => '€ ' + Math.round(n).toLocaleString('it-IT');
+
   function azFillCard() {
+    if (!aziende.length) return;
     const a = azCur();
     document.getElementById('az-av').textContent = a.nome.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
     document.getElementById('az-nome').textContent = a.nome;
-    document.getElementById('az-sub').textContent = 'P.IVA ' + a.piva + ' · ' + a.citta;
-    document.getElementById('az-consulente').textContent = a.consulente;
+    document.getElementById('az-sub').textContent = 'P.IVA ' + a.piva
+      + (a.matricola ? ' · Matr. INPS ' + a.matricola : (a.citta ? ' · ' + a.citta : ''));
+    document.getElementById('az-fondo').textContent = a.fondo || '—';
     document.getElementById('az-dip').textContent = a.dipendenti;
-    document.getElementById('az-ateco').textContent = a.ateco;
+    document.getElementById('az-ore').textContent = a.ore ? Math.round(a.ore).toLocaleString('it-IT') : '—';
+    document.getElementById('az-beneficio').textContent = a.beneficio ? azEur(a.beneficio) : '—';
     const sel = document.getElementById('az-select');
-    sel.innerHTML = aziende.map((x, i) => `<option value="${i}" ${i === azSelected ? 'selected' : ''}>${x.nome} — ${x.citta}</option>`).join('');
+    sel.innerHTML = aziende.map((x, i) => `<option value="${i}" ${i === azSelected ? 'selected' : ''}>${x.nome} · ${x.piva}</option>`).join('');
   }
 
   function azSelect(i) {
@@ -2309,9 +2357,56 @@ FNC 4 · Time Vision`;
     azRenderTable();
   }
 
-  azFillCard();
-  docRender();
-  azRenderTable();
+  // Nomi azienda dal CSV sono in maiuscolo: resa leggibile mantenendo le forme societarie
+  function azTitleCase(s) {
+    return s.toLowerCase().replace(/\S+/g, w =>
+      /^(srl|spa|snc|sas|sc|scarl|sne|di|e|&|il|la|del|della)$/.test(w)
+        ? (w.length <= 2 && w !== '&' ? w : w.toUpperCase())
+        : w[0].toUpperCase() + w.slice(1))
+      .replace(/\b(srl|spa|snc|sas|sc|scarl)\b/gi, m => m.toUpperCase())
+      .replace(/\b(di|e|il|la|del|della)\b/g, m => m.toLowerCase());
+  }
+
+  async function azInit() {
+    document.getElementById('az-tbody').innerHTML =
+      '<tr><td colspan="6" style="text-align:center;color:var(--text-3);padding:26px">Caricamento aziende dal database…</td></tr>';
+    try {
+      if (!supa) throw new Error('client non disponibile');
+      const { data, error } = await supa
+        .from('fn4_aziende')
+        .select('*, fn4_documenti(*)')
+        .order('nome')
+        .limit(2000);
+      if (error) throw error;
+      aziende = data.map(a => ({
+        dbId: a.id,
+        nome: azTitleCase(a.nome),
+        piva: a.piva,
+        citta: a.indirizzo || '',
+        matricola: a.matricola_inps || '',
+        fondo: a.fondo || '',
+        dipendenti: a.n_lavoratori,
+        ore: Number(a.ore_formazione) || 0,
+        beneficio: Number(a.beneficio_totale) || 0,
+        consulente: a.consulente || '',
+        referente: a.referente || '',
+        email: a.email || '',
+        docs: (a.fn4_documenti || []).sort((x, y) => x.ord - y.ord).map(d => ({
+          id: d.id, name: d.tipo, ext: d.ext, status: d.status,
+          meta: d.meta || 'Non ancora caricato', file_path: d.file_path,
+        })),
+      }));
+      toast(aziende.length + ' aziende caricate dal database FNC');
+    } catch (e) {
+      aziende = azDemoData();
+      toast('⚠ Database non raggiungibile: dati demo (' + (e.message || e) + ')');
+    }
+    azSelected = 0;
+    azFillCard();
+    docRender();
+    azRenderTable();
+  }
+  azInit();
 
   // ---- Fase 2: import UNIEMENS/FNC3 + calcolo beneficio (algoritmo FNC3) ----
   const eur = n => '€ ' + Math.round(n).toLocaleString('it-IT');
