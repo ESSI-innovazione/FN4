@@ -1292,6 +1292,7 @@
                 <h3 style="font-size:14.5px">Parametri del progetto</h3>
                 <div class="seg" id="fnc-seg">
                   <button class="on" data-mode="xml" onclick="fncSetMode('xml')">Upload UNIEMENS</button>
+                  <button data-mode="archivio" onclick="fncSetMode('archivio')">Archivio FNC3</button>
                   <button data-mode="manual" onclick="fncSetMode('manual')">Inserimento manuale</button>
                 </div>
               </div>
@@ -1304,6 +1305,19 @@
                 <div class="divider"></div>
                 <div class="kv"><span class="k">Monte ore totale formazione</span><span class="v tnum" id="r-hours">— h</span></div>
                 <div class="kv"><span class="k">Costo orario medio applicato</span><span class="v tnum" id="r-cmo">—</span></div>
+              </div>
+              <div id="fnc-mode-archivio" style="display:none">
+                <div class="field"><label>Azienda (archivio FNC3 2023/24)</label>
+                  <select class="inp" id="fnc-az-select" onchange="fncArchSelect(+this.value)"><option value="-1">Seleziona azienda…</option></select>
+                </div>
+                <div id="fnc-arch-info" style="display:none">
+                  <div class="divider"></div>
+                  <div class="kv"><span class="k">P.IVA</span><span class="v mono" id="fnc-arch-piva">—</span></div>
+                  <div class="kv"><span class="k">Fondo</span><span class="v" id="fnc-arch-fondo">—</span></div>
+                  <div class="kv"><span class="k">Lavoratori in formazione</span><span class="v tnum" id="fnc-arch-lav">—</span></div>
+                  <div class="kv"><span class="k">Ore di formazione</span><span class="v tnum" id="fnc-arch-ore">—</span></div>
+                  <div class="muted" style="font-size:11.5px;margin-top:10px">Beneficio e percentuale provengono dal foglio FNC3 2023/24 importato: la percentuale resta modificabile con lo slider.</div>
+                </div>
               </div>
               <div id="fnc-mode-xml">
               <div class="dropzone" id="fnc-dz" onclick="document.getElementById('fnc-file').click()">
@@ -2388,6 +2402,7 @@ FNC 4 · Time Vision`;
         dipendenti: a.n_lavoratori,
         ore: Number(a.ore_formazione) || 0,
         beneficio: Number(a.beneficio_totale) || 0,
+        fee: Number(a.fee_percent) || 0,
         consulente: a.consulente || '',
         referente: a.referente || '',
         email: a.email || '',
@@ -2405,26 +2420,54 @@ FNC 4 · Time Vision`;
     azFillCard();
     docRender();
     azRenderTable();
+    fncArchPopulate();
   }
   azInit();
 
   // ---- Fase 2: import UNIEMENS/FNC3 + calcolo beneficio (algoritmo FNC3) ----
   const eur = n => '€ ' + Math.round(n).toLocaleString('it-IT');
   const eur2 = n => '€ ' + n.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  const fnc = { companies: [], selected: -1, mode: 'xml' };
+  const fnc = { companies: [], selected: -1, arch: -1, mode: 'xml' };
 
   function fncSetMode(m) {
     fnc.mode = m;
     document.querySelectorAll('#fnc-seg button').forEach(b => b.classList.toggle('on', b.dataset.mode === m));
     document.getElementById('fnc-mode-xml').style.display = m === 'xml' ? '' : 'none';
     document.getElementById('fnc-mode-manual').style.display = m === 'manual' ? '' : 'none';
+    document.getElementById('fnc-mode-archivio').style.display = m === 'archivio' ? '' : 'none';
     document.getElementById('fnc-emp-card').style.display = (m === 'xml' && fnc.selected >= 0) ? '' : 'none';
     document.getElementById('fnc-row-company').style.display = m === 'manual' ? '' : 'none';
-    document.getElementById('r-total-label').textContent = m === 'manual' ? 'Valore progetto (rimborso FNC)' : 'Beneficio totale (rimborso FNC)';
+    document.getElementById('r-total-label').textContent = m === 'manual' ? 'Valore progetto (rimborso FNC)'
+      : m === 'archivio' ? 'Beneficio totale (archivio FNC3)' : 'Beneficio totale (rimborso FNC)';
     const pill = document.getElementById('fnc-pill');
     if (m === 'manual') pill.innerHTML = '<span class="dot"></span> Bozza · Calcolo manuale';
+    else if (m === 'archivio') pill.innerHTML = fnc.arch >= 0
+      ? `<span class="dot"></span> Bozza · ${aziende[fnc.arch].nome}`
+      : '<span class="dot"></span> Seleziona azienda dall\'archivio';
     else pill.innerHTML = fnc.selected >= 0 ? `<span class="dot"></span> Bozza · ${fnc.companies[fnc.selected].nome}` : '<span class="dot"></span> In attesa dati azienda';
     fncCalc();
+  }
+
+  // Modalità archivio: aziende reali FNC3 caricate dal database (stesso elenco della Fase 1)
+  function fncArchPopulate() {
+    const sel = document.getElementById('fnc-az-select');
+    if (!sel) return;
+    sel.innerHTML = '<option value="-1">Seleziona azienda…</option>' +
+      aziende.map((a, i) => `<option value="${i}">${a.nome} · ${a.piva}</option>`).join('');
+  }
+
+  function fncArchSelect(i) {
+    fnc.arch = i;
+    const box = document.getElementById('fnc-arch-info');
+    if (i < 0) { box.style.display = 'none'; fncSetMode('archivio'); return; }
+    const a = aziende[i];
+    document.getElementById('fnc-arch-piva').textContent = a.piva;
+    document.getElementById('fnc-arch-fondo').textContent = a.fondo || '—';
+    document.getElementById('fnc-arch-lav').textContent = a.dipendenti;
+    document.getElementById('fnc-arch-ore').textContent = a.ore ? Math.round(a.ore).toLocaleString('it-IT') + ' h' : '—';
+    box.style.display = '';
+    if (a.fee >= 8 && a.fee <= 30) document.getElementById('c-fee').value = a.fee;
+    fncSetMode('archivio');
   }
 
   // "€ 10,50" / "1.234,56" / "2298" -> Number
@@ -2611,6 +2654,15 @@ FNC 4 · Time Vision`;
       document.getElementById('r-company').textContent = eur(company);
       document.getElementById('r-fee').textContent = eur(fee);
       document.getElementById('r-benefit').textContent = eur(total - fee - company);
+      return;
+    }
+    if (fnc.mode === 'archivio') {
+      const a = aziende[fnc.arch];
+      const total = a ? (a.beneficio || 0) : 0;
+      const fee = total * feePct / 100;
+      document.getElementById('r-total').textContent = eur(total);
+      document.getElementById('r-fee').textContent = eur(fee);
+      document.getElementById('r-benefit').textContent = eur(total - fee);
       return;
     }
     const c = fnc.companies[fnc.selected];
