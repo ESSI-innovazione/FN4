@@ -394,21 +394,6 @@
   .mail-draft textarea:focus { outline: none; background: var(--sky-pale); }
   .mail-actions { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 12px; border-top: 1px solid var(--line); }
   .mail-preview { max-height: 340px; overflow: auto; background: #FFFAE0; }
-  .doc-modal-bg { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; padding: 20px;
-    background: rgba(39,17,25,.45); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
-    opacity: 0; pointer-events: none; transition: opacity .2s; }
-  .doc-modal-bg.show { opacity: 1; pointer-events: auto; }
-  .doc-modal { background: var(--surface); border-radius: 18px; max-width: 500px; width: 100%;
-    box-shadow: 0 24px 60px rgba(39,17,25,.3); overflow: hidden;
-    transform: translateY(14px) scale(.97); transition: transform .2s; }
-  .doc-modal-bg.show .doc-modal { transform: none; }
-  .doc-modal-head { display: flex; gap: 13px; padding: 20px 22px 14px; align-items: flex-start; }
-  .doc-modal-head h3 { font-size: 16px; font-weight: 800; }
-  .doc-modal-head p { font-size: 12.5px; color: var(--text-2); margin-top: 3px; line-height: 1.5; }
-  .doc-modal .doc-row { padding: 13px 22px; }
-  .doc-modal-foot { display: flex; justify-content: flex-end; gap: 8px; padding: 14px 22px;
-    border-top: 1px solid var(--line); background: var(--surface-2); }
-  .doc-modal-ok { padding: 10px 22px 26px; text-align: center; font-weight: 700; color: var(--good); font-size: 14px; }
   .mail-hint { font-size: 10.5px; color: var(--text-3); padding: 0 12px 10px; line-height: 1.5; }
   .mail-field .seg { padding: 2px; }
   .mail-field .seg button { padding: 4px 11px; font-size: 11px; }
@@ -1888,23 +1873,6 @@
 
 <div class="toast-wrap" id="toasts"></div>
 
-<div class="doc-modal-bg" id="doc-modal-bg" onclick="if(event.target===this)docModalClose()">
-  <div class="doc-modal" role="dialog" aria-modal="true" aria-labelledby="doc-modal-title">
-    <div class="doc-modal-head">
-      <div class="icon-badge merlot" style="flex:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></div>
-      <div>
-        <h3 id="doc-modal-title">Documenti mancanti</h3>
-        <p id="doc-modal-sub">Per completare la Fase 1 mancano ancora alcuni documenti: caricali subito da qui.</p>
-      </div>
-    </div>
-    <div id="doc-modal-list"></div>
-    <div class="doc-modal-foot">
-      <button class="btn ghost" onclick="docModalClose()">Più tardi</button>
-      <button class="btn" onclick="docModalSollecito()">Invia sollecito email</button>
-    </div>
-  </div>
-</div>
-
 <script>
   // ---- Navigation (shared by sidebar nav + dashboard section cards) ----
   const titles = { dashboard:'Home', consulente:'Portale Consulente', commerciale:'Proposta Commerciale',
@@ -1923,7 +1891,6 @@
     document.getElementById('hero').hidden = (v !== 'dashboard');
     document.getElementById('sidebar').classList.remove('open');
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    if (v === 'consulente') docModalMaybe();
   }
   document.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => navigate(b.dataset.view)));
 
@@ -2006,7 +1973,6 @@
     { name: 'Piano orario formativo', ext: null, status: 'missing', meta: 'Non ancora caricato' },
   ];
   let docTarget = -1; // riga destinataria del prossimo file scelto
-  const DOC_SVG_UP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 15V4M7 8.5 12 3.5l5 5"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>';
 
   const docFmtSize = b => b < 102400 ? Math.max(1, Math.round(b / 1024)) + ' KB'
     : (b / 1048576).toFixed(1).replace('.', ',') + ' MB';
@@ -2021,7 +1987,7 @@
       checking: '<span class="pill info"><span class="dot"></span> In verifica</span>',
       missing:  '<span class="pill bad"><span class="dot"></span> Mancante</span>',
     };
-    const icUp = DOC_SVG_UP;
+    const icUp = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 15V4M7 8.5 12 3.5l5 5"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>';
     const icRep = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 3v5h-5"/></svg>';
     document.getElementById('doc-list').innerHTML = docChecklist.map((d, i) => {
       const ic = d.status === 'missing'
@@ -2049,7 +2015,6 @@
       ? `Alle <b>18:00</b> partirà automaticamente una email al consulente con l'elenco ${missing === 1 ? 'del documento ancora mancante' : 'dei ' + missing + ' documenti ancora mancanti'}. Puoi anticiparla inviando subito la bozza qui sotto.`
       : 'Tutti i documenti sono stati caricati: nessun sollecito in programma.';
     docMailRefresh();
-    if (document.getElementById('doc-modal-bg').classList.contains('show')) docModalRender();
   }
 
   // Bozza email sollecito (aggiornata automaticamente finché l'admin non la modifica a mano)
@@ -2158,47 +2123,6 @@ FNC 4 · Time Vision`;
       + '&su=' + encodeURIComponent(subj), '_blank');
     docMailCopy();
   }
-
-  // Popup all'ingresso nel Portale Consulente quando mancano documenti
-  function docModalMaybe() {
-    if (docMissingNames().length) {
-      docModalRender();
-      document.getElementById('doc-modal-bg').classList.add('show');
-    }
-  }
-
-  function docModalClose() {
-    document.getElementById('doc-modal-bg').classList.remove('show');
-  }
-
-  function docModalSollecito() {
-    docModalClose();
-    document.getElementById('doc-mail').scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-
-  function docModalRender() {
-    const missing = docChecklist.map((d, i) => ({ d, i })).filter(x => x.d.status === 'missing');
-    const list = document.getElementById('doc-modal-list');
-    const sub = document.getElementById('doc-modal-sub');
-    if (!missing.length) {
-      sub.textContent = 'Checklist completa: la pratica può proseguire.';
-      list.innerHTML = '<div class="doc-modal-ok">✓ Tutti i documenti sono stati caricati</div>';
-      setTimeout(docModalClose, 1600);
-      return;
-    }
-    sub.textContent = missing.length === 1
-      ? 'Per completare la Fase 1 manca ancora un documento: caricalo subito da qui.'
-      : `Per completare la Fase 1 mancano ancora ${missing.length} documenti: caricali subito da qui.`;
-    list.innerHTML = missing.map(({ d, i }) =>
-      `<div class="doc-row" ondragover="event.preventDefault();this.classList.add('dragover')"
-        ondragleave="this.classList.remove('dragover')"
-        ondrop="event.preventDefault();this.classList.remove('dragover');docUpload(${i}, event.dataTransfer.files[0])">
-        <div class="doc-ic" style="background:var(--line-strong)">—</div>
-        <div><div class="nm">${d.name}</div><div class="mt">Non ancora caricato</div></div>
-        <div class="act"><span class="pill bad"><span class="dot"></span> Mancante</span>
-        <button class="doc-up" onclick="docPick(${i})">${DOC_SVG_UP}Carica file</button></div></div>`).join('');
-  }
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') docModalClose(); });
 
   function docPick(i) {
     docTarget = i;
