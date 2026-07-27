@@ -978,7 +978,7 @@
               <div class="icon-badge sky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h4"/><circle cx="15" cy="15" r="3.5"/><path d="M15 13.6v2.8M13.6 15h2.8"/></svg></div>
             </div>
             <div class="ttl">Proposta Commerciale</div>
-            <div class="sub">Calcolo CMO, quota azienda e fee — bozza contratto</div>
+            <div class="sub">Upload UNIEMENS, calcolo beneficio e fee — bozza contratto</div>
             <div class="foot"><span class="pill mute"><span class="dot"></span> 1 bozza aperta</span><span class="go">Apri <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
           </button>
           <button class="sec-card hi" data-view="progettazione">
@@ -1135,45 +1135,75 @@
             <div class="icon-badge sky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h4"/><circle cx="15" cy="15" r="3.5"/><path d="M15 13.6v2.8M13.6 15h2.8"/></svg></div>
             <div class="tx">
               <div class="ey">Fase 2 · Proposta commerciale</div>
-              <h1>Calcolo CMO &amp; Proposta</h1>
-              <p>Dal costo medio orario dei dipendenti la piattaforma calcola il valore del progetto, la quota a carico dell'azienda e la nostra fee — pronta da inviare come bozza di contratto.</p>
+              <h1>Calcolo Beneficio &amp; Proposta</h1>
+              <p>L'admin carica il flusso <b>UNIEMENS</b> dell'azienda: la piattaforma estrae i lavoratori, ricava retribuzione e contribuzione oraria e calcola il beneficio con l'algoritmo FNC3 — pronto da inviare come bozza di contratto.</p>
             </div>
           </div>
-          <span class="pill mute"><span class="dot"></span> Bozza · Alfa Logistica</span>
+          <span class="pill mute" id="fnc-pill"><span class="dot"></span> In attesa dati azienda</span>
         </div>
 
         <div class="grid g-2-1">
-          <div class="card card-pad" style="background:#F0EBD8">
-            <h3 style="font-size:14.5px;margin-bottom:16px">Parametri del progetto</h3>
-            <div class="grid g-2" style="gap:0 18px">
-              <div class="field"><label>Numero dipendenti coinvolti</label><input class="inp calc" id="c-emp" type="number" value="18"></div>
-              <div class="field"><label>Ore di formazione / dipendente</label><input class="inp calc" id="c-hrs" type="number" value="120"></div>
+          <div>
+            <div class="card card-pad" style="background:#F0EBD8">
+              <h3 style="font-size:14.5px;margin-bottom:16px">Dati aziendali — flusso UNIEMENS</h3>
+              <div class="dropzone" id="fnc-dz" onclick="document.getElementById('fnc-file').click()">
+                <svg class="big" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+                <div style="font-weight:800;font-size:13.5px">Carica flusso UNIEMENS (.xml)</div>
+                <div class="muted" style="font-size:12px;margin-top:4px">oppure il file storico FNC3 (.csv) · i dati restano nel tuo browser</div>
+              </div>
+              <input type="file" id="fnc-file" accept=".xml,.csv" style="display:none" onchange="fncHandleFile(this.files[0])">
+              <div style="margin-top:10px;text-align:center"><a href="#" onclick="fncLoadDemo();return false" style="font-size:12.5px;font-weight:700;color:var(--sky-2)">Oppure usa i dati di esempio →</a></div>
+
+              <div id="fnc-import" style="display:none">
+                <div class="divider"></div>
+                <div class="kv" style="margin-bottom:10px"><span class="k" id="fnc-import-sum">—</span><span class="v"><span class="pill good"><span class="dot"></span> Importato</span></span></div>
+                <div class="field" style="margin-bottom:8px"><input class="inp" id="fnc-search" type="text" placeholder="Cerca azienda per nome o codice fiscale…" oninput="fncRenderCompanies()"></div>
+                <div id="fnc-companies" style="max-height:240px;overflow-y:auto"></div>
+              </div>
             </div>
-            <div class="field"><label>Costo Medio Orario — CMO <span class="muted">(€/ora)</span></label><input class="inp calc" id="c-cmo" type="number" value="24.50" step="0.5"></div>
-            <div class="field">
-              <label>Percentuale fee Time Vision <span class="slider-val" id="c-fee-lbl">15%</span></label>
-              <input type="range" id="c-fee" class="calc" min="8" max="25" value="15">
+
+            <div class="card section-gap" id="fnc-emp-card" style="display:none">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:16px 22px;border-bottom:1px solid var(--line)">
+                <div>
+                  <div style="font-weight:800;font-size:14px" id="fnc-co-name">—</div>
+                  <div class="muted" style="font-size:11.5px" id="fnc-co-meta">—</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <label class="muted" style="font-size:12px;font-weight:700" for="fnc-hours">Ore formazione / dipendente</label>
+                  <input class="inp" id="fnc-hours" type="number" value="100" min="0" style="width:80px;text-align:right" oninput="fncApplyHours(this.value)">
+                </div>
+              </div>
+              <div style="max-height:340px;overflow-y:auto">
+                <table>
+                  <thead><tr><th>Dipendente</th><th class="r">Ore form.</th><th class="r">Retrib. oraria</th><th class="r">Contrib. oraria</th><th class="r">60% quota</th><th class="r">Beneficio</th></tr></thead>
+                  <tbody id="fnc-emp-rows"></tbody>
+                </table>
+              </div>
+              <div style="display:flex;justify-content:space-between;gap:12px;padding:14px 22px;border-top:1.5px solid var(--line-strong);font-weight:800;font-size:13px">
+                <span id="fnc-tot-emp">—</span>
+                <span><span class="muted" style="font-weight:700">Monte ore</span> <span class="tnum" id="fnc-tot-hours">—</span> &nbsp;·&nbsp; <span class="muted" style="font-weight:700">Beneficio totale</span> <span class="tnum" id="fnc-tot-ben">—</span></span>
+              </div>
             </div>
-            <div class="divider"></div>
-            <div class="kv"><span class="k">Monte ore totale formazione</span><span class="v tnum" id="r-hours">— h</span></div>
-            <div class="kv"><span class="k">Costo orario medio applicato</span><span class="v tnum" id="r-cmo">—</span></div>
-            <button class="btn accent section-gap" style="width:100%" onclick="toast('Bozza di contratto generata e pronta per l\'invio')">Genera bozza contratto</button>
           </div>
 
           <div>
             <div class="result-box">
               <span class="blob"></span>
-              <div style="position:relative;color:#F0CCC0;font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:800">Valore progetto (rimborso FNC)</div>
+              <div style="position:relative;color:#F0CCC0;font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:800">Beneficio totale (rimborso FNC)</div>
               <div class="big-num" id="r-total">€ 0</div>
               <div style="margin-top:14px;position:relative">
-                <div class="rl"><span class="lab">Quota a carico azienda</span><span class="num" id="r-company">€ 0</span></div>
+                <div class="rl" style="display:block">
+                  <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span class="lab">Percentuale Time Vision</span><span class="num" id="c-fee-lbl">25%</span></div>
+                  <input type="range" id="c-fee" min="8" max="30" value="25" style="width:100%" oninput="fncCalc()">
+                </div>
                 <div class="rl"><span class="lab">Fee Time Vision</span><span class="num fee" id="r-fee">€ 0</span></div>
                 <div class="rl"><span class="lab">Beneficio netto azienda</span><span class="num" id="r-benefit">€ 0</span></div>
               </div>
             </div>
+            <button class="btn accent section-gap" style="width:100%" onclick="toast('Bozza di contratto generata e pronta per l\'invio')">Genera bozza contratto</button>
             <div class="card card-pad section-gap">
               <div style="font-weight:800;font-size:13px;margin-bottom:8px">Come funziona</div>
-              <div class="muted" style="font-size:12.5px;line-height:1.55">Il Fondo rimborsa il costo delle ore che i dipendenti passano in formazione invece che al lavoro. Il calcolo si basa sull'algoritmo sviluppato per FNC3, adattato a FNC4.<br><br><em style="color:var(--text-3)">Valori illustrativi a scopo dimostrativo.</em></div>
+              <div class="muted" style="font-size:12.5px;line-height:1.55">Per ogni dipendente il beneficio è <b>ore di formazione × (60% della retribuzione oraria + contribuzione oraria)</b> — l'algoritmo FNC3 applicato ai dati del flusso UNIEMENS. Le ore di formazione non sono nel flusso e si impostano qui.<br><br><em style="color:var(--text-3)">Valori illustrativi a scopo dimostrativo.</em></div>
             </div>
           </div>
         </div>
@@ -1633,7 +1663,7 @@
             <div style="font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:6px">Allegati pronti per l'invio</div>
             <div class="doc-row" style="padding-left:0;padding-right:0"><div class="doc-ic" style="background:var(--good)">PDF</div><div><div class="nm">Documento di progetto (47 pag.)</div><div class="mt">Generato in Progettazione</div></div><div class="act"><span class="pill good"><span class="dot"></span> Pronto</span></div></div>
             <div class="doc-row" style="padding-left:0;padding-right:0"><div class="doc-ic" style="background:var(--good)">PDF</div><div><div class="nm">Accordo sindacale</div><div class="mt">Firmato digitalmente</div></div><div class="act"><span class="pill good"><span class="dot"></span> Pronto</span></div></div>
-            <div class="doc-row" style="padding-left:0;padding-right:0"><div class="doc-ic" style="background:var(--good)">XLS</div><div><div class="nm">Prospetto costi e CMO</div><div class="mt">Da Proposta commerciale</div></div><div class="act"><span class="pill good"><span class="dot"></span> Pronto</span></div></div>
+            <div class="doc-row" style="padding-left:0;padding-right:0"><div class="doc-ic" style="background:var(--good)">XLS</div><div><div class="nm">Prospetto costi e beneficio</div><div class="mt">Da Proposta commerciale</div></div><div class="act"><span class="pill good"><span class="dot"></span> Pronto</span></div></div>
             <button class="btn primary section-gap" style="width:100%" onclick="toast('Upload programmato per il 22/07 ore 09:00:00')">Programma upload automatico ore 09:00</button>
           </div>
 
@@ -1795,28 +1825,230 @@
     setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateX(30px)'; el.style.transition = '.3s'; setTimeout(() => el.remove(), 300); }, 2600);
   }
 
-  // ---- CMO calculator (live) ----
+  // ---- Fase 2: import UNIEMENS/FNC3 + calcolo beneficio (algoritmo FNC3) ----
   const eur = n => '€ ' + Math.round(n).toLocaleString('it-IT');
-  function calc() {
-    const emp = +document.getElementById('c-emp').value || 0;
-    const hrs = +document.getElementById('c-hrs').value || 0;
-    const cmo = +document.getElementById('c-cmo').value || 0;
-    const feePct = +document.getElementById('c-fee').value || 0;
-    const totalHours = emp * hrs;
-    const total = totalHours * cmo;
-    const fee = total * feePct / 100;
-    const company = total * 0.10;
-    const benefit = total - fee - company;
-    document.getElementById('c-fee-lbl').textContent = feePct + '%';
-    document.getElementById('r-hours').textContent = totalHours.toLocaleString('it-IT') + ' h';
-    document.getElementById('r-cmo').textContent = eur(cmo) + ' / h';
-    document.getElementById('r-total').textContent = eur(total);
-    document.getElementById('r-company').textContent = eur(company);
-    document.getElementById('r-fee').textContent = eur(fee);
-    document.getElementById('r-benefit').textContent = eur(benefit);
+  const eur2 = n => '€ ' + n.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const fnc = { companies: [], selected: -1 };
+
+  // "€ 10,50" / "1.234,56" / "2298" -> Number
+  function itNum(s) {
+    if (s == null) return 0;
+    s = String(s).replace(/[^0-9.,-]/g, '');
+    if (s.includes(',')) s = s.replace(/\./g, '').replace(',', '.');
+    return parseFloat(s) || 0;
   }
-  document.querySelectorAll('.calc').forEach(i => i.addEventListener('input', calc));
-  calc();
+
+  function parseUniemens(text) {
+    const doc = new DOMParser().parseFromString(text, 'text/xml');
+    if (doc.querySelector('parsererror')) throw new Error('XML non valido');
+    const companies = [];
+    doc.querySelectorAll('Azienda').forEach(az => {
+      const co = {
+        nome: (az.querySelector('RagSocAzienda')?.textContent || '').trim(),
+        cf: az.querySelector('CFAzienda')?.textContent || '',
+        mese: az.querySelector('AnnoMeseDenuncia')?.textContent || '',
+        feePct: null, esclusi: 0, lavoratori: []
+      };
+      az.querySelectorAll('DenunciaIndividuale').forEach(d => {
+        let imponibile = 0, contributo = 0, ore = 0;
+        d.querySelectorAll('DatiRetributivi').forEach(dr => {
+          imponibile += itNum(dr.querySelector('Imponibile')?.textContent);
+          contributo += itNum(dr.querySelector('Contributo')?.textContent);
+          ore += itNum(dr.querySelector('OreLavorabili')?.textContent) / 100; // in centesimi
+        });
+        if (ore <= 0 || imponibile <= 0) { co.esclusi++; return; }
+        co.lavoratori.push({
+          nome: ((d.querySelector('Nome')?.textContent || '') + ' ' + (d.querySelector('Cognome')?.textContent || '')).trim(),
+          cf: d.querySelector('CFLavoratore')?.textContent || '',
+          ore: 100,
+          retrib: imponibile / ore,
+          contrib: contributo / ore
+        });
+      });
+      if (co.lavoratori.length) companies.push(co);
+    });
+    return companies;
+  }
+
+  function parseCsvRows(text) {
+    const rows = []; let row = [], cell = '', q = false;
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (q) { if (c === '"') { if (text[i + 1] === '"') { cell += '"'; i++; } else q = false; } else cell += c; }
+      else if (c === '"') q = true;
+      else if (c === ',') { row.push(cell); cell = ''; }
+      else if (c === '\n' || c === '\r') { if (c === '\r' && text[i + 1] === '\n') i++; row.push(cell); rows.push(row); row = []; cell = ''; }
+      else cell += c;
+    }
+    if (cell !== '' || row.length) { row.push(cell); rows.push(row); }
+    return rows;
+  }
+
+  // File storico FNC3: si usano solo i dati grezzi, le colonne precalcolate vengono ignorate
+  function parseFnc3Csv(text) {
+    const rows = parseCsvRows(text);
+    const byKey = new Map();
+    rows.slice(1).forEach(r => {
+      if (r.length < 33 || !r[0].trim() || !r[1].trim()) return;
+      const retrib = itNum(r[30]);
+      const key = r[0] + '|' + r[1];
+      if (!byKey.has(key)) byKey.set(key, { nome: r[1].trim(), cf: r[0].trim(), mese: 'FNC3 2023/24', feePct: null, esclusi: 0, lavoratori: [] });
+      const co = byKey.get(key);
+      if (co.feePct == null && itNum(r[37]) > 0) co.feePct = itNum(r[37]);
+      if (retrib <= 0) { co.esclusi++; return; }
+      const ore = itNum(r[29]) || itNum(r[28]) || 0;
+      co.lavoratori.push({
+        nome: (r[13].trim() + ' ' + r[14].trim()).trim(),
+        cf: r[12].trim(),
+        ore: ore,
+        retrib: retrib,
+        contrib: itNum(r[31]) + itNum(r[32])
+      });
+    });
+    return [...byKey.values()].filter(c => c.lavoratori.length);
+  }
+
+  function fncHandleFile(file) {
+    if (!file) return;
+    const fr = new FileReader();
+    fr.onload = () => {
+      let text = new TextDecoder('utf-8').decode(fr.result);
+      if (text.includes('�')) text = new TextDecoder('windows-1252').decode(fr.result);
+      try {
+        const isXml = /\.xml$/i.test(file.name) || text.trimStart().startsWith('<');
+        const companies = isXml ? parseUniemens(text) : parseFnc3Csv(text);
+        if (!companies.length) throw new Error('Nessun lavoratore trovato nel file');
+        fncImported(companies, file.name);
+      } catch (e) {
+        toast('File non riconosciuto: ' + e.message);
+      }
+    };
+    fr.readAsArrayBuffer(file);
+  }
+
+  function fncImported(companies, label) {
+    fnc.companies = companies;
+    fnc.selected = -1;
+    const nLav = companies.reduce((s, c) => s + c.lavoratori.length, 0);
+    const nEsc = companies.reduce((s, c) => s + c.esclusi, 0);
+    document.getElementById('fnc-import').style.display = '';
+    document.getElementById('fnc-import-sum').innerHTML =
+      `<b>${companies.length}</b> aziende · <b>${nLav.toLocaleString('it-IT')}</b> lavoratori` +
+      (nEsc ? ` · ${nEsc} esclusi (dati incompleti)` : '') + ` — ${label}`;
+    document.getElementById('fnc-search').value = '';
+    fncRenderCompanies();
+    if (companies.length === 1) fncSelect(0); else { document.getElementById('fnc-emp-card').style.display = 'none'; fncCalc(); }
+    toast(`Importate ${companies.length} aziende (${nLav.toLocaleString('it-IT')} lavoratori)`);
+  }
+
+  function fncRenderCompanies() {
+    const f = (document.getElementById('fnc-search').value || '').toLowerCase();
+    const list = document.getElementById('fnc-companies');
+    const hits = fnc.companies.map((c, i) => ({ c, i }))
+      .filter(({ c }) => !f || c.nome.toLowerCase().includes(f) || c.cf.toLowerCase().includes(f));
+    list.innerHTML = hits.slice(0, 40).map(({ c, i }) =>
+      `<div onclick="fncSelect(${i})" style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;cursor:pointer;${i === fnc.selected ? 'background:var(--sky-pale);' : ''}" onmouseover="this.style.background='var(--sky-pale)'" onmouseout="this.style.background='${i === fnc.selected ? 'var(--sky-pale)' : ''}'">
+        <div><div style="font-weight:700;font-size:12.5px">${c.nome}</div><div class="muted" style="font-size:11px">CF ${c.cf} · ${c.mese}</div></div>
+        <span class="pill mute" style="flex:none">${c.lavoratori.length} lav.</span>
+      </div>`).join('') +
+      (hits.length > 40 ? `<div class="muted" style="padding:8px 12px;font-size:11.5px">… e altre ${hits.length - 40} aziende, affina la ricerca</div>` : '') ||
+      '<div class="muted" style="padding:8px 12px;font-size:12px">Nessuna azienda trovata</div>';
+  }
+
+  function fncSelect(i) {
+    fnc.selected = i;
+    const c = fnc.companies[i];
+    if (c.feePct != null) document.getElementById('c-fee').value = Math.round(c.feePct);
+    document.getElementById('fnc-pill').innerHTML = `<span class="dot"></span> Bozza · ${c.nome}`;
+    document.getElementById('fnc-co-name').textContent = c.nome;
+    document.getElementById('fnc-co-meta').textContent = `CF ${c.cf} · ${c.mese} · ${c.lavoratori.length} lavoratori` + (c.esclusi ? ` · ${c.esclusi} esclusi` : '');
+    document.getElementById('fnc-emp-card').style.display = '';
+    fncRenderCompanies();
+    fncRenderTable();
+  }
+
+  function fncApplyHours(v) {
+    const c = fnc.companies[fnc.selected];
+    if (!c) return;
+    c.lavoratori.forEach(l => l.ore = +v || 0);
+    fncRenderTable();
+  }
+
+  function fncSetHours(j, v) {
+    const c = fnc.companies[fnc.selected];
+    if (!c) return;
+    c.lavoratori[j].ore = +v || 0;
+    fncCalc();
+  }
+
+  function fncRenderTable() {
+    const c = fnc.companies[fnc.selected];
+    if (!c) return;
+    document.getElementById('fnc-emp-rows').innerHTML = c.lavoratori.map((l, j) => {
+      const q60 = l.retrib * 0.6;
+      return `<tr>
+        <td><div style="font-weight:700">${l.nome || '—'}</div><small class="muted" style="font-size:10.5px">${l.cf}</small></td>
+        <td class="r"><input class="inp tnum" type="number" min="0" value="${l.ore}" style="width:66px;padding:5px 8px;text-align:right" oninput="fncSetHours(${j},this.value)"></td>
+        <td class="r tnum">${eur2(l.retrib)}</td>
+        <td class="r tnum">${eur2(l.contrib)}</td>
+        <td class="r tnum">${eur2(q60)}</td>
+        <td class="r tnum" style="font-weight:800" data-ben="${j}">${eur2(l.ore * (q60 + l.contrib))}</td>
+      </tr>`;
+    }).join('');
+    fncCalc();
+  }
+
+  function fncCalc() {
+    const feePct = +document.getElementById('c-fee').value || 0;
+    document.getElementById('c-fee-lbl').textContent = feePct + '%';
+    const c = fnc.companies[fnc.selected];
+    if (!c) {
+      document.getElementById('r-total').textContent = '€ 0';
+      document.getElementById('r-fee').textContent = '€ 0';
+      document.getElementById('r-benefit').textContent = '€ 0';
+      return;
+    }
+    let total = 0, hours = 0;
+    c.lavoratori.forEach((l, j) => {
+      const ben = l.ore * (l.retrib * 0.6 + l.contrib);
+      total += ben; hours += l.ore;
+      const cell = document.querySelector(`[data-ben="${j}"]`);
+      if (cell) cell.textContent = eur2(ben);
+    });
+    const fee = total * feePct / 100;
+    document.getElementById('fnc-tot-emp').textContent = `${c.lavoratori.length} dipendenti`;
+    document.getElementById('fnc-tot-hours').textContent = hours.toLocaleString('it-IT') + ' h';
+    document.getElementById('fnc-tot-ben').textContent = eur2(total);
+    document.getElementById('r-total').textContent = eur(total);
+    document.getElementById('r-fee').textContent = eur(fee);
+    document.getElementById('r-benefit').textContent = eur(total - fee);
+  }
+
+  // Drag & drop sul riquadro upload
+  (function () {
+    const dz = document.getElementById('fnc-dz');
+    ['dragover', 'dragenter'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.style.borderColor = 'var(--sky)'; }));
+    ['dragleave', 'drop'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.style.borderColor = ''; }));
+    dz.addEventListener('drop', e => fncHandleFile(e.dataTransfer.files[0]));
+  })();
+
+  // Dataset di esempio (dati fittizi, nomi e CF inventati)
+  function fncLoadDemo() {
+    fncImported([{
+      nome: 'ALFA LOGISTICA S.R.L.', cf: '04512380657', mese: '2026-05', feePct: 25, esclusi: 0,
+      lavoratori: [
+        { nome: 'MARIO VERDI', cf: 'VRDMRA80A01H703X', ore: 100, retrib: 13.68, contrib: 5.45 },
+        { nome: 'LUCIA FERRARI', cf: 'FRRLCU85D45H703Y', ore: 100, retrib: 12.10, contrib: 4.47 },
+        { nome: 'PAOLO RUSSO', cf: 'RSSPLA78C12F912Z', ore: 100, retrib: 11.52, contrib: 4.34 },
+        { nome: 'ANNA GRECO', cf: 'GRCNNA90B41A717W', ore: 50, retrib: 10.86, contrib: 4.33 },
+        { nome: 'FRANCO ESPOSITO', cf: 'SPSFNC70E20H703V', ore: 100, retrib: 14.73, contrib: 5.32 },
+        { nome: 'SARA COLOMBO', cf: 'CLMSRA95T55F839U', ore: 100, retrib: 9.95, contrib: 3.71 },
+        { nome: 'GIUSEPPE MARINO', cf: 'MRNGPP82L03H703T', ore: 100, retrib: 11.99, contrib: 4.42 },
+        { nome: 'ELENA RIZZO', cf: 'RZZLNE88M62A717S', ore: 50, retrib: 10.20, contrib: 3.89 }
+      ]
+    }], 'dati di esempio');
+  }
+  fncCalc();
 
   // ---- Rich charts: crosshair + tooltips ----
   const areaData = [
