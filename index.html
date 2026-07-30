@@ -347,12 +347,18 @@
 
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
   th { text-align: left; font-size: 10.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--text-3);
-    font-weight: 700; padding: 12px 22px; border-bottom: 1px solid var(--line); }
-  td { padding: 13px 22px; border-bottom: 1px solid var(--line); color: var(--text); }
+    font-weight: 700; padding: 11px 22px; border-bottom: 1px solid var(--line-strong); white-space: nowrap; }
+  td { padding: 15px 22px; border-bottom: 1px solid var(--line); color: var(--text); vertical-align: middle; }
   tbody tr:last-child td { border-bottom: none; }
   /* zebra striping — soft tints of #1F433E for easier row scanning */
   tbody tr:nth-child(even) td { background: rgba(31,67,62,.05); }
   tbody tr:hover td { background: rgba(31,67,62,.09); }
+  tbody tr { transition: background .12s; }
+  /* la riga apre il dettaglio: pulsante pillola discreto, evidenziato al passaggio */
+  .row-go { border-radius: var(--r-pill); padding: 8px 15px; font-size: 12.5px; white-space: nowrap;
+    color: var(--text-2); box-shadow: none; }
+  .row-go svg { width: 14px; height: 14px; flex: none; }
+  tbody tr:hover .row-go { border-color: var(--sky); color: var(--sky-2); background: var(--surface); }
   th.r, td.r { text-align: right; }
   .co { display: flex; align-items: center; gap: 10px; }
   .co .av { width: 30px; height: 30px; border-radius: 9px; flex: none; display: grid; place-items: center;
@@ -413,6 +419,32 @@
   #az-tbody tr:hover td { background: var(--sky-pale); }
   .az-mini { width: 64px; height: 5px; border-radius: 99px; background: var(--line); overflow: hidden; display: inline-block; vertical-align: middle; margin-right: 8px; }
   .az-mini i { display: block; height: 100%; background: var(--sky); border-radius: 99px; }
+  /* Tabella a righe-scheda: righe staccate, arieggiate, con bordo morbido */
+  .tbl-cards { border-collapse: separate; border-spacing: 0 9px; }
+  .tbl-cards th { border-bottom: none; padding: 4px 14px 2px; font-size: 10px; letter-spacing: .09em; color: var(--text-3); }
+  .tbl-cards th:first-child { padding-left: 22px; }
+  .tbl-cards td { background: var(--surface); border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line); padding: 18px 14px; }
+  .tbl-cards td:first-child { border-left: 1px solid var(--line); border-radius: 14px 0 0 14px; padding-left: 22px; }
+  .tbl-cards td:last-child { border-right: 1px solid var(--line); border-radius: 0 14px 14px 0; padding-right: 22px; }
+  .tbl-cards tbody tr:nth-child(even) td { background: #FAF9F6; }
+  .tbl-cards tbody tr:hover td { background: var(--sky-pale); border-color: color-mix(in srgb, var(--sky) 35%, var(--line)); }
+  .tbl-cards tbody tr:last-child td { border-bottom: 1px solid var(--line); }
+  .tbl-cards .co .av { width: 34px; height: 34px; border-radius: 11px; font-size: 12px; }
+  .tbl-cards .co > div { font-weight: 700; font-size: 13.5px; }
+
+  /* Matrice documenti: una colonna per tipo di documento, nome sempre visibile */
+  th.doc-col { text-align: center; white-space: normal; width: 96px; line-height: 1.3; }
+  td.doc-col { text-align: center; padding-left: 6px; padding-right: 6px; }
+  .dchip { width: 26px; height: 26px; border-radius: 50%; display: inline-grid; place-items: center; flex: none;
+    font-size: 12px; font-weight: 800; font-style: normal; line-height: 1; }
+  .dchip.verified { background: var(--good-soft); color: var(--good); }
+  .dchip.checking { background: var(--info-soft); color: var(--info); }
+  .dchip.missing { background: transparent; border: 1.5px dashed var(--bad); color: var(--bad); font-size: 11px; }
+  .doc-legend { display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    font-size: 11.5px; font-weight: 600; color: var(--text-2); }
+  .doc-legend span { display: inline-flex; align-items: center; gap: 7px; }
+  .doc-legend .dchip { width: 20px; height: 20px; font-size: 10px; }
   .az-pagination { display: flex; align-items: center; gap: 6px; padding: 12px 22px; border-top: 1px solid var(--line); font-size: 12px; color: var(--text-3); font-weight: 600; flex-wrap: wrap; }
   .az-pagination .pg { margin-left: auto; display: flex; gap: 5px; }
   .az-pagination button { border: 1px solid var(--line-strong); background: var(--surface); border-radius: 8px; padding: 5px 11px; font: inherit; font-size: 12px; font-weight: 700; color: var(--text-2); cursor: pointer; }
@@ -1212,10 +1244,16 @@
             <div class="card-head"><h3>Panoramica aziende</h3><span class="pill mute" id="az-count"><span class="dot"></span> — aziende</span></div>
             <div style="padding:12px 22px;border-bottom:1px solid var(--line)">
               <input class="inp" id="az-search" placeholder="Cerca azienda, consulente o città…" oninput="azPage=1;azRenderTable()">
+              <div class="doc-legend" style="margin-top:11px">
+                <span><i class="dchip verified">✓</i> Verificato</span>
+                <span><i class="dchip checking">⋯</i> In verifica</span>
+                <span><i class="dchip missing">✕</i> Mancante</span>
+                <span style="margin-left:auto;color:var(--text-3)">Apri l'azienda per caricare o sostituire i documenti</span>
+              </div>
             </div>
-            <div style="overflow-x:auto">
-              <table>
-                <thead><tr><th>Azienda</th><th>Fondo</th><th>Documenti</th><th class="r">Mancanti</th><th>Stato</th><th></th></tr></thead>
+            <div style="overflow-x:auto;padding:4px 12px 14px">
+              <table class="tbl-cards">
+                <thead id="az-thead"></thead>
                 <tbody id="az-tbody"></tbody>
               </table>
             </div>
@@ -2100,6 +2138,20 @@
     const done = a.docs.filter(d => d.status !== 'missing').length;
     return { done, tot: a.docs.length, missing: a.docs.length - done, checking: a.docs.some(d => d.status === 'checking') };
   };
+  // Matrice documenti in panoramica: intestazioni leggibili, una colonna per documento
+  const DOC_SHORT = {
+    'Visura camerale': 'Visura camerale', 'Documento identità legale rappresentante': 'Doc. identità',
+    'Elenco dipendenti + mansioni': 'Elenco dipendenti', 'Ultimo bilancio depositato': 'Bilancio',
+    'Accordo sindacale firmato': 'Accordo sindacale', 'Piano orario formativo': 'Piano orario',
+  };
+  const DOC_STATUS_IT = { verified: 'Verificato', checking: 'In verifica', missing: 'Mancante' };
+  const DOC_MARK = { verified: '✓', checking: '⋯', missing: '✕' };
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const docShort = n => DOC_SHORT[n] || n;
+  const docTip = d => esc(d.name + ' — ' + (DOC_STATUS_IT[d.status] || d.status) + (d.meta ? ' · ' + d.meta : ''));
+  // colonne = tipi di documento (dalla prima azienda con documenti, altrimenti i tipi standard)
+  const azDocCols = () => ((aziende.find(a => a.docs && a.docs.length) || { docs: DOC_TYPES }).docs).map(d => d.name);
+
   let docTarget = -1; // riga destinataria del prossimo file scelto
 
   const docFmtSize = b => b < 102400 ? Math.max(1, Math.round(b / 1024)) + ' KB'
@@ -2319,22 +2371,29 @@ FNC 4 · Time Vision`;
     azPage = Math.min(Math.max(1, azPage), pages);
     const slice = rows.slice((azPage - 1) * AZ_PER_PAGE, azPage * AZ_PER_PAGE);
     const AV_BG = ['var(--sky)', 'var(--merlot)', 'var(--cream-deep)', 'var(--good)'];
+    const cols = azDocCols();
     document.getElementById('az-tbody').innerHTML = slice.map(({ a, i }) => {
       const s = azStats(a);
       const stato = s.missing > 0
-        ? '<span class="pill bad"><span class="dot"></span> Mancanti</span>'
+        ? `<span class="pill bad"><span class="dot"></span> ${s.missing} mancant${s.missing === 1 ? 'e' : 'i'}</span>`
         : s.checking
           ? '<span class="pill info"><span class="dot"></span> In verifica</span>'
           : '<span class="pill good"><span class="dot"></span> Completa</span>';
       const ini = a.nome.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+      const cells = cols.map(name => {
+        const d = a.docs.find(x => x.name === name);
+        if (!d) return '<td class="doc-col"><span style="color:var(--text-3)">—</span></td>';
+        return `<td class="doc-col"><i class="dchip ${d.status}" title="${docTip(d)}">${DOC_MARK[d.status] || '?'}</i></td>`;
+      }).join('');
       return `<tr onclick="azSelect(${i})" title="Apri la situazione documentale di ${a.nome.replace(/"/g, '&quot;')}">
         <td><div class="co"><span class="av" style="background:${AV_BG[i % AV_BG.length]}">${ini}</span><div>${a.nome}<small>${a.piva} · ${a.dipendenti} lav.</small></div></div></td>
-        <td>${a.fondo || '—'}</td>
-        <td><span class="az-mini"><i style="width:${Math.round(s.done / s.tot * 100)}%"></i></span><span class="tnum">${s.done} / ${s.tot}</span></td>
-        <td class="r tnum">${s.missing || '—'}</td>
+        ${cells}
         <td>${stato}</td>
-        <td class="r"><button class="btn ghost" onclick="event.stopPropagation();azSelect(${i})">Apri →</button></td></tr>`;
+        <td class="r"><button class="btn row-go" onclick="event.stopPropagation();azSelect(${i})" title="Apri per caricare o sostituire i documenti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Dettagli</button></td></tr>`;
     }).join('');
+    document.getElementById('az-thead').innerHTML = '<tr><th>Azienda</th>' +
+      cols.map(n => `<th class="doc-col" title="${esc(n)}">${esc(docShort(n))}</th>`).join('') +
+      '<th>Stato</th><th></th></tr>';
     document.getElementById('az-count').innerHTML = `<span class="dot"></span> ${aziende.length} aziende · ${aziende.filter(a => azStats(a).missing > 0).length} con documenti mancanti`;
     const from = rows.length ? (azPage - 1) * AZ_PER_PAGE + 1 : 0;
     const to = Math.min(azPage * AZ_PER_PAGE, rows.length);
@@ -2399,7 +2458,7 @@ FNC 4 · Time Vision`;
 
   async function azInit() {
     document.getElementById('az-tbody').innerHTML =
-      '<tr><td colspan="6" style="text-align:center;color:var(--text-3);padding:26px">Caricamento aziende dal database…</td></tr>';
+      '<tr><td colspan="9" style="text-align:center;color:var(--text-3);padding:26px">Caricamento aziende dal database…</td></tr>';
     try {
       if (!supa) throw new Error('client non disponibile');
       const { data, error } = await supa
