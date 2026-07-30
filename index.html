@@ -456,7 +456,10 @@
      sticky dentro un contenitore con overflow, non sulla pagina. */
   .az-scroll { max-height: min(68vh, 620px); overflow: auto; overscroll-behavior: contain;
     padding: 0 12px 14px; }
-  .tbl-cards thead th { position: sticky; top: 0; z-index: 3; background: #F0EBD8;
+  /* tinta acqua chiarissima condivisa dalle card in evidenza (come i sec-card) */
+  .card.wash { background: color-mix(in srgb, #A6D8D2 16%, #fff); }
+  .tbl-cards thead th { position: sticky; top: 0; z-index: 3;
+    background: color-mix(in srgb, #A6D8D2 16%, #fff);
     padding-top: 12px; padding-bottom: 9px; box-shadow: 0 1px 0 var(--line); }
   th.doc-col { text-align: center; white-space: normal; width: 96px; line-height: 1.3; }
   td.doc-col { text-align: center; padding-left: 6px; padding-right: 6px; }
@@ -1441,7 +1444,7 @@
 
         <!-- Panoramica: situazione documentale di tutte le aziende -->
         <div id="az-panoramica">
-          <div class="card" style="background:#F0EBD8">
+          <div class="card wash">
             <div class="card-head"><h3>Panoramica aziende</h3><span class="pill mute" id="az-count"><span class="dot"></span> — aziende</span></div>
             <div style="padding:12px 22px;border-bottom:1px solid var(--line)">
               <input class="inp" id="az-search" placeholder="Cerca azienda, consulente o città…" oninput="azPage=1;azRenderTable()">
@@ -1472,7 +1475,7 @@
 
         <div class="grid g-1-2">
           <div>
-            <div class="card card-pad" style="background:#F0EBD8">
+            <div class="card card-pad wash">
               <div class="co" style="gap:13px"><span class="av" style="width:44px;height:44px;border-radius:13px;background:var(--sky);font-size:15px" id="az-av">AL</span>
                 <div><div style="font-weight:700;font-size:15px" id="az-nome">Alfa Logistica S.r.l.</div><div class="muted" style="font-size:12.5px" id="az-sub">P.IVA 0289 4410 727 · Napoli</div></div>
               </div>
@@ -1487,7 +1490,7 @@
           </div>
 
           <div>
-            <div class="card" style="background:#F0EBD8">
+            <div class="card wash">
               <div class="card-head"><h3>Checklist documenti</h3><span class="pill warn" id="doc-counter"><span class="dot"></span> 4 / 6 completati</span></div>
               <div id="doc-list"></div>
             </div>
@@ -1555,7 +1558,7 @@
 
         <div class="grid g-2-1">
           <div>
-            <div class="card card-pad" style="background:#F0EBD8">
+            <div class="card card-pad wash">
               <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px;flex-wrap:wrap">
                 <h3 style="font-size:14.5px">Parametri del progetto</h3>
               </div>
