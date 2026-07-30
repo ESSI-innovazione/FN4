@@ -243,23 +243,21 @@
   .view.active { display: block; }
   @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
-  /* ---- Hero (dashboard) ---- */
-  .hero { position: relative; overflow: hidden; border-radius: var(--r-lg);
-    background: rgba(255,243,176,.35);
-    -webkit-backdrop-filter: blur(20px) saturate(140%); backdrop-filter: blur(20px) saturate(140%);
-    border: 1px solid rgba(31,67,62,.12);
-    padding: 30px 32px; margin: 18px 30px 0;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.65); }
-  .hero-inner { position: relative; z-index: 1; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+  /* ---- Hero (dashboard): richiama la forma del login, mezzo cerchio a destra ---- */
+  .hero { position: relative; overflow: hidden; width: max-content; max-width: 100%;
+    border-radius: var(--r-lg) 999px 999px var(--r-lg);
+    background: linear-gradient(118deg, #A6D8D2 0%, var(--merlot) 55%, #3E7A73 135%);
+    padding: 24px 110px 24px 30px; margin: 18px 30px 0;
+    box-shadow: 0 10px 26px rgba(30,71,66,.14); }
+  .hero .ball-h { width: 58px; height: 58px; right: 26px; top: -16px; }
+  @media (prefers-reduced-motion: no-preference) {
+    .hero .ball-h { animation: drift-c 12s ease-in-out -4s infinite alternate; }
+  }
+  .hero-inner { position: relative; z-index: 1; }
   .hero .eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: #1E4742; font-weight: 800; margin-bottom: 9px; }
   .hero h1 { font-size: 27px; font-weight: 800; color: #17332F; letter-spacing: -.02em; }
   .hero .meta { display: flex; align-items: center; gap: 7px; margin-top: 8px; font-size: 12.5px; color: #1E4742; }
   .hero .meta .live { width: 6px; height: 6px; border-radius: 50%; background: #0F7A5C; box-shadow: 0 0 0 3px rgba(15,122,92,.22); }
-  .hero-stat { background: rgba(255,255,255,.5); border: 1px solid rgba(255,255,255,.7); border-radius: var(--r-md);
-    padding: 14px 18px; text-align: right; backdrop-filter: blur(6px);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.8); }
-  .hero-stat .v { font-size: 38px; font-weight: 800; color: #17332F; font-variant-numeric: tabular-nums; line-height: 1.1; }
-  .hero-stat .k { font-size: 11.5px; color: #1E4742; margin-top: 2px; }
 
   .sec-label { display: flex; align-items: center; gap: 12px; margin: 4px 0 14px; }
   .sec-label span { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--text-3); font-weight: 800; white-space: nowrap; }
@@ -696,7 +694,7 @@
     .content { padding: 18px 16px 40px; }
     .topbar { padding: 12px 16px; }
     .stepper { padding: 14px 16px 0; }
-    .hero { margin: 14px 16px 0; padding: 22px 20px; }
+    .hero { margin: 14px 16px 0; padding: 18px 64px 18px 20px; }
     .menu-toggle { display: grid !important; }
     .support-fab { right: 14px; bottom: 14px; }
     .toast-wrap { bottom: 80px; right: 14px; }
@@ -1274,15 +1272,12 @@
     </header>
 
     <div class="hero" id="hero">
+      <span class="ball ball-h" aria-hidden="true"></span>
       <div class="hero-inner">
         <div>
           <div class="eyebrow">FAD Manager · Piattaforma Unica FNC</div>
           <h1>Ciao, Admin</h1>
           <div class="meta"><span class="live"></span> Martedì 21 Luglio 2026 · 6 pratiche in corso</div>
-        </div>
-        <div class="hero-stat">
-          <div class="v tnum">€ 412k</div>
-          <div class="k">Valore pipeline attiva</div>
         </div>
       </div>
     </div>
