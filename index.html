@@ -717,7 +717,7 @@
   .deco3d { position: absolute; inset: 0; z-index: 1; pointer-events: none; perspective: 1200px; }
   .g3 { position: absolute; animation: g3-float 12s ease-in-out infinite alternate; will-change: transform; }
   .g3-a { left: 29%; top: 33%; }
-  .g3-b { left: 6%;  top: 52%; animation-duration: 10s; animation-delay: 1.4s; }
+  .g3-b { left: 6%;  top: 45%; animation-duration: 10s; animation-delay: 1.4s; }
   .g3-c { left: 51%; top: 15%; animation-duration: 14s; animation-delay: .8s; }
   .gcard { display: block; border-radius: 16px; padding: 15px 16px;
     background: rgba(255,255,255,.12);
@@ -758,6 +758,9 @@
   .l-copy .hello { margin: 0 0 10px; font-size: 15px; font-weight: 700; color: #1E4742; }
   .l-copy h2 { font-size: clamp(26px, 3vw, 37px); font-weight: 800; color: #17332F; line-height: 1.14;
     letter-spacing: -.02em; max-width: 13ch; }
+  /* feature list + firma restano un blocco unico ancorato in basso, cosi'
+     la lista non finisce a meta' pannello sopra le card in vetro */
+  .l-bottom { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 26px; }
   .feat-list { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 20px; }
   .feat { display: flex; align-items: center; gap: 14px; }
   .feat .f-ic { width: 46px; height: 46px; border-radius: 13px; background: rgba(255,255,255,.14);
@@ -990,8 +993,10 @@
   .mon-mixleg { display: flex; flex-direction: column; gap: 12px; margin-top: 18px; }
   .mon-mixleg .row { display: flex; align-items: center; gap: 10px; font-size: 12.5px; font-weight: 600; }
   .mon-mixleg .row i { width: 10px; height: 10px; border-radius: 3px; flex: none; }
-  .mon-mixleg .row b { margin-left: auto; font-variant-numeric: tabular-nums; }
+  .mon-mixleg .row b { margin-left: auto; font-variant-numeric: tabular-nums; white-space: nowrap; }
   .mon-mixleg .row small { color: var(--text-3); font-weight: 600; }
+  .mon-mixleg .note { display: block; font-size: 12px; line-height: 1.55; color: var(--text-2); }
+  .mon-mixleg .note b { font-weight: 800; color: var(--text); }
 
   /* --- per-course progress --- */
   .mon-crow { display: grid; grid-template-columns: minmax(150px, 1.3fr) minmax(140px, 1fr) 128px 104px;
@@ -1003,6 +1008,7 @@
   .mon-crow .sub { font-size: 11.5px; color: var(--text-3); margin-top: 3px; }
   .mon-crow .ore { text-align: right; font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums; }
   .mon-crow .ore small { display: block; font-size: 11px; font-weight: 600; color: var(--text-3); margin-top: 2px; }
+  .mon-crow .st { text-align: right; }
 
   @media (max-width: 1080px) {
     .mon-kpi { grid-template-columns: repeat(2, 1fr); }
@@ -1014,7 +1020,7 @@
     .mon-co .num { text-align: left; }
     .mon-crow, .mon-chead { grid-template-columns: 1fr; gap: 12px; }
     .mon-chead { display: none; }
-    .mon-crow .ore { text-align: left; }
+    .mon-crow .ore, .mon-crow .st { text-align: left; }
     .mon-verdict .fig { font-size: 44px; }
     .mon-plot { margin: 0 34px 34px 42px; }
     .mon-cols { margin-right: 40px; }
@@ -1063,24 +1069,26 @@
       <p class="hello">Bentornato!</p>
       <h2>&Egrave; un piacere rivederti!</h2>
     </div>
-    <div class="feat-list">
-      <div class="feat">
-        <div class="f-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><path d="M9 13h6M9 17h4"/></svg></div>
-        <div><div class="f-t">Documenti</div><div class="f-s">Raccolta e notifiche automatiche</div></div>
+    <div class="l-bottom">
+      <div class="feat-list">
+        <div class="feat">
+          <div class="f-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><path d="M9 13h6M9 17h4"/></svg></div>
+          <div><div class="f-t">Documenti</div><div class="f-s">Raccolta e notifiche automatiche</div></div>
+        </div>
+        <div class="feat">
+          <div class="f-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z"/><path d="M9 12l2 2 4-4"/></svg></div>
+          <div><div class="f-t">Sicurezza</div><div class="f-s">Protezione di livello enterprise</div></div>
+        </div>
+        <div class="feat">
+          <div class="f-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg></div>
+          <div><div class="f-t">Velocit&agrave;</div><div class="f-s">Dal corso al documento in 30 secondi</div></div>
+        </div>
       </div>
-      <div class="feat">
-        <div class="f-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z"/><path d="M9 12l2 2 4-4"/></svg></div>
-        <div><div class="f-t">Sicurezza</div><div class="f-s">Protezione di livello enterprise</div></div>
-      </div>
-      <div class="feat">
-        <div class="f-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg></div>
-        <div><div class="f-t">Velocit&agrave;</div><div class="f-s">Dal corso al documento in 30 secondi</div></div>
-      </div>
-    </div>
 
-    <div class="l-foot">
-      <span class="lf-k">Un prodotto</span>
-      <img src="assets/timevision-logo.svg" alt="Time Vision" width="663" height="107">
+      <div class="l-foot">
+        <span class="lf-k">Un prodotto</span>
+        <img src="assets/timevision-logo.svg" alt="Time Vision" width="663" height="107">
+      </div>
     </div>
   </div>
 
@@ -3602,7 +3610,7 @@ FNC 4 · Time Vision`;
     monPlotRender(a, c);
     monKpiRender(a, c);
     monColsRender(a, c);
-    monMixRender(a);
+    monMixRender(a, c);
     monCorsiRender(a, c);
     monTableRender(a, c);
   }
@@ -3660,14 +3668,19 @@ FNC 4 · Time Vision`;
         stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>`;
     document.getElementById('monPlotSvg').innerHTML = svg;
 
-    // etichette settimana a passo variabile; l'ultima colonna è riservata alla scadenza
-    const stride = Math.ceil(c.tot / 7);
+    // Etichette settimana con passo calcolato sulla larghezza reale, così non si accavallano;
+    // la coda dell'asse è riservata alla data di scadenza.
+    const plotW = document.getElementById('monPlot').clientWidth || 700;
+    const stretto = plotW < 460;
+    const fine = (stretto ? '' : 'scadenza ') + dFmt(c.scadenza);
+    const riserva = (stretto ? 66 : 118) / plotW * 100;
+    const stride = Math.max(1, Math.ceil(c.tot / Math.max(3, Math.floor(plotW / 62))));
     const xs = [];
-    for (let w = stride; w < c.tot - stride / 2; w += stride) xs.push(w);
+    for (let w = stride; w <= c.tot; w += stride) if (X(w) < 100 - riserva - 3) xs.push(w);
     document.getElementById('monPlotOv').innerHTML =
       grid.map(v => `<span class="mon-ylab" style="top:${Y(v).toFixed(2)}%">${nFmt(v)}</span>`).join('') +
       xs.map(w => `<span class="mon-xlab" style="left:${X(w).toFixed(2)}%">S${w}</span>`).join('') +
-      `<span class="mon-xlab end" style="left:100%">scadenza ${dFmt(c.scadenza)}</span>` +
+      `<span class="mon-xlab end" style="left:100%">${fine}</span>` +
       `<span class="mon-mark" style="left:${X(c.n).toFixed(2)}%"><b>oggi</b></span>` +
       `<span class="mon-mark end" style="left:100%"></span>` +
       (c.inLinea ? `<span class="mon-dot goal" style="left:${X(projW).toFixed(2)}%;top:${Y(projV).toFixed(2)}%"
@@ -3770,9 +3783,9 @@ FNC 4 · Time Vision`;
         <div class="k">Lavoratori in aula</div>
         <div class="v">${a.attivi} <small>/ ${a.iscritti} iscritti</small></div>
         <div class="s">${fermi === 0 ? 'Nessun ritiro: tutti gli iscritti risultano attivi'
-          : `<span class="mon-d down">${fermi} fermi</span> da più di due settimane`}</div>
+          : `<span class="mon-d down">${fermi} ${fermi === 1 ? 'fermo' : 'fermi'}</span> da più di due settimane`}</div>
         <div class="viz"><div class="mon-dots">${dots}</div>
-          <span class="cap"><span>Un punto per lavoratore</span><span>${fermi === 0 ? 'tutti attivi' : fermi + ' inattivi'}</span></span>
+          <span class="cap"><span>Un punto per lavoratore</span><span>${fermi === 0 ? 'tutti attivi' : fermi + (fermi === 1 ? ' inattivo' : ' inattivi')}</span></span>
         </div>
       </div>
 
@@ -3782,7 +3795,7 @@ FNC 4 · Time Vision`;
         <div class="s">Ultimo giorno utile: ${dFmt(c.scadenza)}</div>
         <div class="viz">
           <span class="strip" style="height:12px;display:block"><span class="fill" style="width:${(c.n / c.tot * 100).toFixed(1)}%"></span></span>
-          <span class="cap"><span>Settimana ${c.n} di ${c.tot}</span><span>${c.tot - c.n} settimane residue</span></span>
+          <span class="cap"><span>Settimana ${c.n} di ${c.tot}</span><span>${c.tot - c.n === 1 ? '1 settimana residua' : (c.tot - c.n) + ' settimane residue'}</span></span>
         </div>
       </div>`;
   }
@@ -3821,16 +3834,20 @@ FNC 4 · Time Vision`;
     });
   }
 
-  function monMixRender(a) {
+  function monMixRender(a, c) {
     const parts = [
-      { k: 'Aula', v: a.mix.aula, c: 'var(--c1)', ink: '#fff', nota: 'in presenza, presso la sede o in aula esterna' },
-      { k: 'FAD', v: a.mix.fad, c: 'var(--c2)', ink: '#241C1A', nota: 'formazione a distanza tracciata dalla piattaforma' },
+      { k: 'Aula', v: a.mix.aula, c: 'var(--c1)', ink: '#fff', nota: 'in presenza, in sede o in aula esterna' },
+      { k: 'FAD', v: a.mix.fad, c: 'var(--c2)', ink: '#241C1A', nota: 'a distanza, tracciata dalla piattaforma' },
       { k: 'Affiancamento', v: a.mix.aff, c: 'var(--c3)', ink: '#fff', nota: 'on the job, con tutor interno' },
     ];
     document.getElementById('monMix').innerHTML = parts.map(p =>
       `<span style="flex:${p.v};background:${p.c};color:${p.ink}">${p.v >= 14 ? p.v + '%' : ''}</span>`).join('');
     document.getElementById('monMixLeg').innerHTML = parts.map(p =>
-      `<span class="row"><i style="background:${p.c}"></i>${p.k} <small>· ${p.nota}</small><b>${p.v}%</b></span>`).join('');
+      `<span class="row"><i style="background:${p.c}"></i>${p.k} <small>· ${p.nota}</small>
+        <b>${p.v}% <small style="font-weight:600">· ${nFmt(c.erogate * p.v / 100)} ore</small></b></span>`).join('') +
+      `<span class="divider" style="margin:4px 0"></span>
+       <span class="note">Le ore FAD entrano nel registro presenze solo se tracciate dalla piattaforma:
+         sono <b>${nFmt(c.erogate * a.mix.fad / 100)} ore</b> delle ${nFmt(c.erogate)} erogate finora.</span>`;
   }
 
   function monCorsiRender(a, c) {
@@ -3846,7 +3863,7 @@ FNC 4 · Time Vision`;
           aria-label="${Math.round(pct * 100)} per cento delle ore previste">
           <span class="fill" style="width:${(pct * 100).toFixed(1)}%;background:${st[0] === 'bad' ? 'var(--bad)' : 'var(--c1)'}"></span></span></div>
         <div class="ore">${Math.round(pct * 100)}%<small>${nFmt(k.erogate)} su ${nFmt(k.piano)} ore</small></div>
-        <div style="text-align:right"><span class="pill ${st[0]}"><span class="dot"></span> ${st[1]}</span></div>
+        <div class="st"><span class="pill ${st[0]}"><span class="dot"></span> ${st[1]}</span></div>
       </div>`;
     }).join('');
   }
