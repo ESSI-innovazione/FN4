@@ -94,18 +94,6 @@
   .collapse-btn:hover { background: rgba(255,255,255,.16); }
   .collapse-btn svg { transition: transform .2s; }
 
-  .side-search { margin: 14px 14px 2px; padding: 0 12px; height: 44px; border-radius: 10px;
-    background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12);
-    display: flex; align-items: center; gap: 8px; flex: none; }
-  .side-search .skbd { flex: none; font-size: 10px; font-weight: 700; color: #CBE4E0;
-    background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.16);
-    border-radius: 6px; padding: 2px 6px; letter-spacing: .04em; }
-  .side-search:focus-within { background: rgba(255,255,255,.15); outline: 2px solid var(--cream); outline-offset: 2px; }
-  .side-search svg { width: 17px; height: 17px; flex: none; color: #A9CFC9; }
-  .side-search input { flex: 1; min-width: 0; border: none; background: none; color: #fff;
-    font-size: 14.5px; outline: none; }
-  .side-search input::placeholder { color: #A9CFC9; }
-
   /* role / permission card (glass tier, opaque active segment) */
   .role-card { margin: 12px 14px 0; padding: 12px 12px 11px; border-radius: 12px; flex: none;
     background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.13);
@@ -179,14 +167,11 @@
     .sidebar.collapsed .brand .bsub,
     .sidebar.collapsed .nav-label,
     .sidebar.collapsed .nav-item .lbl,
-    .sidebar.collapsed .side-search input,
-    .sidebar.collapsed .side-search .skbd,
     .sidebar.collapsed .role-card,
     .sidebar.collapsed .tv-foot,
     .sidebar.collapsed .su-who,
     .sidebar.collapsed .su-menu { display: none; }
     .sidebar.collapsed .collapse-btn svg { transform: rotate(180deg); }
-    .sidebar.collapsed .side-search { width: 44px; margin-left: auto; margin-right: auto; padding: 0; justify-content: center; }
     .sidebar.collapsed .nav-item { justify-content: center; padding: 9px 0; }
     .sidebar.collapsed .wf-badge { position: absolute; top: 3px; right: 8px; min-width: 8px; width: 8px;
       height: 8px; padding: 0; border-radius: 50%; font-size: 0; }
@@ -773,15 +758,12 @@
   @keyframes drift-c { from { transform: translate3d(-12px,-10px,0) scale(.97); } to { transform: translate3d(18px,28px,0) scale(1.04); } }
 
   .l-copy { position: relative; z-index: 2; }
-  .l-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 34px; }
-  .l-brand .mk { width: 44px; height: 44px; border-radius: 13px; background: var(--cream); color: var(--merlot-ink);
-    font-weight: 800; font-size: 11px; letter-spacing: .02em; display: grid; place-items: center;
-    box-shadow: 0 6px 14px rgba(23,51,47,.18); }
-  .l-brand .wd { font-weight: 800; font-size: 23px; color: #17332F; letter-spacing: .01em; }
-  .l-copy .hello { margin: 0 0 8px; font-size: 12px; font-weight: 800; letter-spacing: .13em;
+  .l-brand { display: flex; align-items: center; margin-bottom: 34px; }
+  .l-brand .wd { font-weight: 800; font-size: 28px; color: #17332F; letter-spacing: .01em; }
+  .l-copy .hello { margin: 0 0 10px; font-size: 14px; font-weight: 800; letter-spacing: .13em;
     text-transform: uppercase; color: #1E4742; }
-  .l-copy h2 { margin: 0; font-size: clamp(26px, 3vw, 36px); font-weight: 800; color: #17332F;
-    line-height: 1.13; letter-spacing: -.02em; max-width: 13ch; }
+  .l-copy h2 { margin: 0; font-size: clamp(32px, 3.6vw, 46px); font-weight: 800; color: #17332F;
+    line-height: 1.12; letter-spacing: -.02em; max-width: 13ch; }
   /* feature list + firma restano un blocco unico ancorato in basso */
   .l-bottom { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 24px; }
   .feat-list { display: flex; flex-direction: column; gap: 18px; }
@@ -1066,7 +1048,7 @@
   <div class="login-card">
   <div class="login-left">
     <div class="l-copy">
-      <div class="l-brand"><span class="mk">FAD</span><span class="wd">FAD MANAGER</span></div>
+      <div class="l-brand"><span class="wd">FAD MANAGER</span></div>
       <p class="hello">Bentornato!</p>
       <h2>&Egrave; un piacere rivederti!</h2>
     </div>
@@ -1182,12 +1164,6 @@
       <button class="collapse-btn" title="Comprimi" onclick="toggleSidebar()">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
       </button>
-    </div>
-
-    <div class="side-search">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-      <input type="search" placeholder="Cerca azienda…" aria-label="Cerca azienda">
-      <span class="skbd" aria-hidden="true">⌘K</span>
     </div>
 
     <div class="role-card">
