@@ -706,40 +706,30 @@
 
   /* ============ LOGIN ============ */
   .app.gated { display: none; }
-  /* piano pagina: verde ink, la card fluttua al centro */
+  /* split brand/form a tutta pagina */
   .login { position: fixed; inset: 0; z-index: 200; display: flex; overflow-y: auto;
-    background: var(--merlot-ink); padding: 34px 24px;
+    background: var(--surface);
     opacity: 1; transition: opacity .45s ease; }
-  .login::before { content: ""; position: absolute; inset: 0; pointer-events: none;
-    background:
-      radial-gradient(560px 420px at 10% -6%, rgba(131,197,190,.13), transparent 70%),
-      radial-gradient(640px 480px at 96% 108%, rgba(131,197,190,.09), transparent 70%); }
   .login.leaving { opacity: 0; pointer-events: none; }
   .login.gone { display: none; }
 
-  .login-card { position: relative; z-index: 2; margin: auto; width: min(1020px, 100%);
-    min-height: 620px; display: grid; grid-template-columns: 0.94fr 1.06fr;
-    border-radius: var(--r-lg); overflow: hidden; background: var(--surface);
-    box-shadow: 0 42px 90px rgba(0,0,0,.42), 0 14px 32px rgba(0,0,0,.26); }
-  @media (prefers-reduced-motion: no-preference) {
-    .login-card { animation: cardIn .5s cubic-bezier(.2,.7,.3,1) both; }
-  }
-  @keyframes cardIn { from { opacity: 0; transform: translateY(14px) scale(.985); } }
+  .login-card { position: relative; z-index: 2; width: 100%; min-height: 100%;
+    display: grid; grid-template-columns: 0.94fr 1.06fr; background: var(--surface); }
 
+  /* pill e badge mockup poggiano sul pannello bianco: colori invertiti */
   .signin-pill { position: absolute; top: 22px; right: 26px; z-index: 6;
-    background: var(--cream); color: var(--merlot-ink); border: none; border-radius: var(--r-pill);
+    background: var(--merlot-ink); color: var(--cream); border: none; border-radius: var(--r-pill);
     padding: 9px 22px; font-size: 13px; font-weight: 700; cursor: pointer;
-    box-shadow: 0 6px 16px rgba(0,0,0,.35); transition: .15s; }
-  .signin-pill:hover { filter: brightness(1.12); }
-  .mock-float { position: absolute; bottom: 18px; right: 22px; z-index: 6;
-    color: var(--cream); background: rgba(255,243,176,.14); border-color: rgba(255,243,176,.34); }
-  .mock-float .dot { background: var(--cream); }
+    box-shadow: 0 6px 16px rgba(30,71,66,.28); transition: .15s; }
+  .signin-pill:hover { filter: brightness(1.15); }
+  .signin-pill:focus-visible { outline: 2px solid var(--sky); outline-offset: 2px; }
+  .mock-float { position: absolute; bottom: 18px; right: 22px; z-index: 6; }
 
   /* ---- left: brand panel with gradient ---- */
   /* 118deg: la zona scura #3E7A73 resta sul bordo destro, il testo poggia
      sempre su A6D8D2–83C5BE (contrasto >=4.5:1 con l'ink dei testi) */
   .login-left { position: relative; overflow: hidden; display: flex; flex-direction: column;
-    justify-content: space-between; gap: 36px; padding: 46px 42px 38px;
+    justify-content: space-between; gap: 40px; padding: 60px clamp(42px, 4.5vw, 68px) 48px;
     background: linear-gradient(118deg, #A6D8D2 0%, var(--merlot) 48%, #3E7A73 100%); }
 
   /* ---- 3D drifting spheres ---- */
@@ -796,10 +786,10 @@
 
   /* ---- right panel: white form ---- */
   .login-right { position: relative; display: flex; flex-direction: column; align-items: center;
-    justify-content: center; padding: 46px 40px; background: var(--surface); }
+    justify-content: center; padding: 64px 40px; background: var(--surface); }
   /* --field-border: mix di token esistenti per raggiungere >=3:1 su bianco
      (line-strong da solo si ferma a ~1.6:1) */
-  .login-form { width: min(400px, 100%); display: flex; flex-direction: column;
+  .login-form { width: min(420px, 100%); display: flex; flex-direction: column;
     --field-border: color-mix(in srgb, var(--text-2) 58%, var(--line-strong)); }
   .lock-badge { width: 58px; height: 58px; border-radius: 50%; margin: 0 auto 14px;
     background: var(--cream); display: grid; place-items: center; color: var(--merlot-ink);
@@ -859,9 +849,8 @@
 
 
   @media (max-width: 860px) {
-    .login { padding: 58px 14px 22px; }
-    .login-card { grid-template-columns: 1fr; min-height: 0; }
-    .login-right { order: -1; padding: 34px 22px 30px; }
+    .login-card { grid-template-columns: 1fr; }
+    .login-right { order: -1; padding: 72px 22px 34px; }
     .login-left { padding: 24px 22px 26px; gap: 18px; }
     .deco3d { display: none; }
     .l-brand { margin-bottom: 12px; }
