@@ -150,16 +150,12 @@
   .wf-badge.teal { background: var(--sky); }
   .wf-badge.amber { background: var(--cream-deep); }
 
-  .pipe-card { margin: 14px 14px 0; padding: 14px 15px; border-radius: 12px;
-    background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.13); flex: none; }
-  .pipe-card .pc-label { font-size: 12px; text-transform: uppercase; letter-spacing: .09em;
-    color: #A9CFC9; font-weight: 700; white-space: nowrap; }
-  .pipe-card .pc-value { font-size: 20px; font-weight: 800; color: #fff; margin: 4px 0 9px;
-    font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
-  .pipe-card .pc-bar { height: 4px; border-radius: var(--r-pill); background: rgba(255,255,255,.16); overflow: hidden; }
-  .pipe-card .pc-bar span { display: block; height: 100%; border-radius: var(--r-pill); background: var(--cream); }
-
   .side-spacer { flex: 1; }
+
+  /* Firma Time Vision in fondo alla sidebar */
+  .tv-foot { flex: none; margin: 0 16px 16px; display: block; }
+  .tv-foot img { display: block; width: 140px; height: auto; opacity: .9;
+    filter: brightness(0) invert(1); }
 
   .side-user { margin: 0; padding: 14px 16px 16px; border: none; border-top: 1px solid rgba(255,255,255,.16);
     background: none; display: flex; align-items: center; gap: 10px; width: 100%; text-align: left;
@@ -186,7 +182,7 @@
     .sidebar.collapsed .side-search input,
     .sidebar.collapsed .side-search .skbd,
     .sidebar.collapsed .role-card,
-    .sidebar.collapsed .pipe-card,
+    .sidebar.collapsed .tv-foot,
     .sidebar.collapsed .su-who,
     .sidebar.collapsed .su-menu { display: none; }
     .sidebar.collapsed .collapse-btn svg { transform: rotate(180deg); }
@@ -249,15 +245,19 @@
 
   /* ---- Hero (dashboard) ---- */
   .hero { position: relative; overflow: hidden; border-radius: var(--r-lg);
-    background: var(--cream);
-    padding: 30px 32px; margin: 18px 30px 0; box-shadow: var(--shadow-lg); }
+    background: rgba(255,243,176,.35);
+    -webkit-backdrop-filter: blur(20px) saturate(140%); backdrop-filter: blur(20px) saturate(140%);
+    border: 1px solid rgba(31,67,62,.12);
+    padding: 30px 32px; margin: 18px 30px 0;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.65); }
   .hero-inner { position: relative; z-index: 1; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
   .hero .eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: #1E4742; font-weight: 800; margin-bottom: 9px; }
   .hero h1 { font-size: 27px; font-weight: 800; color: #17332F; letter-spacing: -.02em; }
   .hero .meta { display: flex; align-items: center; gap: 7px; margin-top: 8px; font-size: 12.5px; color: #1E4742; }
   .hero .meta .live { width: 6px; height: 6px; border-radius: 50%; background: #0F7A5C; box-shadow: 0 0 0 3px rgba(15,122,92,.22); }
-  .hero-stat { background: rgba(255,255,255,.28); border: 1px solid rgba(255,255,255,.4); border-radius: var(--r-md);
-    padding: 14px 18px; text-align: right; backdrop-filter: blur(6px); }
+  .hero-stat { background: rgba(255,255,255,.5); border: 1px solid rgba(255,255,255,.7); border-radius: var(--r-md);
+    padding: 14px 18px; text-align: right; backdrop-filter: blur(6px);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.8); }
   .hero-stat .v { font-size: 38px; font-weight: 800; color: #17332F; font-variant-numeric: tabular-nums; line-height: 1.1; }
   .hero-stat .k { font-size: 11.5px; color: #1E4742; margin-top: 2px; }
 
@@ -766,6 +766,14 @@
   .feat .f-t { font-size: 15px; font-weight: 800; color: #fff; }
   .feat .f-s { font-size: 11.5px; color: #F0CCC0; margin-top: 1px; font-weight: 600; }
 
+  /* firma Time Vision in fondo al pannello sinistro */
+  .l-foot { position: relative; z-index: 2; display: flex; align-items: center; gap: 15px;
+    width: max-content; max-width: 100%;
+    padding-top: 22px; border-top: 1px solid rgba(255,255,255,.24); }
+  .l-foot .lf-k { font-size: 10.5px; font-weight: 800; letter-spacing: .14em;
+    text-transform: uppercase; color: rgba(255,255,255,.78); white-space: nowrap; }
+  .l-foot img { display: block; width: 152px; height: auto; filter: brightness(0) invert(1); }
+
   /* ---- right panel: form ---- */
   .login-right { position: relative; display: flex; flex-direction: column; align-items: center;
     justify-content: center; padding: 72px 28px 56px; }
@@ -830,8 +838,187 @@
     .l-copy h2 { max-width: none; }
     .feat-list { flex-direction: row; flex-wrap: wrap; gap: 14px 22px; }
     .feat .f-s { display: none; }
+    .l-foot { padding-top: 16px; }
+    .l-foot .lf-k { display: none; }
+    .l-foot img { width: 118px; }
     .login-right { padding: 36px 22px 72px; }
     .deco3d { display: none; }
+  }
+
+  /* ==================== FASE 5 · MONITORAGGIO ====================
+     Chart ink is a separate, higher-chroma set from the UI chrome:
+     validated for CVD separation and contrast on both white and cream. */
+  #view-monitoraggio { --c1: #00806B; --c2: #AD8305; --c3: #3268B8;
+    --c1-track: #DCEDE9; --c1-wash: rgba(0,128,107,.10); --plan: #9C8B8F; }
+  .mon-eyebrow { font-size: 10.5px; font-weight: 800; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--text-3); }
+
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+  /* --- pace strip: the page signature, repeated at three scales --- */
+  .strip { display: block; position: relative; height: 8px; border-radius: var(--r-pill); background: var(--c1-track); }
+  .strip .fill { position: absolute; top: 0; bottom: 0; left: 0; border-radius: var(--r-pill); background: var(--c1); }
+  .strip .tick { position: absolute; top: -3px; bottom: -3px; width: 2px; border-radius: 2px; background: var(--text); }
+  .strip.late .fill { background: var(--bad); }
+
+  /* --- state A: company picker --- */
+  .mon-pick-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px;
+    flex-wrap: wrap; padding: 22px 22px 18px; border-bottom: 1px solid var(--line); }
+  .mon-pick-head h3 { font-size: 21px; font-weight: 800; letter-spacing: -.025em; margin: 7px 0 5px; }
+  .mon-pick-head p { font-size: 12.5px; color: var(--text-2); margin: 0; max-width: 58ch; }
+  .mon-search { position: relative; flex: none; width: 270px; max-width: 100%; }
+  .mon-search svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    width: 16px; height: 16px; color: var(--text-3); pointer-events: none; }
+  .mon-search .inp { padding-left: 36px; }
+  .mon-co { display: grid; grid-template-columns: 42px minmax(170px, 1.25fr) minmax(150px, 1fr) 104px 16px;
+    align-items: center; gap: 18px; width: 100%; text-align: left; font: inherit; color: inherit;
+    padding: 15px 22px; background: none; border: none; border-bottom: 1px solid var(--line);
+    cursor: pointer; transition: background .15s; }
+  .mon-co:last-child { border-bottom: none; }
+  .mon-co:hover { background: var(--surface-2); }
+  .mon-co .av { width: 42px; height: 42px; border-radius: 13px; display: grid; place-items: center;
+    font-weight: 800; font-size: 13px; color: #17332F; }
+  .mon-co .nm { display: block; font-weight: 700; font-size: 14px; }
+  .mon-co .sub { display: block; font-size: 11.5px; color: var(--text-3); margin-top: 3px; }
+  .mon-co .num { text-align: right; font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .mon-co .num small { display: block; font-size: 11px; font-weight: 600; color: var(--text-3);
+    letter-spacing: 0; margin-top: 2px; }
+  .mon-co .go { color: var(--text-3); font-weight: 800; }
+  .mon-co:hover .go { color: var(--c1); }
+  .mon-empty { padding: 34px 22px; text-align: center; font-size: 13px; color: var(--text-2); }
+
+  /* --- state B: selected company --- */
+  .mon-cobar { display: flex; align-items: center; gap: 13px; flex-wrap: wrap;
+    padding: 13px 16px; border-radius: var(--r-lg); background: #1E4742; color: #fff; margin-bottom: 18px; }
+  .mon-cobar .av { width: 42px; height: 42px; border-radius: 13px; display: grid; place-items: center;
+    font-weight: 800; font-size: 14px; color: #17332F; flex: none; }
+  .mon-cobar .nm { font-weight: 800; font-size: 15.5px; }
+  .mon-cobar .sub { font-size: 12px; color: #A9CFC9; margin-top: 2px; }
+  .mon-cobar .sp { margin-left: auto; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .mon-sel { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.3);
+    border-radius: var(--r-sm); padding: 9px 11px; font: inherit; font-size: 13px; font-weight: 600; max-width: 250px; }
+  .mon-sel option { color: var(--text); }
+  .mon-cobar .btn.ghost { color: #fff; border-color: rgba(255,255,255,.4); background: transparent; }
+  .mon-cobar .btn.ghost:hover { background: rgba(255,255,255,.12); color: #fff; }
+
+  .mon-hero { padding: 22px 22px 20px; }
+  .mon-hero-top { display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 26px; flex-wrap: wrap; margin-bottom: 26px; }
+  .mon-verdict { display: flex; align-items: baseline; gap: 13px; flex-wrap: wrap; margin-top: 9px; }
+  .mon-verdict .fig { font-size: 56px; line-height: .92; font-weight: 800; letter-spacing: -.035em; color: var(--c1); }
+  .mon-verdict .fig.late { color: var(--bad); }
+  .mon-verdict .unit { font-size: 15px; font-weight: 700; line-height: 1.25; max-width: 15ch; }
+  .mon-verdict-sub { font-size: 12.5px; color: var(--text-2); margin-top: 11px; max-width: 62ch; line-height: 1.55; }
+  .mon-legend { display: flex; flex-direction: column; gap: 10px; padding-top: 4px; }
+  .mon-key { display: flex; align-items: center; gap: 9px; font-size: 12px; font-weight: 600; color: var(--text-2); }
+  .mon-key i { width: 20px; flex: none; border-top: 2px solid currentColor; }
+
+  .mon-plot { position: relative; height: 232px; margin: 0 62px 34px 48px; }
+  .mon-plot svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .mon-ylab { position: absolute; right: 100%; transform: translateY(-50%); padding-right: 9px;
+    font-size: 10px; font-weight: 600; color: var(--text-3); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .mon-xlab { position: absolute; top: 100%; margin-top: 11px; transform: translateX(-50%);
+    font-size: 10.5px; font-weight: 600; color: var(--text-3); white-space: nowrap; }
+  .mon-xlab.end { transform: translateX(-100%); color: var(--text-2); font-weight: 700; }
+  .mon-mark { position: absolute; top: -4px; bottom: 0; width: 1.5px; background: var(--line-strong); }
+  .mon-mark.end { background: none; border-left: 1.5px dashed var(--line-strong); width: 0; }
+  .mon-mark b { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 5px;
+    font-size: 9.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--text-3); white-space: nowrap; }
+  .mon-mark.end b { left: auto; right: 0; transform: none; }
+  .mon-dot { position: absolute; width: 11px; height: 11px; border-radius: 50%; background: var(--c1);
+    border: 2px solid var(--surface); transform: translate(-50%, -50%); pointer-events: none; }
+  .mon-endlab { position: absolute; transform: translate(-42%, -195%); background: var(--c1); color: #fff;
+    font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 7px; white-space: nowrap;
+    font-variant-numeric: tabular-nums; pointer-events: none; }
+  .mon-hover { position: absolute; inset: -8px -10px 0; cursor: crosshair; }
+  .mon-cross { position: absolute; display: none; top: 0; bottom: 0; width: 1.5px;
+    background: var(--line-strong); pointer-events: none; }
+  .mon-tip { position: absolute; display: none; z-index: 6; pointer-events: none; background: #1E4742; color: #fff;
+    padding: 7px 11px; border-radius: 9px; font-size: 11.5px; font-weight: 800; white-space: nowrap;
+    transform: translate(-50%, -135%); box-shadow: var(--shadow-lg); font-variant-numeric: tabular-nums; }
+  .mon-tip small { display: block; font-weight: 600; color: #A9CFC9; font-size: 10.5px; margin-top: 2px; }
+
+  .mon-tblbtn { margin-top: 4px; background: none; border: none; padding: 0; font: inherit; font-size: 12px;
+    font-weight: 700; color: var(--text-2); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+  .mon-tblbtn:hover { color: var(--text); }
+  .mon-tbl { width: 100%; border-collapse: collapse; margin-top: 13px; font-size: 12.5px; }
+  .mon-tbl th, .mon-tbl td { padding: 7px 10px; text-align: right; border-bottom: 1px solid var(--line);
+    font-variant-numeric: tabular-nums; }
+  .mon-tbl th:first-child, .mon-tbl td:first-child { text-align: left; }
+  .mon-tbl th { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--text-3); font-weight: 800; }
+
+  /* --- KPI tiles --- */
+  .mon-kpi { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 16px; }
+  .mon-tile { padding: 18px 20px 17px; display: flex; flex-direction: column; }
+  .mon-tile .k { font-size: 10.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--text-3); }
+  .mon-tile .v { font-size: 31px; font-weight: 800; letter-spacing: -.03em; margin: 10px 0 3px; }
+  .mon-tile .v small { font-size: 15px; font-weight: 700; color: var(--text-3); letter-spacing: 0; }
+  .mon-tile .s { font-size: 12px; color: var(--text-2); font-weight: 600; }
+  .mon-tile .viz { margin-top: auto; padding-top: 15px; }
+  .mon-tile .viz .cap { font-size: 11px; color: var(--text-3); font-weight: 600; margin-top: 7px; display: flex;
+    justify-content: space-between; gap: 8px; }
+  .mon-d { font-weight: 800; }
+  .mon-d.up { color: var(--good); } .mon-d.down { color: var(--bad); } .mon-d.flat { color: var(--text-2); }
+  .mon-dots { display: flex; flex-wrap: wrap; gap: 4px; }
+  .mon-dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--c1); }
+  .mon-dots i.off { background: var(--c1-track); }
+  .mon-spark { display: block; width: 100%; height: 36px; overflow: visible; }
+
+  /* --- weekly columns --- */
+  .mon-cols { position: relative; display: flex; align-items: flex-end; gap: 10px; height: 158px;
+    margin: 22px 46px 30px 0; border-bottom: 1px solid var(--line-strong); }
+  .mon-cols .col { flex: 1; position: relative; display: flex; justify-content: center; align-items: flex-end; height: 100%; }
+  .mon-cols .col i { width: 100%; max-width: 24px; border-radius: 4px 4px 0 0; background: var(--c1); transition: filter .15s; }
+  .mon-cols .col:hover i { filter: brightness(1.12); }
+  .mon-cols .col span { position: absolute; top: 100%; margin-top: 9px; font-size: 10.5px; color: var(--text-3); font-weight: 600; }
+  .mon-cols .col b { position: absolute; margin-bottom: 7px; font-size: 11px; font-weight: 800;
+    color: var(--text-2); font-variant-numeric: tabular-nums; }
+  .mon-gl { position: absolute; left: 0; right: -46px; height: 0; border-top: 1px solid var(--line); pointer-events: none; }
+  .mon-gl b { position: absolute; right: 0; top: -7px; font-size: 10px; font-weight: 600; color: var(--text-3);
+    font-variant-numeric: tabular-nums; background: var(--surface); padding: 0 0 0 6px; }
+  .mon-gl.target { border-top: 1.5px dashed var(--plan); right: 0; }
+  .mon-dot.goal { background: var(--surface); border: 2.5px solid var(--c1); width: 12px; height: 12px; }
+
+  /* --- delivery mode mix --- */
+  .mon-mix { display: flex; gap: 2px; height: 40px; }
+  .mon-mix > span { display: grid; place-items: center; font-size: 11.5px; font-weight: 800;
+    font-variant-numeric: tabular-nums; border-radius: 3px; overflow: hidden; }
+  .mon-mix > span:first-child { border-radius: 9px 3px 3px 9px; }
+  .mon-mix > span:last-child { border-radius: 3px 9px 9px 3px; }
+  .mon-mixleg { display: flex; flex-direction: column; gap: 12px; margin-top: 18px; }
+  .mon-mixleg .row { display: flex; align-items: center; gap: 10px; font-size: 12.5px; font-weight: 600; }
+  .mon-mixleg .row i { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+  .mon-mixleg .row b { margin-left: auto; font-variant-numeric: tabular-nums; }
+  .mon-mixleg .row small { color: var(--text-3); font-weight: 600; }
+
+  /* --- per-course progress --- */
+  .mon-crow { display: grid; grid-template-columns: minmax(150px, 1.3fr) minmax(140px, 1fr) 128px 104px;
+    gap: 20px; align-items: center; padding: 16px 22px; border-bottom: 1px solid var(--line); }
+  .mon-crow:last-child { border-bottom: none; }
+  .mon-chead { font-size: 10px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase;
+    color: var(--text-3); background: var(--surface-2); padding: 11px 22px; }
+  .mon-crow .nm { font-weight: 700; font-size: 13.5px; }
+  .mon-crow .sub { font-size: 11.5px; color: var(--text-3); margin-top: 3px; }
+  .mon-crow .ore { text-align: right; font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .mon-crow .ore small { display: block; font-size: 11px; font-weight: 600; color: var(--text-3); margin-top: 2px; }
+
+  @media (max-width: 1080px) {
+    .mon-kpi { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 760px) {
+    .mon-kpi { grid-template-columns: 1fr; }
+    .mon-co { grid-template-columns: 42px 1fr; gap: 12px; }
+    .mon-co .strip-cell, .mon-co .num, .mon-co .go { grid-column: 2; }
+    .mon-co .num { text-align: left; }
+    .mon-crow, .mon-chead { grid-template-columns: 1fr; gap: 12px; }
+    .mon-chead { display: none; }
+    .mon-crow .ore { text-align: left; }
+    .mon-verdict .fig { font-size: 44px; }
+    .mon-plot { margin: 0 34px 34px 42px; }
+    .mon-cols { margin-right: 40px; }
+    .mon-search { width: 100%; }
   }
 </style>
 
@@ -889,6 +1076,11 @@
         <div class="f-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg></div>
         <div><div class="f-t">Velocit&agrave;</div><div class="f-s">Dal corso al documento in 30 secondi</div></div>
       </div>
+    </div>
+
+    <div class="l-foot">
+      <span class="lf-k">Un prodotto</span>
+      <img src="assets/timevision-logo.svg" alt="Time Vision" width="663" height="107">
     </div>
   </div>
 
@@ -1044,13 +1236,11 @@
       </button>
     </nav>
 
-    <div class="pipe-card">
-      <div class="pc-label">Pipeline attiva</div>
-      <div class="pc-value">€ 412k</div>
-      <div class="pc-bar"><span style="width:66%"></span></div>
-    </div>
-
     <div class="side-spacer"></div>
+
+    <div class="tv-foot">
+      <img src="assets/timevision-logo.svg" alt="Time Vision" width="663" height="107">
+    </div>
 
     <button class="side-user" onclick="toast('Profilo amministratore — demo mockup')">
       <span class="su-av">AD</span>
@@ -1155,7 +1345,7 @@
             <div class="sub">Ore erogate, presenze e avanzamento per la rendicontazione</div>
             <div class="foot"><span class="pill good"><span class="dot"></span> 1 progetto attivo</span><span class="go">Apri <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
           </button>
-          <button class="sec-card" onclick="toast('Elenco completo aziende — demo mockup')">
+          <button class="sec-card" onclick="navigate('consulente', 'az-panoramica')">
             <div class="top-row">
               <div class="icon-badge cream"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M6 21V7l6-4 6 4v14M10 21v-6h4v6M9 10h.01M9 13h.01M15 10h.01M15 13h.01"/></svg></div>
             </div>
@@ -1919,45 +2109,101 @@
             <div class="tx">
               <div class="ey">Fase 5 · Monitoraggio</div>
               <h1>Monitoraggio erogazione</h1>
-              <p>Dopo l'approvazione, la piattaforma segue lo svolgimento: ore erogate, presenze, avanzamento per corso — tutto pronto per la rendicontazione finale.</p>
+              <p>Scegli l'azienda: la piattaforma mostra ore erogate, presenze e avanzamento per corso, con la proiezione a scadenza pronta per la rendicontazione.</p>
             </div>
           </div>
-          <span class="pill good"><span class="dot"></span> Delta Servizi · Approvato</span>
         </div>
 
-        <div class="grid g-4">
-          <div class="card card-pad stat"><span class="rail"></span><div class="k">Ore erogate</div><div class="v tnum">2.140</div><div class="d up">▲ su 3.240 previste</div></div>
-          <div class="card card-pad stat"><span class="rail" style="background:var(--merlot)"></span><div class="k">Presenza media</div><div class="v tnum">94%</div><div class="d up">▲ +2% vs target</div></div>
-          <div class="card card-pad stat"><span class="rail" style="background:var(--info)"></span><div class="k">Dipendenti attivi</div><div class="v tnum">27</div><div class="d flat">● su 27 iscritti</div></div>
-          <div class="card card-pad stat"><span class="rail" style="background:var(--cream-deep)"></span><div class="k">Avanzamento</div><div class="v tnum">66%</div><div class="d flat">● in linea col piano</div></div>
-        </div>
-
-        <div class="grid g-2-1 section-gap">
-          <div class="card card-pad">
-            <div class="card-head" style="padding:0 0 14px;border:none"><h3>Ore erogate per settimana</h3><span class="hint">Ultime 8 settimane</span></div>
-            <div class="bars" id="weekBars">
-              <div class="bar" data-v="180 ore" data-w="Settimana 1"><i style="height:47%"></i><span>S1</span></div>
-              <div class="bar" data-v="240 ore" data-w="Settimana 2"><i style="height:63%"></i><span>S2</span></div>
-              <div class="bar" data-v="208 ore" data-w="Settimana 3"><i style="height:55%"></i><span>S3</span></div>
-              <div class="bar" data-v="296 ore" data-w="Settimana 4"><i style="height:78%"></i><span>S4</span></div>
-              <div class="bar" data-v="272 ore" data-w="Settimana 5"><i style="height:72%"></i><span>S5</span></div>
-              <div class="bar" data-v="352 ore" data-w="Settimana 6"><i style="height:93%"></i><span>S6</span></div>
-              <div class="bar" data-v="320 ore" data-w="Settimana 7"><i style="height:84%"></i><span>S7</span></div>
-              <div class="bar" data-v="380 ore" data-w="Settimana 8"><i style="height:100%"></i><b style="bottom:100%">380</b><span>S8</span></div>
-              <div class="chart-tip" id="barsTip"></div>
-            </div>
-            <div style="height:26px"></div>
-          </div>
-
+        <!-- ---- Passo 1: scelta azienda ---- -->
+        <div id="mon-picker">
           <div class="card">
-            <div class="card-head"><h3>Avanzamento corsi</h3></div>
-            <div class="card-pad" style="display:flex;flex-direction:column;gap:16px">
-              <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span>Excel avanzato</span><b class="tnum">82%</b></div><div class="progress"><i style="width:82%"></i></div></div>
-              <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span>Gestione logistica</span><b class="tnum">64%</b></div><div class="progress"><i style="width:64%"></i></div></div>
-              <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span>Sicurezza sul lavoro</span><b class="tnum">51%</b></div><div class="progress"><i style="width:51%"></i></div></div>
-              <div class="divider" style="margin:2px 0"></div>
-              <button class="btn primary" style="width:100%" onclick="toast('Report di rendicontazione esportato')">Esporta rendicontazione</button>
+            <div class="mon-pick-head">
+              <div>
+                <div class="mon-eyebrow">Passo 1</div>
+                <h3>Scegli l'azienda da monitorare</h3>
+                <p>La barra mostra le ore già erogate sul piano approvato. La tacca scura è il punto in cui il piano dovrebbe trovarsi oggi: fill oltre la tacca vuol dire in anticipo, fill prima vuol dire in ritardo.</p>
+              </div>
+              <div class="mon-search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                <input class="inp" id="monQ" type="search" placeholder="Cerca azienda o città" oninput="monRenderList()" aria-label="Cerca azienda">
+              </div>
             </div>
+            <div id="monCoList"></div>
+            <div class="mon-empty" id="monCoEmpty" hidden>Nessuna azienda trovata. Prova con un altro nome o città.</div>
+          </div>
+        </div>
+
+        <!-- ---- Passo 2: cruscotto dell'azienda scelta ---- -->
+        <div id="mon-dash" hidden>
+          <div class="mon-cobar">
+            <span class="av" id="monAv">DS</span>
+            <div>
+              <div class="nm" id="monNome">—</div>
+              <div class="sub" id="monSub">—</div>
+            </div>
+            <div class="sp">
+              <label class="sub" for="monSelect" style="color:#A9CFC9">Azienda</label>
+              <select class="mon-sel" id="monSelect" onchange="monPick(+this.value)"></select>
+              <button class="btn ghost" onclick="monBack()">Tutte le aziende</button>
+            </div>
+          </div>
+
+          <div class="card mon-hero">
+            <div class="mon-hero-top">
+              <div>
+                <div class="mon-eyebrow">Passo di erogazione</div>
+                <div class="mon-verdict" id="monVerdict"></div>
+                <div class="mon-verdict-sub" id="monVerdictSub"></div>
+              </div>
+              <div class="mon-legend">
+                <span class="mon-key"><i style="color:var(--c1)"></i> Ore erogate (cumulate)</span>
+                <span class="mon-key"><i style="color:var(--plan);border-top-style:dashed"></i> Piano approvato</span>
+                <span class="mon-key"><i style="color:var(--c1);border-top-style:dashed;opacity:.6"></i> Proiezione al passo attuale</span>
+              </div>
+            </div>
+
+            <div class="mon-plot" id="monPlot">
+              <svg viewBox="0 0 100 100" preserveAspectRatio="none" role="img" id="monPlotSvg" aria-label="Ore cumulate erogate rispetto al piano approvato, con proiezione fino alla scadenza"></svg>
+              <div id="monPlotOv"></div>
+              <div class="mon-cross" id="monCross"></div>
+              <div class="mon-tip" id="monTip"></div>
+              <div class="mon-hover" id="monHover"></div>
+            </div>
+
+            <button class="mon-tblbtn" id="monTblBtn" onclick="monToggleTable()" aria-expanded="false">Vedi i dati in tabella</button>
+            <div id="monTblWrap" hidden></div>
+          </div>
+
+          <div class="mon-kpi" id="monKpi"></div>
+
+          <div class="grid g-2-1 section-gap">
+            <div class="card card-pad">
+              <div class="card-head" style="padding:0 0 4px;border:none">
+                <h3>Ore erogate per settimana</h3>
+                <span class="hint" id="monWeeksHint"></span>
+              </div>
+              <div class="mon-cols" id="monCols"></div>
+              <div class="mon-key" id="monColsLeg"></div>
+            </div>
+
+            <div class="card card-pad">
+              <div class="card-head" style="padding:0 0 16px;border:none">
+                <h3>Come vengono erogate le ore</h3>
+              </div>
+              <div class="mon-mix" id="monMix"></div>
+              <div class="mon-mixleg" id="monMixLeg"></div>
+            </div>
+          </div>
+
+          <div class="card section-gap">
+            <div class="card-head">
+              <h3>Avanzamento per corso</h3>
+              <button class="btn primary" onclick="monExport()">Esporta rendicontazione</button>
+            </div>
+            <div class="mon-crow mon-chead">
+              <span>Corso</span><span>Avanzamento</span><span style="text-align:right">Ore erogate</span><span style="text-align:right">Stato</span>
+            </div>
+            <div id="monCorsi"></div>
           </div>
         </div>
       </section>
@@ -1980,17 +2226,21 @@
     'ai-contenuti':'Progettazione · Contenuti AI', 'ai-slide':'Progettazione · Contenuti AI',
     'ai-video':'Progettazione · Contenuti AI', 'ai-immagini':'Progettazione · Contenuti AI' };
   const aiViews = ['ai-contenuti', 'ai-slide', 'ai-immagini', 'ai-video'];
-  function navigate(v) {
+  function navigate(v, anchor) {
+    // risolvi prima la destinazione: se manca, non spegnere la vista corrente
+    const target = document.getElementById('view-' + v);
+    if (!target) { toast('Sezione "' + v + '" non disponibile in questo mockup'); return; }
     const nav = aiViews.includes(v) ? 'ai-contenuti' : v;
     const step = aiViews.includes(v) ? 'progettazione' : v;
     document.querySelectorAll('.nav-item[data-view]').forEach(x => x.classList.toggle('active', x.dataset.view === nav));
     document.querySelectorAll('.view').forEach(x => x.classList.remove('active'));
-    document.getElementById('view-' + v).classList.add('active');
-    document.getElementById('crumb-view').textContent = titles[v];
+    target.classList.add('active');
+    document.getElementById('crumb-view').textContent = titles[v] || '';
     document.querySelectorAll('.step').forEach(s => s.classList.toggle('current', s.dataset.step === step));
     document.getElementById('hero').hidden = (v !== 'dashboard');
     document.getElementById('sidebar').classList.remove('open');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const to = anchor && document.getElementById(anchor);
+    window.scrollTo({ top: to ? to.getBoundingClientRect().top + window.scrollY - 70 : 0, behavior: 'smooth' });
   }
   document.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => navigate(b.dataset.view)));
 
@@ -3194,4 +3444,412 @@ FNC 4 · Time Vision`;
       document.getElementById('vp-time').textContent = vpFmt(vpT) + ' / ' + vpFmt(VP_DUR);
     }, 250);
   }
+
+  /* ==================== FASE 5 · MONITORAGGIO ====================
+     Un'azienda alla volta: si sceglie dall'elenco, poi KPI e grafici
+     sono tutti ricalcolati sui dati di quell'azienda. */
+  const MON_OGGI = new Date(2026, 6, 30);
+  // de-DE ha lo stesso separatore dell'italiano ma raggruppa anche le migliaia a 4 cifre (3.240, non 3240)
+  const nFmt = n => Math.round(n).toLocaleString('de-DE');
+  const dFmt = d => String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0') + '/' + d.getFullYear();
+
+  const MON_AZIENDE = [
+    {
+      nome: 'Delta Servizi S.r.l.', av: 'DS', avBg: '#83C5BE', citta: 'Napoli', piva: '0341 2290 118',
+      iscritti: 27, attivi: 27, orePiano: 3240, settimaneTot: 14,
+      settimane: [180, 220, 200, 260, 280, 300, 340, 360],
+      presenze: [90, 92, 89, 95, 93, 96, 94, 97], presenzaTarget: 92,
+      mix: { aula: 46, fad: 34, aff: 20 },
+      corsi: [
+        { nome: 'Excel avanzato', piano: 1080, erogate: 886, part: 27 },
+        { nome: 'Gestione logistica', piano: 1080, erogate: 691, part: 22 },
+        { nome: 'Sicurezza sul lavoro', piano: 1080, erogate: 563, part: 27 },
+      ],
+    },
+    {
+      nome: 'Alfa Logistica S.r.l.', av: 'AL', avBg: '#335C67', citta: 'Napoli', piva: '0289 4410 727',
+      iscritti: 18, attivi: 18, orePiano: 2160, settimaneTot: 12,
+      settimane: [160, 180, 200, 190, 210],
+      presenze: [86, 88, 91, 87, 93], presenzaTarget: 92,
+      mix: { aula: 52, fad: 28, aff: 20 },
+      corsi: [
+        { nome: 'Digitalizzazione magazzino', piano: 720, erogate: 396, part: 18 },
+        { nome: 'Sicurezza sul lavoro', piano: 720, erogate: 302, part: 18 },
+        { nome: 'Inglese tecnico', piano: 720, erogate: 242, part: 12 },
+      ],
+    },
+    {
+      nome: 'Beta Manifattura S.p.A.', av: 'BM', avBg: '#8A771B', citta: 'Caserta', piva: '0417 8830 552',
+      iscritti: 42, attivi: 34, orePiano: 5040, settimaneTot: 16,
+      settimane: [220, 260, 180, 140, 160, 120, 150, 130, 110],
+      presenze: [88, 84, 79, 72, 70, 66, 69, 64, 62], presenzaTarget: 92,
+      mix: { aula: 61, fad: 22, aff: 17 },
+      corsi: [
+        { nome: 'Lean manufacturing', piano: 1680, erogate: 618, part: 42 },
+        { nome: 'Manutenzione predittiva', piano: 1680, erogate: 495, part: 28 },
+        { nome: 'Qualità e certificazioni', piano: 1680, erogate: 357, part: 24 },
+      ],
+    },
+    {
+      nome: 'Gamma Costruzioni', av: 'GC', avBg: '#27474F', citta: 'Salerno', piva: '0533 1174 906',
+      iscritti: 9, attivi: 9, orePiano: 1080, settimaneTot: 10,
+      settimane: [90, 120, 130],
+      presenze: [97, 95, 96], presenzaTarget: 92,
+      mix: { aula: 70, fad: 12, aff: 18 },
+      corsi: [
+        { nome: 'Sicurezza cantieri', piano: 540, erogate: 190, part: 9 },
+        { nome: 'Lettura disegno tecnico', piano: 540, erogate: 150, part: 6 },
+      ],
+    },
+    {
+      nome: 'Epsilon Food S.r.l.', av: 'EP', avBg: '#3D8F7A', citta: 'Avellino', piva: '0298 6612 340',
+      iscritti: 14, attivi: 13, orePiano: 1680, settimaneTot: 12,
+      settimane: [140, 150, 130, 160, 145, 155, 150, 165, 140, 158, 127],
+      presenze: [92, 94, 91, 95, 93, 96, 92, 94, 90, 95, 91], presenzaTarget: 92,
+      mix: { aula: 40, fad: 45, aff: 15 },
+      corsi: [
+        { nome: 'HACCP e sicurezza alimentare', piano: 560, erogate: 548, part: 14 },
+        { nome: 'Automazione linea', piano: 560, erogate: 542, part: 10 },
+        { nome: 'Marketing di prodotto', piano: 560, erogate: 530, part: 8 },
+      ],
+    },
+  ];
+
+  // Tutto ciò che la pagina mostra deriva da qui: nessun numero scritto a mano.
+  function monCalc(a) {
+    const n = a.settimane.length, tot = a.settimaneTot;
+    const cum = [0];
+    a.settimane.forEach(v => cum.push(cum[cum.length - 1] + v));
+    const erogate = cum[n];
+    const pianoAt = w => a.orePiano * w / tot;
+    const scarto = erogate - pianoAt(n);
+    const ultime = a.settimane.slice(-3);
+    const passo = ultime.reduce((x, y) => x + y, 0) / ultime.length;
+    const proiezione = erogate + passo * (tot - n);
+    const settNecessarie = n + (a.orePiano - erogate) / passo;
+    const margineGg = Math.round((tot - settNecessarie) * 7);
+    const inLinea = proiezione >= a.orePiano;
+    const ammanco = Math.max(0, a.orePiano - proiezione);
+    const scadenza = new Date(MON_OGGI.getTime() + (tot - n) * 7 * 864e5);
+    const fine = new Date(MON_OGGI.getTime() + (settNecessarie - n) * 7 * 864e5);
+    const giorni = Math.round((scadenza - MON_OGGI) / 864e5);
+    const presenza = a.presenze.reduce((x, y) => x + y, 0) / a.presenze.length;
+    return { n, tot, cum, erogate, pianoAt, scarto, passo, proiezione, margineGg, settNecessarie,
+      inLinea, ammanco, scadenza, fine, giorni, presenza, pct: erogate / a.orePiano };
+  }
+
+  const niceStep = v => {
+    const p = Math.pow(10, Math.floor(Math.log10(v))), m = v / p;
+    return (m <= 1.2 ? 1 : m <= 2 ? 2 : m <= 2.5 ? 2.5 : m <= 5 ? 5 : 10) * p;
+  };
+  const monScale = max => { const s = niceStep(max / 4); return { step: s, top: Math.ceil(max / s) * s }; };
+
+  let monSel = -1;
+
+  /* ---- Passo 1: elenco aziende con la mini pace strip ---- */
+  function monRenderList() {
+    const q = (document.getElementById('monQ').value || '').trim().toLowerCase();
+    const rows = MON_AZIENDE.map((a, i) => ({ a, i, c: monCalc(a) }))
+      .filter(r => !q || (r.a.nome + ' ' + r.a.citta).toLowerCase().includes(q));
+    document.getElementById('monCoEmpty').hidden = rows.length > 0;
+    document.getElementById('monCoList').innerHTML = rows.map(({ a, i, c }) => {
+      const fill = Math.min(100, c.pct * 100), tick = Math.min(100, c.pianoAt(c.n) / a.orePiano * 100);
+      const late = !c.inLinea;
+      return `<button class="mon-co" onclick="monPick(${i})">
+        <span class="av" style="background:${a.avBg}">${a.av}</span>
+        <span><span class="nm">${a.nome}</span><span class="sub">${a.citta} · ${a.iscritti} lavoratori · settimana ${c.n} di ${c.tot}</span></span>
+        <span class="strip-cell"><span class="strip${late ? ' late' : ''}" role="img"
+          aria-label="${nFmt(c.erogate)} ore erogate su ${nFmt(a.orePiano)}; il piano a oggi è ${nFmt(c.pianoAt(c.n))} ore">
+          <span class="fill" style="width:${fill}%"></span><span class="tick" style="left:${tick}%"></span></span></span>
+        <span class="num">${nFmt(c.erogate)}<small>su ${nFmt(a.orePiano)} ore</small></span>
+        <span class="go">→</span>
+      </button>`;
+    }).join('');
+  }
+
+  function monBack() {
+    monSel = -1;
+    document.getElementById('mon-picker').hidden = false;
+    document.getElementById('mon-dash').hidden = true;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function monPick(i) {
+    monSel = i;
+    document.getElementById('mon-picker').hidden = true;
+    document.getElementById('mon-dash').hidden = false;
+    monRender();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function monExport() {
+    if (monSel < 0) return;
+    toast('Rendicontazione di ' + MON_AZIENDE[monSel].nome + ' esportata');
+  }
+
+  /* ---- Passo 2: cruscotto ---- */
+  function monRender() {
+    const a = MON_AZIENDE[monSel], c = monCalc(a);
+
+    document.getElementById('monAv').textContent = a.av;
+    document.getElementById('monAv').style.background = a.avBg;
+    document.getElementById('monNome').textContent = a.nome;
+    document.getElementById('monSub').textContent = 'P.IVA ' + a.piva + ' · ' + a.citta + ' · ' + a.iscritti + ' lavoratori in formazione';
+    document.getElementById('monSelect').innerHTML = MON_AZIENDE
+      .map((x, i) => `<option value="${i}"${i === monSel ? ' selected' : ''}>${x.nome}</option>`).join('');
+
+    monVerdictRender(a, c);
+    monPlotRender(a, c);
+    monKpiRender(a, c);
+    monColsRender(a, c);
+    monMixRender(a);
+    monCorsiRender(a, c);
+    monTableRender(a, c);
+  }
+
+  function monVerdictRender(a, c) {
+    const v = document.getElementById('monVerdict');
+    if (c.inLinea) {
+      v.innerHTML = `<span class="fig">${c.margineGg}</span><span class="unit">giorni di margine sulla scadenza</span>
+        <span class="pill good" style="align-self:center"><span class="dot"></span> In linea col piano</span>`;
+    } else {
+      v.innerHTML = `<span class="fig late">${nFmt(c.ammanco)}</span><span class="unit">ore che al passo attuale non verranno erogate</span>
+        <span class="pill bad" style="align-self:center"><span class="dot"></span> In ritardo</span>`;
+    }
+    const seg = c.scarto >= 0
+      ? `<b style="color:var(--good)">+${nFmt(c.scarto)} ore</b> sopra il piano`
+      : `<b style="color:var(--bad)">${nFmt(c.scarto)} ore</b> sotto il piano`;
+    const esito = c.inLinea
+      ? `mantenendolo, le <b>${nFmt(a.orePiano)}</b> ore approvate si completano entro il <b>${dFmt(c.fine)}</b>, ` +
+        `${c.margineGg} giorni prima della chiusura del ${dFmt(c.scadenza)}.`
+      : `mantenendolo si arriva a <b>${nFmt(c.proiezione)}</b> ore entro il <b>${dFmt(c.scadenza)}</b>: ` +
+        `<b style="color:var(--bad)">${nFmt(c.ammanco)} ore</b> resterebbero fuori dalla rendicontazione.`;
+    document.getElementById('monVerdictSub').innerHTML =
+      `Settimana ${c.n} di ${c.tot}. Erogate <b>${nFmt(c.erogate)}</b> ore delle <b>${nFmt(a.orePiano)}</b> approvate: ${seg}. ` +
+      `Nelle ultime tre settimane il passo è di <b>${nFmt(c.passo)} ore</b> a settimana: ${esito}`;
+  }
+
+  /* Grafico firma: ore cumulate vs piano vs proiezione */
+  let monPlotData = null;
+  function monPlotRender(a, c) {
+    // La scala si ferma al piano approvato: erogare oltre non aggiunge nulla alla rendicontazione,
+    // quindi la proiezione si interrompe dove tocca il traguardo.
+    const y = monScale(Math.max(a.orePiano, c.erogate));
+    const X = w => w / c.tot * 100;
+    const Y = v => 100 - v / y.top * 100;
+    const at = w => Math.min(a.orePiano, w <= c.n ? c.cum[w] : c.erogate + c.passo * (w - c.n));
+    const projW = Math.min(c.tot, c.settNecessarie);
+    const projV = Math.min(a.orePiano, c.proiezione);
+
+    const grid = [];
+    for (let v = 0; v <= y.top + 0.001; v += y.step) grid.push(v);
+
+    const pts = c.cum.map((v, w) => `${X(w).toFixed(2)},${Y(v).toFixed(2)}`);
+    const svg = `
+      <defs><linearGradient id="monWash" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#00806B" stop-opacity=".18"/>
+        <stop offset="1" stop-color="#00806B" stop-opacity="0"/>
+      </linearGradient></defs>
+      ${grid.map(v => `<line x1="0" y1="${Y(v).toFixed(2)}" x2="100" y2="${Y(v).toFixed(2)}" stroke="var(--line)" vector-effect="non-scaling-stroke"/>`).join('')}
+      <path d="M0,100 L${pts.join(' L')} L${X(c.n).toFixed(2)},100 Z" fill="url(#monWash)"/>
+      <line x1="0" y1="100" x2="100" y2="${Y(a.orePiano).toFixed(2)}" stroke="var(--plan)" stroke-width="1.5"
+        stroke-dasharray="5 4" vector-effect="non-scaling-stroke"/>
+      <line x1="${X(c.n).toFixed(2)}" y1="${Y(c.erogate).toFixed(2)}" x2="${X(projW).toFixed(2)}" y2="${Y(projV).toFixed(2)}"
+        stroke="var(--c1)" stroke-width="2" stroke-dasharray="5 5" stroke-opacity=".55" vector-effect="non-scaling-stroke"/>
+      <polyline points="${pts.join(' ')}" fill="none" stroke="var(--c1)" stroke-width="2"
+        stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>`;
+    document.getElementById('monPlotSvg').innerHTML = svg;
+
+    // etichette settimana a passo variabile; l'ultima colonna è riservata alla scadenza
+    const stride = Math.ceil(c.tot / 7);
+    const xs = [];
+    for (let w = stride; w < c.tot - stride / 2; w += stride) xs.push(w);
+    document.getElementById('monPlotOv').innerHTML =
+      grid.map(v => `<span class="mon-ylab" style="top:${Y(v).toFixed(2)}%">${nFmt(v)}</span>`).join('') +
+      xs.map(w => `<span class="mon-xlab" style="left:${X(w).toFixed(2)}%">S${w}</span>`).join('') +
+      `<span class="mon-xlab end" style="left:100%">scadenza ${dFmt(c.scadenza)}</span>` +
+      `<span class="mon-mark" style="left:${X(c.n).toFixed(2)}%"><b>oggi</b></span>` +
+      `<span class="mon-mark end" style="left:100%"></span>` +
+      (c.inLinea ? `<span class="mon-dot goal" style="left:${X(projW).toFixed(2)}%;top:${Y(projV).toFixed(2)}%"
+        title="Piano completato: ${nFmt(a.orePiano)} ore entro il ${dFmt(c.fine)}"></span>` : '') +
+      `<span class="mon-dot" style="left:${X(c.n).toFixed(2)}%;top:${Y(c.erogate).toFixed(2)}%"></span>` +
+      `<span class="mon-endlab" style="left:${X(c.n).toFixed(2)}%;top:${Y(c.erogate).toFixed(2)}%">${nFmt(c.erogate)} ore</span>`;
+
+    monPlotData = { a, c, X, Y, at };
+  }
+
+  (function monPlotHover() {
+    const hov = document.getElementById('monHover'), plot = document.getElementById('monPlot');
+    const cross = document.getElementById('monCross'), tip = document.getElementById('monTip');
+    const move = e => {
+      if (!monPlotData) return;
+      const { a, c, X, Y, at } = monPlotData;
+      const r = plot.getBoundingClientRect();
+      const px = e.touches ? e.touches[0].clientX : e.clientX;
+      const rel = Math.min(1, Math.max(0, (px - r.left) / r.width));
+      const w = Math.round(rel * c.tot);
+      const val = at(w), piano = c.pianoAt(w);
+      cross.style.display = 'block'; cross.style.left = X(w).toFixed(2) + '%';
+      tip.style.display = 'block';
+      tip.style.left = X(w).toFixed(2) + '%';
+      tip.style.top = Y(val).toFixed(2) + '%';
+      tip.innerHTML = (w === 0 ? 'Avvio corsi' : 'Settimana ' + w) +
+        `<small>${w > c.n ? 'Proiezione' : 'Erogate'} ${nFmt(val)} ore · piano ${nFmt(piano)} ore</small>`;
+    };
+    const out = () => { cross.style.display = 'none'; tip.style.display = 'none'; };
+    hov.addEventListener('mousemove', move);
+    hov.addEventListener('touchmove', move, { passive: true });
+    hov.addEventListener('mouseleave', out);
+    hov.addEventListener('touchend', out);
+  })();
+
+  function monToggleTable() {
+    const w = document.getElementById('monTblWrap'), b = document.getElementById('monTblBtn');
+    w.hidden = !w.hidden;
+    b.textContent = w.hidden ? 'Vedi i dati in tabella' : 'Nascondi la tabella';
+    b.setAttribute('aria-expanded', String(!w.hidden));
+  }
+
+  function monTableRender(a, c) {
+    const rows = a.settimane.map((v, i) => {
+      const w = i + 1, sc = c.cum[w] - c.pianoAt(w);
+      return `<tr><td>Settimana ${w}</td><td>${nFmt(v)}</td><td>${nFmt(c.cum[w])}</td><td>${nFmt(c.pianoAt(w))}</td>
+        <td style="color:${sc >= 0 ? 'var(--good)' : 'var(--bad)'}">${sc >= 0 ? '+' : ''}${nFmt(sc)}</td></tr>`;
+    }).join('');
+    document.getElementById('monTblWrap').innerHTML =
+      `<table class="mon-tbl"><caption class="sr-only">Ore erogate per settimana, cumulate e confronto col piano</caption>
+        <thead><tr><th>Periodo</th><th>Ore</th><th>Cumulate</th><th>Piano</th><th>Scarto</th></tr></thead>
+        <tbody>${rows}</tbody></table>`;
+  }
+
+  function monKpiRender(a, c) {
+    const fill = Math.min(100, c.pct * 100), tick = Math.min(100, c.pianoAt(c.n) / a.orePiano * 100);
+    const dPres = c.presenza - a.presenzaTarget;
+    const fermi = a.iscritti - a.attivi;
+
+    // sparkline presenze
+    const lo = Math.min(...a.presenze, a.presenzaTarget) - 4, hi = 100;
+    const sy = v => 36 - (v - lo) / (hi - lo) * 36;
+    const sx = i => i / (a.presenze.length - 1) * 100;
+    const spark = `<div style="position:relative">
+      <svg class="mon-spark" viewBox="0 0 100 36" preserveAspectRatio="none" aria-hidden="true">
+        <line x1="0" y1="${sy(a.presenzaTarget).toFixed(2)}" x2="100" y2="${sy(a.presenzaTarget).toFixed(2)}"
+          stroke="var(--plan)" stroke-width="1.5" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"/>
+        <polyline points="${a.presenze.map((v, i) => sx(i).toFixed(2) + ',' + sy(v).toFixed(2)).join(' ')}"
+          fill="none" stroke="var(--c1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"
+          vector-effect="non-scaling-stroke"/>
+      </svg>
+      <span class="mon-dot" style="width:9px;height:9px;left:100%;top:${(sy(a.presenze[a.presenze.length - 1]) / 36 * 100).toFixed(2)}%"></span>
+    </div>`;
+
+    const dots = Array.from({ length: a.iscritti }, (_, i) =>
+      `<i class="${i < a.attivi ? '' : 'off'}"></i>`).join('');
+
+    document.getElementById('monKpi').innerHTML = `
+      <div class="card mon-tile">
+        <div class="k">Ore erogate</div>
+        <div class="v">${nFmt(c.erogate)} <small>/ ${nFmt(a.orePiano)}</small></div>
+        <div class="s"><span class="mon-d ${c.scarto >= 0 ? 'up' : 'down'}">${c.scarto >= 0 ? '+' : ''}${nFmt(c.scarto)} ore</span> rispetto al piano a oggi</div>
+        <div class="viz">
+          <span class="strip${c.inLinea ? '' : ' late'}" style="height:12px;display:block">
+            <span class="fill" style="width:${fill}%"></span><span class="tick" style="left:${tick}%"></span></span>
+          <span class="cap"><span>${Math.round(c.pct * 100)}% del piano</span><span>tacca = piano a oggi</span></span>
+        </div>
+      </div>
+
+      <div class="card mon-tile">
+        <div class="k">Presenza media</div>
+        <div class="v">${c.presenza.toFixed(0)}<small>%</small></div>
+        <div class="s"><span class="mon-d ${dPres >= 0 ? 'up' : 'down'}">${dPres >= 0 ? '+' : ''}${dPres.toFixed(1)} punti</span> sul target del ${a.presenzaTarget}%</div>
+        <div class="viz">${spark}
+          <span class="cap"><span>S1</span><span>ultima rilevazione ${a.presenze[a.presenze.length - 1]}%</span></span>
+        </div>
+      </div>
+
+      <div class="card mon-tile">
+        <div class="k">Lavoratori in aula</div>
+        <div class="v">${a.attivi} <small>/ ${a.iscritti} iscritti</small></div>
+        <div class="s">${fermi === 0 ? 'Nessun ritiro: tutti gli iscritti risultano attivi'
+          : `<span class="mon-d down">${fermi} fermi</span> da più di due settimane`}</div>
+        <div class="viz"><div class="mon-dots">${dots}</div>
+          <span class="cap"><span>Un punto per lavoratore</span><span>${fermi === 0 ? 'tutti attivi' : fermi + ' inattivi'}</span></span>
+        </div>
+      </div>
+
+      <div class="card mon-tile">
+        <div class="k">Chiusura erogazione</div>
+        <div class="v">${c.giorni} <small>giorni</small></div>
+        <div class="s">Ultimo giorno utile: ${dFmt(c.scadenza)}</div>
+        <div class="viz">
+          <span class="strip" style="height:12px;display:block"><span class="fill" style="width:${(c.n / c.tot * 100).toFixed(1)}%"></span></span>
+          <span class="cap"><span>Settimana ${c.n} di ${c.tot}</span><span>${c.tot - c.n} settimane residue</span></span>
+        </div>
+      </div>`;
+  }
+
+  function monColsRender(a, c) {
+    const media = a.orePiano / c.tot;
+    const y = monScale(Math.max(...a.settimane, media) * 1.08);
+    const grid = [];
+    for (let v = y.step; v <= y.top + 0.001; v += y.step) grid.push(v);
+
+    document.getElementById('monWeeksHint').textContent = 'Settimane 1–' + c.n + ' · ore';
+    document.getElementById('monCols').innerHTML =
+      grid.map(v => `<span class="mon-gl" style="bottom:${(v / y.top * 100).toFixed(2)}%"><b>${nFmt(v)}</b></span>`).join('') +
+      `<span class="mon-gl target" style="bottom:${(media / y.top * 100).toFixed(2)}%"></span>` +
+      a.settimane.map((v, i) => {
+        const h = (v / y.top * 100).toFixed(2);
+        return `<span class="col" data-w="${i + 1}" data-v="${nFmt(v)}">
+          ${i === a.settimane.length - 1 ? `<b style="bottom:${h}%">${nFmt(v)}</b>` : ''}
+          <i style="height:${h}%"></i><span>S${i + 1}</span></span>`;
+      }).join('') +
+      `<span class="mon-tip" id="monColTip"></span>`;
+
+    document.getElementById('monColsLeg').innerHTML =
+      `<i style="color:var(--plan);border-top-style:dashed"></i> Media richiesta per chiudere il piano · <b>&nbsp;${nFmt(media)} ore a settimana</b>`;
+
+    const wrap = document.getElementById('monCols'), tip = document.getElementById('monColTip');
+    wrap.querySelectorAll('.col').forEach(col => {
+      col.addEventListener('mouseenter', () => {
+        const r = col.getBoundingClientRect(), w = wrap.getBoundingClientRect();
+        tip.style.display = 'block';
+        tip.style.left = (r.left - w.left + r.width / 2) + 'px';
+        tip.style.top = (col.querySelector('i').getBoundingClientRect().top - w.top) + 'px';
+        tip.innerHTML = 'Settimana ' + col.dataset.w + `<small>${col.dataset.v} ore erogate</small>`;
+      });
+      col.addEventListener('mouseleave', () => { tip.style.display = 'none'; });
+    });
+  }
+
+  function monMixRender(a) {
+    const parts = [
+      { k: 'Aula', v: a.mix.aula, c: 'var(--c1)', ink: '#fff', nota: 'in presenza, presso la sede o in aula esterna' },
+      { k: 'FAD', v: a.mix.fad, c: 'var(--c2)', ink: '#241C1A', nota: 'formazione a distanza tracciata dalla piattaforma' },
+      { k: 'Affiancamento', v: a.mix.aff, c: 'var(--c3)', ink: '#fff', nota: 'on the job, con tutor interno' },
+    ];
+    document.getElementById('monMix').innerHTML = parts.map(p =>
+      `<span style="flex:${p.v};background:${p.c};color:${p.ink}">${p.v >= 14 ? p.v + '%' : ''}</span>`).join('');
+    document.getElementById('monMixLeg').innerHTML = parts.map(p =>
+      `<span class="row"><i style="background:${p.c}"></i>${p.k} <small>· ${p.nota}</small><b>${p.v}%</b></span>`).join('');
+  }
+
+  function monCorsiRender(a, c) {
+    const atteso = c.n / c.tot;
+    document.getElementById('monCorsi').innerHTML = a.corsi.map(k => {
+      const pct = k.erogate / k.piano;
+      const st = pct >= .97 ? ['good', 'Completato']
+        : pct >= atteso * .95 ? ['info', 'In linea']
+          : pct >= atteso * .8 ? ['warn', 'Da recuperare'] : ['bad', 'In ritardo'];
+      return `<div class="mon-crow">
+        <div><div class="nm">${k.nome}</div><div class="sub">${k.part} partecipanti</div></div>
+        <div><span class="strip" style="display:block" role="img"
+          aria-label="${Math.round(pct * 100)} per cento delle ore previste">
+          <span class="fill" style="width:${(pct * 100).toFixed(1)}%;background:${st[0] === 'bad' ? 'var(--bad)' : 'var(--c1)'}"></span></span></div>
+        <div class="ore">${Math.round(pct * 100)}%<small>${nFmt(k.erogate)} su ${nFmt(k.piano)} ore</small></div>
+        <div style="text-align:right"><span class="pill ${st[0]}"><span class="dot"></span> ${st[1]}</span></div>
+      </div>`;
+    }).join('');
+  }
+
+  monRenderList();
 </script>
