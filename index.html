@@ -713,7 +713,7 @@
   .login.leaving { opacity: 0; pointer-events: none; }
   .login.gone { display: none; }
 
-  .login-card { position: relative; z-index: 2; width: 100%; min-height: 100%;
+  .login-card { position: relative; z-index: 2; width: 100%; min-height: 100%; overflow: hidden;
     display: grid; grid-template-columns: 0.94fr 1.06fr; background: var(--surface); }
 
   /* pill e badge mockup poggiano sul pannello bianco: colori invertiti */
@@ -728,9 +728,17 @@
   /* ---- left: brand panel with gradient ---- */
   /* 118deg: la zona scura #3E7A73 resta sul bordo destro, il testo poggia
      sempre su A6D8D2–83C5BE (contrasto >=4.5:1 con l'ink dei testi) */
-  .login-left { position: relative; overflow: hidden; display: flex; flex-direction: column;
-    justify-content: space-between; gap: 40px; padding: 60px clamp(42px, 4.5vw, 68px) 48px;
-    background: linear-gradient(118deg, #A6D8D2 0%, var(--merlot) 48%, #3E7A73 100%); }
+  .login-left { position: relative; display: flex; flex-direction: column;
+    justify-content: space-between; gap: 40px; padding: 60px clamp(42px, 4.5vw, 68px) 48px; }
+  /* il divisorio non e' una linea dritta: il pannello brand e' l'arco di un
+     cerchio enorme che sborda nel bianco; stop del gradiente compressi perche'
+     la parte visibile del cerchio copre solo la sua meta' sinistra */
+  .login-left::before { content: ""; position: absolute; top: 50%; transform: translateY(-50%);
+    right: calc(-1 * clamp(48px, 5vw, 96px)); width: 170vh; height: 170vh; border-radius: 50%;
+    background: linear-gradient(118deg, #A6D8D2 0%, var(--merlot) 30%, #3E7A73 58%); }
+  /* secondo cerchio piatto che si sovrappone in basso, come nella reference */
+  .login-left::after { content: ""; position: absolute; left: -120px; bottom: -140px;
+    width: 420px; height: 420px; border-radius: 50%; background: rgba(23,51,47,.10); }
 
   /* ---- 3D drifting spheres ---- */
   .deco3d { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
@@ -739,17 +747,19 @@
     box-shadow: inset 0 -10px 24px rgba(30,71,66,.35), 0 18px 40px rgba(23,51,47,.28); }
   .ball::after { content: ""; position: absolute; left: 20%; top: 13%; width: 20%; height: 13%;
     border-radius: 50%; background: rgba(255,255,255,.9); filter: blur(3px); transform: rotate(-24deg); }
-  .ball-1 { width: 210px; height: 210px; top: 27%; right: -62px; }
-  .ball-2 { width: 150px; height: 150px; top: 5%; right: 18%; }
-  .ball-3 { width: 96px; height: 96px; top: 40%; left: -28px; }
-  .ball-4 { width: 64px; height: 64px; top: 47%; right: 31%; filter: blur(2px); opacity: .6; }
-  .ball-5 { width: 40px; height: 40px; top: 13%; left: 32%; filter: blur(2px); opacity: .5; }
+  .ball-1 { width: 210px; height: 210px; left: 41%; top: 11%; }
+  .ball-2 { width: 150px; height: 150px; left: 12%; bottom: -46px; }
+  .ball-3 { width: 96px; height: 96px; left: 44%; top: 64%; }
+  .ball-4 { width: 64px; height: 64px; left: 8%; top: 30%; filter: blur(2px); opacity: .6; }
+  .ball-5 { width: 40px; height: 40px; left: 30%; top: 8%; filter: blur(2px); opacity: .5; }
+  .ball-6 { width: 120px; height: 120px; right: -34px; bottom: -30px; }
   @media (prefers-reduced-motion: no-preference) {
     .ball-1 { animation: drift-a 14s ease-in-out -7s infinite alternate; }
     .ball-2 { animation: drift-b 11s ease-in-out -3s infinite alternate; }
     .ball-3 { animation: drift-c 12.5s ease-in-out -9s infinite alternate; }
     .ball-4 { animation: drift-b 16s ease-in-out -13s infinite alternate; }
     .ball-5 { animation: drift-c 9s ease-in-out -5s infinite alternate; }
+    .ball-6 { animation: drift-a 17s ease-in-out -4s infinite alternate; }
   }
   @keyframes drift-a { from { transform: translate3d(-8px,10px,0) scale(1); }    to { transform: translate3d(22px,-32px,0) scale(1.05); } }
   @keyframes drift-b { from { transform: translate3d(10px,-8px,0) scale(1.03); } to { transform: translate3d(-28px,22px,0) scale(.96); } }
@@ -851,7 +861,9 @@
   @media (max-width: 860px) {
     .login-card { grid-template-columns: 1fr; }
     .login-right { order: -1; padding: 72px 22px 34px; }
-    .login-left { padding: 24px 22px 26px; gap: 18px; }
+    .login-left { padding: 24px 22px 26px; gap: 18px;
+      background: linear-gradient(118deg, #A6D8D2 0%, var(--merlot) 48%, #3E7A73 100%); }
+    .login-left::before, .login-left::after { display: none; }
     .deco3d { display: none; }
     .l-brand { margin-bottom: 12px; }
     .l-copy .hello { margin-bottom: 4px; }
@@ -1049,13 +1061,6 @@
 
   <div class="login-card">
   <div class="login-left">
-    <div class="deco3d" aria-hidden="true">
-      <span class="ball ball-1"></span>
-      <span class="ball ball-2"></span>
-      <span class="ball ball-3"></span>
-      <span class="ball ball-4"></span>
-      <span class="ball ball-5"></span>
-    </div>
     <div class="l-copy">
       <div class="l-brand"><span class="mk">FAD</span><span class="wd">FAD MANAGER</span></div>
       <p class="hello">Bentornato!</p>
@@ -1148,6 +1153,14 @@
 
       <div class="login-help">Serve aiuto? <a href="#" onclick="toast('Richiesta inviata all&#39;amministratore &mdash; demo');return false;">Contatta l&#39;amministratore</a></div>
     </div>
+  </div>
+  <div class="deco3d" aria-hidden="true">
+    <span class="ball ball-1"></span>
+    <span class="ball ball-2"></span>
+    <span class="ball ball-3"></span>
+    <span class="ball ball-4"></span>
+    <span class="ball ball-5"></span>
+    <span class="ball ball-6"></span>
   </div>
   </div><!-- /.login-card -->
 </div>
