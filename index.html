@@ -243,23 +243,21 @@
   .view.active { display: block; }
   @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
-  /* ---- Hero (dashboard) ---- */
-  .hero { position: relative; overflow: hidden; border-radius: var(--r-lg);
-    background: rgba(255,243,176,.35);
-    -webkit-backdrop-filter: blur(20px) saturate(140%); backdrop-filter: blur(20px) saturate(140%);
-    border: 1px solid rgba(31,67,62,.12);
-    padding: 30px 32px; margin: 18px 30px 0;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.65); }
-  .hero-inner { position: relative; z-index: 1; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+  /* ---- Hero (dashboard): richiama la forma del login, mezzo cerchio a destra ---- */
+  .hero { position: relative; overflow: hidden; width: max-content; max-width: 100%;
+    border-radius: var(--r-lg) 999px 999px var(--r-lg);
+    background: linear-gradient(118deg, #A6D8D2 0%, var(--merlot) 55%, #3E7A73 135%);
+    padding: 24px 220px 24px 30px; margin: 18px 30px 0;
+    box-shadow: 0 10px 26px rgba(30,71,66,.14); }
+  .hero .ball-h { width: 58px; height: 58px; right: 26px; top: -16px; }
+  @media (prefers-reduced-motion: no-preference) {
+    .hero .ball-h { animation: drift-c 12s ease-in-out -4s infinite alternate; }
+  }
+  .hero-inner { position: relative; z-index: 1; }
   .hero .eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: #1E4742; font-weight: 800; margin-bottom: 9px; }
   .hero h1 { font-size: 27px; font-weight: 800; color: #17332F; letter-spacing: -.02em; }
   .hero .meta { display: flex; align-items: center; gap: 7px; margin-top: 8px; font-size: 12.5px; color: #1E4742; }
   .hero .meta .live { width: 6px; height: 6px; border-radius: 50%; background: #0F7A5C; box-shadow: 0 0 0 3px rgba(15,122,92,.22); }
-  .hero-stat { background: rgba(255,255,255,.5); border: 1px solid rgba(255,255,255,.7); border-radius: var(--r-md);
-    padding: 14px 18px; text-align: right; backdrop-filter: blur(6px);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.8); }
-  .hero-stat .v { font-size: 38px; font-weight: 800; color: #17332F; font-variant-numeric: tabular-nums; line-height: 1.1; }
-  .hero-stat .k { font-size: 11.5px; color: #1E4742; margin-top: 2px; }
 
   .sec-label { display: flex; align-items: center; gap: 12px; margin: 4px 0 14px; }
   .sec-label span { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--text-3); font-weight: 800; white-space: nowrap; }
@@ -269,13 +267,17 @@
   .sec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
   @media (max-width: 980px) { .sec-grid { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 640px) { .sec-grid { grid-template-columns: 1fr; } }
-  .sec-card { background: #F0EBD8; border: 1px solid #E1D8BC; border-radius: var(--r-lg);
+  .sec-card { background: color-mix(in srgb, #A6D8D2 16%, #fff);
+    border: 1px solid color-mix(in srgb, var(--merlot) 34%, #fff); border-radius: var(--r-lg);
     padding: 20px; text-align: left; box-shadow: var(--shadow); transition: transform .16s, box-shadow .16s, border-color .16s;
     position: relative; display: flex; flex-direction: column; gap: 2px; }
-  .sec-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: #CEC29C; }
-  .sec-card.hi { border-color: color-mix(in srgb, var(--sky) 45%, #E1D8BC); background: #F0EBD8; }
-  .sec-card .foot { border-top-color: #DFD5B6; }
-  .sec-card .pill.mute { background: rgba(255,255,255,.6); border-color: #DFD5B6; }
+  .sec-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg);
+    border-color: color-mix(in srgb, var(--merlot) 62%, #fff); }
+  .sec-card.hi { border-color: color-mix(in srgb, var(--sky) 45%, #D7EBE7);
+    background: color-mix(in srgb, #A6D8D2 16%, #fff); }
+  .sec-card .foot { border-top-color: color-mix(in srgb, var(--merlot) 28%, #fff); }
+  .sec-card .pill.mute { background: rgba(255,255,255,.6);
+    border-color: color-mix(in srgb, var(--merlot) 28%, #fff); }
   .sec-card .top-row { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 13px; }
   .icon-badge { width: 42px; height: 42px; border-radius: 13px; display: grid; place-items: center; flex: none; color: #fff; }
   .icon-badge.merlot { background: var(--merlot); color: #1E4742; }
@@ -403,18 +405,34 @@
   .doc-up.replace { border-style: solid; border-color: var(--line-strong); color: var(--text-2); }
   .doc-up.replace:hover { border-color: var(--sky); color: var(--sky-2); background: var(--sky-pale); }
   .mail-draft { margin-top: 12px; background: var(--surface); border: 1px solid var(--line-strong); border-radius: 12px; overflow: hidden; text-align: left; }
-  .mail-head { display: flex; align-items: center; gap: 7px; padding: 9px 12px; background: var(--surface-2);
+  .mail-head { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; padding: 9px 12px; background: var(--surface-2);
     border-bottom: 1px solid var(--line); font-size: 11.5px; font-weight: 800; color: var(--text-2);
     text-transform: uppercase; letter-spacing: .04em; }
   .mail-head svg { width: 14px; height: 14px; color: var(--merlot); flex: none; }
+  .mail-head .seg { text-transform: none; letter-spacing: 0; padding: 2px; }
+  .mail-head .seg button { padding: 4px 11px; font-size: 11px; }
   .mail-field { display: flex; gap: 8px; padding: 7px 12px; border-bottom: 1px solid var(--line); font-size: 12px; align-items: baseline; }
   .mail-field .lbl { color: var(--text-3); font-weight: 700; flex: none; width: 48px; }
-  .mail-field .val { color: var(--text); font-weight: 600; word-break: break-all; }
-  .mail-draft textarea { display: block; width: 100%; border: 0; background: transparent; font: inherit; font-size: 12px;
-    color: var(--text); padding: 10px 12px; min-height: 168px; resize: vertical; line-height: 1.55; }
+  .mail-field .val { color: var(--text); font-weight: 600; overflow-wrap: anywhere; }
+  .mail-draft textarea { display: block; width: 100%; height: 100%; border: 0; background: transparent; font: inherit;
+    font-size: 12px; color: var(--text); padding: 10px 14px; min-height: 168px; resize: none; line-height: 1.55; }
   .mail-draft textarea:focus { outline: none; background: var(--sky-pale); }
   .mail-actions { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 12px; border-top: 1px solid var(--line); }
-  .mail-preview { max-height: 340px; overflow: auto; background: #FFFAE0; }
+  /* Intestazioni e comandi a sinistra, messaggio a destra: la bozza occupa la riga intera */
+  .mail-split { display: grid; grid-template-columns: minmax(250px, 320px) 1fr; align-items: stretch; }
+  .mail-side { display: flex; flex-direction: column; border-right: 1px solid var(--line); min-width: 0; }
+  .mail-main { display: flex; flex-direction: column; min-width: 0; max-height: 430px; background: #FFFAE0; }
+  .mail-foot { display: flex; align-items: flex-start; gap: 8px; margin-top: auto; padding: 11px 12px;
+    border-top: 1px solid var(--line); background: var(--surface-2);
+    font-size: 10.5px; line-height: 1.5; color: var(--text-3); }
+  .mail-foot svg { width: 13px; height: 13px; flex: none; margin-top: 1px; }
+  .mail-foot b { color: var(--text-2); }
+  .mail-preview { flex: 1; min-height: 0; overflow: auto; background: #FFFAE0; }
+  @media (max-width: 900px) {
+    .mail-split { grid-template-columns: 1fr; }
+    .mail-side { border-right: none; border-bottom: 1px solid var(--line); }
+    .mail-main { max-height: 340px; }
+  }
   #az-tbody tr { cursor: pointer; }
   #az-tbody tr:hover td { background: var(--sky-pale); }
   .az-mini { width: 64px; height: 5px; border-radius: 99px; background: var(--line); overflow: hidden; display: inline-block; vertical-align: middle; margin-right: 8px; }
@@ -438,7 +456,10 @@
      sticky dentro un contenitore con overflow, non sulla pagina. */
   .az-scroll { max-height: min(68vh, 620px); overflow: auto; overscroll-behavior: contain;
     padding: 0 12px 14px; }
-  .tbl-cards thead th { position: sticky; top: 0; z-index: 3; background: #F0EBD8;
+  /* tinta acqua chiarissima condivisa dalle card in evidenza (come i sec-card) */
+  .card.wash { background: color-mix(in srgb, #A6D8D2 16%, #fff); }
+  .tbl-cards thead th { position: sticky; top: 0; z-index: 3;
+    background: color-mix(in srgb, #A6D8D2 16%, #fff);
     padding-top: 12px; padding-bottom: 9px; box-shadow: 0 1px 0 var(--line); }
   th.doc-col { text-align: center; white-space: normal; width: 96px; line-height: 1.3; }
   td.doc-col { text-align: center; padding-left: 6px; padding-right: 6px; }
@@ -680,7 +701,7 @@
     .content { padding: 18px 16px 40px; }
     .topbar { padding: 12px 16px; }
     .stepper { padding: 14px 16px 0; }
-    .hero { margin: 14px 16px 0; padding: 22px 20px; }
+    .hero { margin: 14px 16px 0; padding: 18px 64px 18px 20px; }
     .menu-toggle { display: grid !important; }
     .support-fab { right: 14px; bottom: 14px; }
     .toast-wrap { bottom: 80px; right: 14px; }
@@ -690,160 +711,171 @@
 
   /* ============ LOGIN ============ */
   .app.gated { display: none; }
-  .login { position: fixed; inset: 0; z-index: 200; display: grid; grid-template-columns: 0.85fr 1.15fr;
-    background: var(--sky);
-    opacity: 1; transition: opacity .45s ease; overflow-y: auto; }
+  /* split brand/form a tutta pagina */
+  .login { position: fixed; inset: 0; z-index: 200; display: flex; overflow-y: auto;
+    background: var(--surface);
+    opacity: 1; transition: opacity .45s ease; }
   .login.leaving { opacity: 0; pointer-events: none; }
   .login.gone { display: none; }
-  .login-left, .login-right { min-height: 100%; }
 
+  .login-card { position: relative; z-index: 2; width: 100%; min-height: 100%; overflow: hidden;
+    display: grid; grid-template-columns: 0.94fr 1.06fr; background: var(--surface); }
+
+  /* pill e badge mockup poggiano sul pannello bianco: colori invertiti */
   .signin-pill { position: absolute; top: 22px; right: 26px; z-index: 6;
-    background: var(--cream); color: var(--merlot-ink); border: none; border-radius: var(--r-pill);
+    background: var(--merlot-ink); color: var(--cream); border: none; border-radius: var(--r-pill);
     padding: 9px 22px; font-size: 13px; font-weight: 700; cursor: pointer;
-    box-shadow: 0 6px 16px rgba(0,0,0,.35); transition: .15s; }
-  .signin-pill:hover { filter: brightness(1.12); }
-  .mock-float { position: absolute; bottom: 18px; right: 22px; z-index: 6;
-    color: var(--cream); background: rgba(255,243,176,.14); border-color: rgba(255,243,176,.34); }
-  .mock-float .dot { background: var(--cream); }
+    box-shadow: 0 6px 16px rgba(30,71,66,.28); transition: .15s; }
+  .signin-pill:hover { filter: brightness(1.15); }
+  .signin-pill:focus-visible { outline: 2px solid var(--sky); outline-offset: 2px; }
+  .mock-float { position: absolute; bottom: 18px; right: 22px; z-index: 6; }
 
-  /* ---- left panel: organic wave ---- */
-  .login-left { position: relative; overflow: hidden; display: flex; flex-direction: column;
-    justify-content: space-between; gap: 40px; padding: 64px 48px 56px; }
-  .login-left .wave { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  /* ---- left: brand panel with gradient ---- */
+  /* 118deg: la zona scura #3E7A73 resta sul bordo destro, il testo poggia
+     sempre su A6D8D2–83C5BE (contrasto >=4.5:1 con l'ink dei testi) */
+  /* il divisorio e' l'arco di un cerchio: gradiente sul pannello (colori
+     stabili a ogni viewport) e bordo ritagliato con clip-path. Il raggio
+     max(65vh, 47vw) tiene la curvatura ben visibile senza scoprire gli
+     angoli del pannello sugli schermi larghi */
+  .login-left { position: relative; display: flex; flex-direction: column;
+    justify-content: space-between; gap: 40px; padding: 60px clamp(42px, 4.5vw, 68px) 48px;
+    --bulge: clamp(36px, 4vw, 64px); --arc-r: max(65vh, 47vw);
+    margin-right: calc(-1 * var(--bulge));
+    background: linear-gradient(118deg, #A6D8D2 0%, var(--merlot) 48%, #3E7A73 100%);
+    clip-path: circle(var(--arc-r) at calc(100% - var(--arc-r)) 50%); }
+  /* secondo cerchio piatto che si sovrappone in basso, come nella reference */
+  .login-left::after { content: ""; position: absolute; left: -120px; bottom: -140px;
+    width: 420px; height: 420px; border-radius: 50%; background: rgba(23,51,47,.10); }
 
-  /* ---- 3D floating glass documents (glassmorphism) ---- */
-  .deco3d { position: absolute; inset: 0; z-index: 1; pointer-events: none; perspective: 1200px; }
-  .g3 { position: absolute; animation: g3-float 12s ease-in-out infinite alternate; will-change: transform; }
-  .g3-a { left: 29%; top: 33%; }
-  .g3-b { left: 6%;  top: 45%; animation-duration: 10s; animation-delay: 1.4s; }
-  .g3-c { left: 51%; top: 15%; animation-duration: 14s; animation-delay: .8s; }
-  .gcard { display: block; border-radius: 16px; padding: 15px 16px;
-    background: rgba(255,255,255,.12);
-    -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
-    border: 1px solid rgba(255,255,255,.24);
-    box-shadow: 0 24px 48px rgba(40,4,5,.38), inset 0 1px 0 rgba(255,255,255,.3);
-    /* mouse parallax: --mx/--my set on #login by JS, per-card depth via --depth */
-    transform: translate3d(calc(var(--mx, 0) * var(--depth, 16) * 1px), calc(var(--my, 0) * var(--depth, 16) * 1px), 0)
-      rotateX(calc(var(--rx, 0deg) - var(--my, 0) * 5deg)) rotateY(calc(var(--ry, 0deg) + var(--mx, 0) * 5deg)); }
-  .g3-a .gcard { width: 176px; --rx: 7deg; --ry: -13deg; --depth: 18; }
-  .g3-b .gcard { width: 150px; --rx: 5deg; --ry: 11deg; --depth: 11; }
-  .g3-c .gcard { width: 118px; padding: 12px 13px; --rx: 9deg; --ry: -22deg; --depth: 26; opacity: .72; }
-  .gl { display: block; height: 7px; border-radius: 4px; background: rgba(255,255,255,.34); margin-top: 9px; }
-  .gl.short { width: 58%; }
-  .grow { display: flex; align-items: center; gap: 10px; }
-  .gchip { flex: none; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
-    background: rgba(255,243,176,.92); color: #1E4742;
-    box-shadow: 0 6px 14px rgba(40,4,5,.3); }
-  .gchip svg { width: 14px; height: 14px; }
-  .grow .gl { flex: 1; margin-top: 0; }
-  .gbars { display: flex; align-items: flex-end; gap: 7px; height: 46px; margin-top: 11px; }
-  .gbars i { flex: 1; border-radius: 4px 4px 2px 2px; background: rgba(255,255,255,.3); }
-  .gbars i:nth-child(1) { height: 40%; }
-  .gbars i:nth-child(2) { height: 62%; }
-  .gbars i:nth-child(3) { height: 48%; background: #FFF3B0; }
-  .gbars i:nth-child(4) { height: 86%; }
-  @keyframes g3-float {
-    from { transform: translate3d(0, 0, 0) rotateX(2.4deg) rotateY(-3deg); }
-    to   { transform: translate3d(7px, -16px, 0) rotateX(-2.4deg) rotateY(3deg); }
+  /* ---- 3D drifting spheres ---- */
+  .deco3d { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+  .ball { position: absolute; border-radius: 50%;
+    background: radial-gradient(circle at 32% 26%, #ffffff 0%, #A6D8D2 26%, #83C5BE 58%, #3E7A73 100%);
+    box-shadow: inset 0 -10px 24px rgba(30,71,66,.35), 0 18px 40px rgba(23,51,47,.28); }
+  .ball::after { content: ""; position: absolute; left: 20%; top: 13%; width: 20%; height: 13%;
+    border-radius: 50%; background: rgba(255,255,255,.9); filter: blur(3px); transform: rotate(-24deg); }
+  .ball-1 { width: 210px; height: 210px; left: 41%; top: 11%; }
+  .ball-2 { width: 150px; height: 150px; left: 27%; bottom: -46px; }
+  .ball-3 { width: 96px; height: 96px; left: 44%; top: 64%; }
+  .ball-4 { width: 64px; height: 64px; left: 8%; top: 30%; filter: blur(2px); opacity: .6; }
+  .ball-5 { width: 40px; height: 40px; left: 30%; top: 8%; filter: blur(2px); opacity: .5; }
+  .ball-6 { width: 120px; height: 120px; right: -34px; bottom: -30px; }
+  @media (prefers-reduced-motion: no-preference) {
+    .ball-1 { animation: drift-a 14s ease-in-out -7s infinite alternate; }
+    .ball-2 { animation: drift-b 11s ease-in-out -3s infinite alternate; }
+    .ball-3 { animation: drift-c 12.5s ease-in-out -9s infinite alternate; }
+    .ball-4 { animation: drift-b 16s ease-in-out -13s infinite alternate; }
+    .ball-5 { animation: drift-c 9s ease-in-out -5s infinite alternate; }
+    .ball-6 { animation: drift-a 17s ease-in-out -4s infinite alternate; }
   }
-  @media (prefers-reduced-motion: reduce) { .g3 { animation: none; } }
+  @keyframes drift-a { from { transform: translate3d(-8px,10px,0) scale(1); }    to { transform: translate3d(22px,-32px,0) scale(1.05); } }
+  @keyframes drift-b { from { transform: translate3d(10px,-8px,0) scale(1.03); } to { transform: translate3d(-28px,22px,0) scale(.96); } }
+  @keyframes drift-c { from { transform: translate3d(-12px,-10px,0) scale(.97); } to { transform: translate3d(18px,28px,0) scale(1.04); } }
 
   .l-copy { position: relative; z-index: 2; }
-  .l-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 36px; }
-  .l-brand .mk { width: 46px; height: 46px; border-radius: 14px; background: var(--cream); color: #1E4742;
-    font-weight: 800; font-size: 11px; letter-spacing: .02em; display: grid; place-items: center; }
-  .l-brand .wd { font-weight: 800; font-size: 26px; color: #17332F; letter-spacing: .01em; }
-  .l-copy .hello { margin: 0 0 10px; font-size: 15px; font-weight: 700; color: #1E4742; }
-  .l-copy h2 { font-size: clamp(26px, 3vw, 37px); font-weight: 800; color: #17332F; line-height: 1.14;
-    letter-spacing: -.02em; max-width: 13ch; }
-  /* feature list + firma restano un blocco unico ancorato in basso, cosi'
-     la lista non finisce a meta' pannello sopra le card in vetro */
-  .l-bottom { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 26px; }
-  .feat-list { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 20px; }
+  .l-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 34px; }
+  .l-brand .mk { width: 44px; height: 44px; border-radius: 13px; background: var(--cream); color: var(--merlot-ink);
+    font-weight: 800; font-size: 11px; letter-spacing: .02em; display: grid; place-items: center;
+    box-shadow: 0 6px 14px rgba(23,51,47,.18); }
+  .l-brand .wd { font-weight: 800; font-size: 23px; color: #17332F; letter-spacing: .01em; }
+  .l-copy .hello { margin: 0 0 8px; font-size: 12px; font-weight: 800; letter-spacing: .13em;
+    text-transform: uppercase; color: #1E4742; }
+  .l-copy h2 { margin: 0; font-size: clamp(26px, 3vw, 36px); font-weight: 800; color: #17332F;
+    line-height: 1.13; letter-spacing: -.02em; max-width: 13ch; }
+  /* feature list + firma restano un blocco unico ancorato in basso */
+  .l-bottom { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 24px; }
+  .feat-list { display: flex; flex-direction: column; gap: 18px; }
   .feat { display: flex; align-items: center; gap: 14px; }
-  .feat .f-ic { width: 46px; height: 46px; border-radius: 13px; background: rgba(255,255,255,.14);
-    border: 1px solid rgba(255,255,255,.28); display: grid; place-items: center; color: #fff; flex: none; }
-  .feat .f-ic svg { width: 21px; height: 21px; }
-  .feat .f-t { font-size: 15px; font-weight: 800; color: #fff; }
-  .feat .f-s { font-size: 11.5px; color: #F0CCC0; margin-top: 1px; font-weight: 600; }
+  .feat .f-ic { width: 44px; height: 44px; border-radius: 13px; background: rgba(255,255,255,.42);
+    border: 1px solid rgba(23,51,47,.16); display: grid; place-items: center; color: #17332F; flex: none;
+    -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+  .feat .f-ic svg { width: 20px; height: 20px; }
+  .feat .f-t { font-size: 14.5px; font-weight: 800; color: #17332F; }
+  .feat .f-s { font-size: 11.5px; color: #17332F; margin-top: 1px; font-weight: 600; }
 
   /* firma Time Vision in fondo al pannello sinistro */
-  .l-foot { position: relative; z-index: 2; display: flex; align-items: center; gap: 15px;
+  .l-foot { position: relative; z-index: 2; display: flex; align-items: center;
     width: max-content; max-width: 100%;
-    padding-top: 22px; border-top: 1px solid rgba(255,255,255,.24); }
-  .l-foot .lf-k { font-size: 10.5px; font-weight: 800; letter-spacing: .14em;
-    text-transform: uppercase; color: rgba(255,255,255,.78); white-space: nowrap; }
-  .l-foot img { display: block; width: 152px; height: auto; filter: brightness(0) invert(1); }
+    padding-top: 20px; border-top: 1px solid rgba(23,51,47,.22); }
+  .l-foot img { display: block; width: 148px; height: auto; filter: brightness(0) opacity(.82); }
 
-  /* ---- right panel: form ---- */
+  /* ---- right panel: white form ---- */
   .login-right { position: relative; display: flex; flex-direction: column; align-items: center;
-    justify-content: center; padding: 72px 28px 56px; }
-  .login-form { width: min(420px, 100%); display: flex; flex-direction: column; }
-  .lock-badge { width: 62px; height: 62px; border-radius: 50%; margin: 0 auto 16px;
-    background: var(--cream); display: grid; place-items: center; color: var(--merlot-ink);
-    box-shadow: 0 0 0 8px rgba(255,255,255,.12); }
-  .lock-badge svg { width: 26px; height: 26px; }
-  .login-form h1 { font-size: 24px; font-weight: 800; color: #fff; text-align: center; letter-spacing: -.01em; }
-  .login-form .sub { margin: 7px 0 26px; font-size: 13.5px; color: rgba(255,255,255,.72); text-align: center; }
-  .login-form label { display: block; font-size: 12.5px; font-weight: 700; color: rgba(255,255,255,.92); margin-bottom: 7px; }
+    justify-content: center; padding: 64px 40px; }
+  /* --field-border: mix di token esistenti per raggiungere >=3:1 su bianco
+     (line-strong da solo si ferma a ~1.6:1) */
+  .login-form { width: min(420px, 100%); display: flex; flex-direction: column;
+    --field-border: color-mix(in srgb, var(--text-2) 58%, var(--line-strong)); }
+  .lock-badge { width: 58px; height: 58px; border-radius: 50%; margin: 0 auto 14px;
+    background: var(--merlot-2); display: grid; place-items: center; color: #fff;
+    box-shadow: 0 0 0 8px rgba(46,101,96,.16), 0 8px 18px rgba(39,17,25,.10); }
+  .lock-badge svg { width: 25px; height: 25px; }
+  .login-form h1 { margin: 0; font-size: 23px; font-weight: 800; color: var(--text); text-align: center; letter-spacing: -.015em; }
+  .login-form .sub { margin: 7px 0 24px; font-size: 13.5px; color: var(--text-2); text-align: center; }
+  .login-form label { display: block; font-size: 12.5px; font-weight: 700; color: var(--text); margin-bottom: 7px; }
   .inp-wrap { position: relative; margin-bottom: 16px; }
   .inp-wrap .lead { position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
-    width: 17px; height: 17px; color: #8A8582; pointer-events: none; }
+    width: 17px; height: 17px; color: var(--text-2); pointer-events: none; }
   .inp-wrap .trail { position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
-    border: none; background: none; color: #6E6260; width: 32px; height: 32px; border-radius: 8px;
+    border: none; background: none; color: var(--text-2); width: 34px; height: 34px; border-radius: 8px;
     display: grid; place-items: center; cursor: pointer; }
-  .inp-wrap .trail:hover { color: #241C1A; background: #F1EFEA; }
-  .login-form .inp { width: 100%; background: #fff; border: 1px solid var(--line-strong); color: #241C1A;
-    border-radius: 10px; padding: 12px 44px 12px 40px; font-size: 14px; }
-  .login-form .inp::placeholder { color: #9C918D; }
-  .login-form .inp:focus { outline: none; border-color: var(--cream); box-shadow: 0 0 0 3px rgba(255,243,176,.35); }
+  .inp-wrap .trail:hover { color: var(--text); background: var(--line); }
+  .inp-wrap .trail:focus-visible { outline: 2px solid var(--sky); outline-offset: 1px; }
+  .login-form .inp { width: 100%; min-height: 46px; background: var(--surface); border: 1px solid var(--field-border);
+    color: var(--text); border-radius: var(--r-sm); padding: 12px 44px 12px 40px; font-size: 14px; }
+  .login-form .inp::placeholder { color: color-mix(in srgb, var(--text-2) 72%, #fff); }
+  .login-form .inp:focus { outline: none; border-color: var(--sky); box-shadow: 0 0 0 3px rgba(51,92,103,.18); }
   .login-form .aux { display: flex; align-items: center; justify-content: space-between;
     font-size: 12.5px; margin: 2px 0 20px; }
   .login-form .aux label { display: flex; align-items: center; gap: 7px; margin: 0;
-    font-weight: 600; color: rgba(255,255,255,.8); cursor: pointer; }
-  .login-form .aux input { accent-color: var(--cream); width: 15px; height: 15px; }
-  .login-form .aux a { color: var(--cream); font-weight: 700; text-decoration: none; }
+    font-weight: 600; color: var(--text-2); cursor: pointer; }
+  .login-form .aux input { accent-color: var(--sky); width: 15px; height: 15px; }
+  .login-form .aux input:focus-visible { outline: 2px solid var(--sky); outline-offset: 2px; }
+  .login-form .aux a { color: var(--sky); font-weight: 700; text-decoration: none; }
   .login-form .aux a:hover { text-decoration: underline; }
-  .continue-btn { width: 100%; border: none; border-radius: 10px; padding: 13px; font-family: inherit;
-    font-size: 14px; font-weight: 800; color: var(--merlot-ink); cursor: pointer;
-    background: var(--cream);
-    box-shadow: 0 8px 20px rgba(0,0,0,.26); transition: .15s; }
-  .continue-btn:hover { filter: brightness(1.06); }
-  .login-sep { display: flex; align-items: center; gap: 12px; margin: 18px 0; color: rgba(255,255,255,.6);
-    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
-  .login-sep::before, .login-sep::after { content: ""; height: 1px; flex: 1; background: rgba(255,255,255,.24); }
-  .google-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px;
-    background: #fff; color: #241C1A; border: 1px solid var(--line-strong); border-radius: 10px; padding: 12px; font-family: inherit;
-    font-size: 13.5px; font-weight: 700; cursor: pointer; transition: .15s; }
-  .google-btn:hover { filter: brightness(.96); }
-  .login-help { margin-top: 26px; text-align: center; font-size: 13px; color: rgba(255,255,255,.75); }
-  .login-help a { color: var(--cream); font-weight: 700; text-decoration: none; }
+  .login-form .aux a:focus-visible, .login-help a:focus-visible { outline: 2px solid var(--sky);
+    outline-offset: 2px; border-radius: 4px; }
+  .continue-btn { width: 100%; min-height: 46px; border: none; border-radius: var(--r-sm); padding: 13px; font-family: inherit;
+    font-size: 14px; font-weight: 800; color: #fff; cursor: pointer;
+    background: var(--merlot-2);
+    box-shadow: 0 10px 22px rgba(30,71,66,.24); transition: .15s; }
+  .continue-btn:hover { filter: brightness(1.12); transform: translateY(-1px); }
+  .continue-btn:focus-visible { outline: 2px solid var(--sky); outline-offset: 2px; }
+  .google-btn { width: 100%; min-height: 46px; display: flex; align-items: center; justify-content: center; gap: 10px;
+    background: var(--surface); color: var(--text); border: 1px solid var(--field-border); border-radius: var(--r-sm);
+    padding: 12px; font-family: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer; transition: .15s; }
+  .google-btn:hover { background: color-mix(in srgb, var(--line) 45%, #fff); }
+  .google-btn:focus-visible { outline: 2px solid var(--sky); outline-offset: 2px; }
+  .login-help { margin-top: 24px; text-align: center; font-size: 13px; color: var(--text-2); }
+  .login-help a { color: var(--sky); font-weight: 700; text-decoration: none; }
   .login-help a:hover { text-decoration: underline; }
 
+  /* segmented control chiaro su bianco */
   .role-tabs { display: flex; gap: 4px; padding: 4px; margin-bottom: 22px;
-    background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.22); border-radius: 13px; }
-  .rtab { flex: 1; border: none; background: transparent; color: rgba(255,255,255,.75); font-family: inherit;
-    font-size: 13px; font-weight: 700; padding: 9px 6px; border-radius: 9px; cursor: pointer; transition: .15s; }
-  .rtab:hover { color: #fff; }
-  .rtab.active { background: #fff; color: #335C67; box-shadow: 0 2px 8px rgba(0,0,0,.18); }
+    background: var(--line); border-radius: 13px; }
+  .rtab { flex: 1; border: none; background: transparent; color: var(--text-2); font-family: inherit;
+    font-size: 13px; font-weight: 700; padding: 10px 6px; border-radius: 9px; cursor: pointer; transition: .15s; }
+  .rtab:hover { color: var(--text); }
+  .rtab.active { background: var(--surface); color: var(--sky); box-shadow: 0 2px 8px rgba(39,17,25,.14); }
+  .rtab:focus-visible { outline: 2px solid var(--sky); outline-offset: 1px; }
   .rpane[hidden] { display: none; }
   .inp.cf { text-transform: uppercase; }
-  .int-note { font-size: 13.5px; color: rgba(255,255,255,.78); text-align: center; margin: 10px 0 20px; line-height: 1.55; }
-
-  .feat-list { padding-bottom: 4px; }
+  .int-note { font-size: 13.5px; color: var(--text-2); text-align: center; margin: 10px 0 20px; line-height: 1.55; }
 
 
   @media (max-width: 860px) {
-    .login { grid-template-columns: 1fr; }
-    .login-left { min-height: auto; padding: 76px 26px 34px; gap: 28px; }
-    .l-copy h2 { max-width: none; }
-    .feat-list { flex-direction: row; flex-wrap: wrap; gap: 14px 22px; }
-    .feat .f-s { display: none; }
-    .l-foot { padding-top: 16px; }
-    .l-foot .lf-k { display: none; }
-    .l-foot img { width: 118px; }
-    .login-right { padding: 36px 22px 72px; }
+    .login-card { grid-template-columns: 1fr; }
+    .login-right { order: -1; padding: 72px 22px 34px; }
+    .login-left { padding: 24px 22px 26px; gap: 18px; margin-right: 0; clip-path: none; }
+    .login-left::after { display: none; }
     .deco3d { display: none; }
+    .l-brand { margin-bottom: 12px; }
+    .l-copy .hello { margin-bottom: 4px; }
+    .l-copy h2 { font-size: 22px; max-width: none; }
+    .feat-list { display: none; }
+    .l-foot { padding-top: 14px; }
+    .l-foot img { width: 118px; }
+    .signin-pill { top: 14px; right: 14px; }
   }
 
   /* ==================== FASE 5 · MONITORAGGIO ====================
@@ -1031,37 +1063,8 @@
   <button class="signin-pill" onclick="doLogin()">Accedi</button>
   <div class="mock-float mock-badge"><span class="dot"></span> Mockup &middot; dati fittizi</div>
 
+  <div class="login-card">
   <div class="login-left">
-    <svg class="wave" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-      <defs>
-        <linearGradient id="wgrad" x1="0" y1="0" x2="0.75" y2="1">
-          <stop offset="0" stop-color="#A6D8D2"/>
-          <stop offset="0.55" stop-color="#83C5BE"/>
-          <stop offset="1" stop-color="#3E7A73"/>
-        </linearGradient>
-      </defs>
-      <path d="M0 0 H76 C56 15 96 33 72 50 C54 63 88 82 58 100 H0 Z" fill="url(#wgrad)"/>
-      <path d="M0 0 H30 C22 8 10 10 0 8 Z" fill="rgba(255,243,176,.16)"/>
-    </svg>
-    <div class="deco3d" aria-hidden="true">
-      <span class="g3 g3-a"><span class="gcard">
-        <span class="grow">
-          <span class="gchip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
-          <span class="gl short"></span>
-        </span>
-        <span class="gl"></span>
-        <span class="gl short"></span>
-      </span></span>
-      <span class="g3 g3-b"><span class="gcard">
-        <span class="gl short" style="margin-top:0"></span>
-        <span class="gbars"><i></i><i></i><i></i><i></i></span>
-      </span></span>
-      <span class="g3 g3-c"><span class="gcard">
-        <span class="gl" style="margin-top:0"></span>
-        <span class="gl"></span>
-        <span class="gl short"></span>
-      </span></span>
-    </div>
     <div class="l-copy">
       <div class="l-brand"><span class="mk">FAD</span><span class="wd">FAD MANAGER</span></div>
       <p class="hello">Bentornato!</p>
@@ -1084,7 +1087,6 @@
       </div>
 
       <div class="l-foot">
-        <span class="lf-k">Un prodotto</span>
         <img src="assets/timevision-logo.svg" alt="Time Vision" width="663" height="107">
       </div>
     </div>
@@ -1096,13 +1098,13 @@
       <h1>Accedi al tuo account</h1>
       <p class="sub" id="roleSub">Entra con la Partita IVA della tua azienda</p>
 
-      <div class="role-tabs" role="tablist">
-        <button class="rtab active" onclick="switchRole('azienda', this)">Azienda</button>
-        <button class="rtab" onclick="switchRole('consulente', this)">Consulente</button>
-        <button class="rtab" onclick="switchRole('interno', this)">Interno</button>
+      <div class="role-tabs" role="tablist" aria-label="Tipo di accesso">
+        <button class="rtab active" id="tab-azienda" role="tab" aria-selected="true" aria-controls="pane-azienda" onclick="switchRole('azienda', this)">Azienda</button>
+        <button class="rtab" id="tab-consulente" role="tab" aria-selected="false" tabindex="-1" aria-controls="pane-consulente" onclick="switchRole('consulente', this)">Consulente</button>
+        <button class="rtab" id="tab-interno" role="tab" aria-selected="false" tabindex="-1" aria-controls="pane-interno" onclick="switchRole('interno', this)">Interno</button>
       </div>
 
-      <div class="rpane" id="pane-azienda">
+      <div class="rpane" id="pane-azienda" role="tabpanel" aria-labelledby="tab-azienda">
         <label for="l-piva">Partita IVA</label>
         <div class="inp-wrap">
           <svg class="lead" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M6 21V7l6-4 6 4v14M10 21v-6h4v6M9 10h.01M9 13h.01M15 10h.01M15 13h.01"/></svg>
@@ -1123,7 +1125,7 @@
         <button class="continue-btn" onclick="doLogin()">Accedi come Azienda</button>
       </div>
 
-      <div class="rpane" id="pane-consulente" hidden>
+      <div class="rpane" id="pane-consulente" role="tabpanel" aria-labelledby="tab-consulente" hidden>
         <label for="l-cf">Codice Fiscale</label>
         <div class="inp-wrap">
           <svg class="lead" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a7 7 0 0 1 14 0v1"/></svg>
@@ -1144,7 +1146,7 @@
         <button class="continue-btn" onclick="doLogin()">Accedi come Consulente</button>
       </div>
 
-      <div class="rpane" id="pane-interno" hidden>
+      <div class="rpane" id="pane-interno" role="tabpanel" aria-labelledby="tab-interno" hidden>
         <p class="int-note">Accesso riservato al team Time Vision<br>con account Google aziendale.</p>
         <button class="google-btn" onclick="doLogin()">
           <svg width="17" height="17" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C36.9 40.2 44 35 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>
@@ -1155,6 +1157,15 @@
       <div class="login-help">Serve aiuto? <a href="#" onclick="toast('Richiesta inviata all&#39;amministratore &mdash; demo');return false;">Contatta l&#39;amministratore</a></div>
     </div>
   </div>
+  <div class="deco3d" aria-hidden="true">
+    <span class="ball ball-1"></span>
+    <span class="ball ball-2"></span>
+    <span class="ball ball-3"></span>
+    <span class="ball ball-4"></span>
+    <span class="ball ball-5"></span>
+    <span class="ball ball-6"></span>
+  </div>
+  </div><!-- /.login-card -->
 </div>
 
 <div class="app gated" id="app">
@@ -1268,15 +1279,12 @@
     </header>
 
     <div class="hero" id="hero">
+      <span class="ball ball-h" aria-hidden="true"></span>
       <div class="hero-inner">
         <div>
           <div class="eyebrow">FAD Manager · Piattaforma Unica FNC</div>
           <h1>Ciao, Admin</h1>
           <div class="meta"><span class="live"></span> Martedì 21 Luglio 2026 · 6 pratiche in corso</div>
-        </div>
-        <div class="hero-stat">
-          <div class="v tnum">€ 412k</div>
-          <div class="k">Valore pipeline attiva</div>
         </div>
       </div>
     </div>
@@ -1436,7 +1444,7 @@
 
         <!-- Panoramica: situazione documentale di tutte le aziende -->
         <div id="az-panoramica">
-          <div class="card" style="background:#F0EBD8">
+          <div class="card wash">
             <div class="card-head"><h3>Panoramica aziende</h3><span class="pill mute" id="az-count"><span class="dot"></span> — aziende</span></div>
             <div style="padding:12px 22px;border-bottom:1px solid var(--line)">
               <input class="inp" id="az-search" placeholder="Cerca azienda, consulente o città…" oninput="azPage=1;azRenderTable()">
@@ -1467,7 +1475,7 @@
 
         <div class="grid g-1-2">
           <div>
-            <div class="card card-pad" style="background:#F0EBD8">
+            <div class="card card-pad wash">
               <div class="co" style="gap:13px"><span class="av" style="width:44px;height:44px;border-radius:13px;background:var(--sky);font-size:15px" id="az-av">AL</span>
                 <div><div style="font-weight:700;font-size:15px" id="az-nome">Alfa Logistica S.r.l.</div><div class="muted" style="font-size:12.5px" id="az-sub">P.IVA 0289 4410 727 · Napoli</div></div>
               </div>
@@ -1479,42 +1487,50 @@
               <div class="kv"><span class="k">Completamento</span><span class="v" style="color:var(--cream-deep)" id="doc-pct">75%</span></div>
               <div class="progress section-gap"><i style="width:75%" id="doc-pct-bar"></i></div>
             </div>
-            <div class="card card-pad section-gap" style="border-style:dashed;border-color:var(--cream-deep);background:var(--warn-soft)">
-              <div style="font-weight:800;font-size:13px;color:var(--cream-deep);margin-bottom:5px">⚠ Automazione attiva</div>
-              <div style="font-size:12.5px" class="muted" id="doc-autom-text">Alle <b>18:00</b> partirà automaticamente una email al consulente con l'elenco dei 2 documenti ancora mancanti.</div>
-              <div class="mail-draft" id="doc-mail">
-                <div class="mail-head">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
-                  Bozza sollecito · Gmail
-                </div>
-                <div class="mail-field"><span class="lbl">Da</span><span class="val">innovazione@timevision.it</span></div>
-                <div class="mail-field"><span class="lbl">A</span><span class="val" id="doc-mail-to">espedito.delgaudio@timevision.it</span></div>
-                <div class="mail-field"><span class="lbl">Oggetto</span><span class="val" id="doc-mail-subj">FNC 4 — Documenti mancanti</span></div>
-                <div class="mail-field" style="align-items:center">
-                  <span class="lbl">Corpo</span>
-                  <div class="seg" style="margin-left:auto">
-                    <button class="on" data-mv="preview" onclick="docMailView('preview')">Anteprima</button>
-                    <button data-mv="text" onclick="docMailView('text')">Testo</button>
-                  </div>
-                </div>
-                <div id="doc-mail-preview" class="mail-preview"></div>
-                <textarea id="doc-mail-body" spellcheck="false" oninput="docMailEdited=true" style="display:none"></textarea>
-                <div class="mail-actions">
-                  <button class="btn" style="flex:1" onclick="docMailGmail()" title="Apre Gmail già indirizzata e copia la versione grafica negli appunti">Apri in Gmail e invia</button>
-                  <button class="btn ghost" onclick="docMailCopy()" title="Copia la versione grafica negli appunti">Copia grafica</button>
-                  <button class="btn ghost" onclick="docMailSend()" title="Invio automatico simulato dalla piattaforma">Invio automatico</button>
-                </div>
-                <div class="mail-hint">In Gmail il messaggio arriva già indirizzato con il corpo vuoto: clicca nel corpo e premi <b>Ctrl+V</b> — la versione grafica è già copiata negli appunti — poi Invia. Se cambi finestra e perdi la copia, usa <b>Copia grafica</b>.</div>
-              </div>
-            </div>
           </div>
 
           <div>
-            <div class="card" style="background:#F0EBD8">
+            <div class="card wash">
               <div class="card-head"><h3>Checklist documenti</h3><span class="pill warn" id="doc-counter"><span class="dot"></span> 4 / 6 completati</span></div>
               <div id="doc-list"></div>
             </div>
             <input type="file" id="doc-file" accept=".pdf,.xls,.xlsx,.jpg,.jpeg,.png,.doc,.docx" style="display:none" onchange="docFilesChosen(this.files)">
+          </div>
+        </div>
+
+        <div class="card card-pad section-gap" style="border-style:dashed;border-color:var(--cream-deep);background:var(--warn-soft)">
+          <div style="font-weight:800;font-size:13px;color:var(--cream-deep);margin-bottom:5px">⚠ Automazione attiva</div>
+          <div style="font-size:12.5px" class="muted" id="doc-autom-text">Alle <b>18:00</b> partirà automaticamente una email al consulente con l'elenco dei 2 documenti ancora mancanti.</div>
+          <div class="mail-draft" id="doc-mail">
+            <div class="mail-head">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+              <span>Bozza sollecito · Gmail</span>
+              <div class="seg" style="margin-left:auto">
+                <button class="on" data-mv="preview" onclick="docMailView('preview')">Anteprima</button>
+                <button data-mv="text" onclick="docMailView('text')">Testo</button>
+              </div>
+            </div>
+            <div class="mail-split">
+              <div class="mail-side">
+                <div class="mail-field"><span class="lbl">Da</span><span class="val">innovazione@timevision.it</span></div>
+                <div class="mail-field"><span class="lbl">A</span><span class="val" id="doc-mail-to">espedito.delgaudio@timevision.it</span></div>
+                <div class="mail-field"><span class="lbl">Oggetto</span><span class="val" id="doc-mail-subj">FNC 4 — Documenti mancanti</span></div>
+                <div class="mail-actions">
+                  <button class="btn" style="flex:1 1 100%" onclick="docMailGmail()" title="Apre Gmail già indirizzata e copia la versione grafica negli appunti">Apri in Gmail e invia</button>
+                  <button class="btn ghost" style="flex:1" onclick="docMailCopy()" title="Copia la versione grafica negli appunti">Copia grafica</button>
+                  <button class="btn ghost" style="flex:1" onclick="docMailSend()" title="Invio automatico simulato dalla piattaforma">Invio automatico</button>
+                </div>
+                <div class="mail-hint">In Gmail il messaggio arriva già indirizzato con il corpo vuoto: clicca nel corpo e premi <b>Ctrl+V</b> — la versione grafica è già copiata negli appunti — poi Invia. Se cambi finestra e perdi la copia, usa <b>Copia grafica</b>.</div>
+                <div class="mail-foot">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 7v5l3 2"/><circle cx="12" cy="12" r="9"/></svg>
+                  <span>Ogni invio — automatico o manuale — finisce nel <b>Registro attività</b> con data, ora e destinatario.</span>
+                </div>
+              </div>
+              <div class="mail-main">
+                <div id="doc-mail-preview" class="mail-preview"></div>
+                <textarea id="doc-mail-body" spellcheck="false" oninput="docMailEdited=true" style="display:none"></textarea>
+              </div>
+            </div>
           </div>
         </div>
         </div>
@@ -1542,7 +1558,7 @@
 
         <div class="grid g-2-1">
           <div>
-            <div class="card card-pad" style="background:#F0EBD8">
+            <div class="card card-pad wash">
               <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px;flex-wrap:wrap">
                 <h3 style="font-size:14.5px">Parametri del progetto</h3>
               </div>
@@ -2267,33 +2283,35 @@
     interno: 'Team Time Vision \u2014 accesso con account Google'
   };
   function switchRole(role, btn) {
-    document.querySelectorAll('.rtab').forEach(b => b.classList.toggle('active', b === btn));
+    document.querySelectorAll('.rtab').forEach(b => {
+      const active = b === btn;
+      b.classList.toggle('active', active);
+      b.setAttribute('aria-selected', active ? 'true' : 'false');
+      b.tabIndex = active ? 0 : -1;
+    });
     ['azienda', 'consulente', 'interno'].forEach(k => {
       document.getElementById('pane-' + k).hidden = k !== role;
     });
     document.getElementById('roleSub').textContent = roleSubs[role];
   }
-  // ---- Login: mouse parallax on the 3D glass cards ----
+  // ---- Login: navigazione con frecce sui role tab ----
   (function () {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const login = document.getElementById('login');
-    if (!login) return;
-    let tx = 0, ty = 0, cx = 0, cy = 0, raf = null;
-    function tick() {
-      cx += (tx - cx) * 0.07;
-      cy += (ty - cy) * 0.07;
-      login.style.setProperty('--mx', cx.toFixed(4));
-      login.style.setProperty('--my', cy.toFixed(4));
-      if (Math.abs(tx - cx) > 0.001 || Math.abs(ty - cy) > 0.001) raf = requestAnimationFrame(tick);
-      else raf = null;
-    }
-    function kick() { if (!raf) raf = requestAnimationFrame(tick); }
-    login.addEventListener('mousemove', function (e) {
-      tx = (e.clientX / window.innerWidth) * 2 - 1;
-      ty = (e.clientY / window.innerHeight) * 2 - 1;
-      kick();
+    const tablist = document.querySelector('.role-tabs');
+    if (!tablist) return;
+    tablist.addEventListener('keydown', function (e) {
+      const tabs = Array.from(tablist.querySelectorAll('.rtab'));
+      const i = tabs.indexOf(document.activeElement);
+      if (i === -1) return;
+      let j = null;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') j = (i + 1) % tabs.length;
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') j = (i - 1 + tabs.length) % tabs.length;
+      else if (e.key === 'Home') j = 0;
+      else if (e.key === 'End') j = tabs.length - 1;
+      if (j === null) return;
+      e.preventDefault();
+      tabs[j].focus();
+      tabs[j].click();
     });
-    login.addEventListener('mouseleave', function () { tx = 0; ty = 0; kick(); });
   })();
 
   function doLogin() {
