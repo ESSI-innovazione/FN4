@@ -75,13 +75,21 @@
   .app::after { width: 260px; height: 260px; left: 30px; bottom: -80px; background: var(--cream); opacity: .14; }
 
   .sidebar { color: #fff; width: 300px; z-index: 1;
-    background: rgba(255,255,255,.08);
+    background: linear-gradient(165deg, rgba(166,216,210,.28) 0%, rgba(131,197,190,.14) 45%, rgba(62,122,115,.30) 100%);
     -webkit-backdrop-filter: blur(26px) saturate(150%); backdrop-filter: blur(26px) saturate(150%);
     border: 1px solid rgba(255,255,255,.13); border-radius: 14px;
     box-shadow: inset 0 1px 0 rgba(255,255,255,.18);
     display: flex; flex-direction: column; position: sticky; top: 8px; height: calc(100vh - 16px);
     transition: width .2s ease; overflow: hidden; }
   .sidebar :focus-visible { outline: 2px solid var(--cream); outline-offset: 2px; }
+  /* sfere dietro il vetro: z negativo = sopra lo sfondo, sotto i contenuti */
+  .sidebar .ball { z-index: -1; }
+  .sb-ball-1 { width: 150px; height: 150px; top: 96px; right: -48px; opacity: .55; }
+  .sb-ball-2 { width: 90px; height: 90px; bottom: 130px; left: -30px; opacity: .45; filter: blur(1px); }
+  @media (prefers-reduced-motion: no-preference) {
+    .sb-ball-1 { animation: drift-b 15s ease-in-out -6s infinite alternate; }
+    .sb-ball-2 { animation: drift-c 12s ease-in-out -2s infinite alternate; }
+  }
   .brand-row { display: flex; align-items: center; justify-content: space-between; padding: 18px 16px 4px; flex: none; }
   .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
   .brand .mark { width: 36px; height: 36px; border-radius: 10px; flex: none;
@@ -165,6 +173,7 @@
     .sidebar.collapsed .brand { justify-content: center; }
     .sidebar.collapsed .brand .word,
     .sidebar.collapsed .brand .bsub,
+    .sidebar.collapsed .ball,
     .sidebar.collapsed .nav-label,
     .sidebar.collapsed .nav-item .lbl,
     .sidebar.collapsed .role-card,
@@ -1153,6 +1162,8 @@
 <div class="app gated" id="app">
   <!-- ============ SIDEBAR ============ -->
   <aside class="sidebar" id="sidebar">
+    <span class="ball sb-ball-1" aria-hidden="true"></span>
+    <span class="ball sb-ball-2" aria-hidden="true"></span>
     <div class="brand-row">
       <div class="brand">
         <div class="mark">FAD</div>
@@ -1704,7 +1715,7 @@
             <div class="tx">
               <div class="ey">Progettazione · Creazione contenuti AI <span class="pill warn" style="margin-left:8px;vertical-align:middle"><span class="dot"></span> Funzionalità futura · demo</span></div>
               <h1>Passo 1 · Genera il contenuto didattico</h1>
-              <p>Scrivi un prompt: l'AI struttura il corso in <b>moduli, lezioni e quiz</b>. Il contenuto approvato diventa la base per le slide del Passo 2.</p>
+              <p>Scrivi un prompt: l'AI struttura il corso in <b>moduli, lezioni e quiz</b>. Il contenuto approvato diventa la base per le slide del Passo 2. <b>In questo mockup la generazione funziona con il prompt di esempio già precompilato.</b></p>
             </div>
           </div>
         </div>
@@ -1742,7 +1753,7 @@
                 <div id="ref-docs"></div>
               </div>
               <button class="btn primary" style="width:100%" id="ai-gen-content" onclick="generateContent()">✦ Genera contenuto didattico</button>
-              <div class="muted" style="font-size:11.5px;margin-top:10px;line-height:1.5">Simulazione dimostrativa: nella versione finale il prompt, i dati del corso (Atlante del Lavoro, ISTAT) e i documenti allegati verranno inviati all'AI come fonti, e il contenuto potrà essere rivisto prima di generare le slide.</div>
+              <div class="muted" style="font-size:11.5px;margin-top:10px;line-height:1.5">Simulazione dimostrativa: per ora la generazione funziona con il prompt di esempio precompilato qui sopra. Nella versione finale il prompt, i dati del corso (Atlante del Lavoro, ISTAT) e i documenti allegati verranno inviati all'AI come fonti, e il contenuto potrà essere rivisto prima di generare le slide.</div>
             </div>
           </div>
 
