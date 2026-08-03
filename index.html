@@ -2228,8 +2228,6 @@
 </button>
 
 <div class="toast-wrap" id="toasts"></div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
   // ---- Navigation (shared by sidebar nav + dashboard section cards) ----
   const titles = { dashboard:'Home', consulente:'Portale Aziende', commerciale:'Proposta Commerciale',
@@ -2336,10 +2334,9 @@
     { name: 'Piano orario formativo', ext: 'PDF' },
   ];
 
-  // Backend Supabase (chiave publishable: pensata per l'uso nel client)
-  const SUPA_URL = 'https://bqxwubmrpsrrfdygyejd.supabase.co';
-  const SUPA_KEY = 'sb_publishable_S7hopa2KjfPzIif45DcZiA_0cRrclg9';
-  const supa = window.supabase ? window.supabase.createClient(SUPA_URL, SUPA_KEY) : null;
+  // Nessun backend collegato: il mockup usa sempre il dataset demo deterministico.
+  // Per collegare un database Supabase proprio, ricreare qui il client con URL e publishable key.
+  const supa = null;
 
   // Dataset demo deterministico: usato solo se il database non è raggiungibile
   const azDemoData = (() => {
