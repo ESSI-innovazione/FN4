@@ -1244,6 +1244,10 @@
         <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
         <span class="lbl">Registro attività</span>
       </button>
+      <button class="nav-item" data-view="formazione-ai">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg>
+        <span class="lbl">Formazione AI</span>
+      </button>
     </nav>
 
     <div class="side-spacer"></div>
@@ -1772,6 +1776,7 @@
                 <div style="display:flex;gap:8px"><span style="color:var(--good);font-weight:800">✓</span><span><b>Personale formato</b> (Art. 4) — gli operatori degli strumenti AI hanno completato la formazione interna sull'uso consapevole.</span></div>
                 <div style="display:flex;gap:8px"><span style="color:var(--good);font-weight:800">✓</span><span><b>Revisione umana obbligatoria</b> — l'AI redige i contenuti ma non valuta i partecipanti: quiz approvati da un formatore, punteggio a correzione deterministica.</span></div>
               </div>
+              <button class="btn ghost" style="margin-top:12px" data-view="formazione-ai">Vai al percorso Formazione AI →</button>
             </div>
           </div>
 
@@ -2085,6 +2090,51 @@
         </div>
       </section>
 
+      <!-- ========== FORMAZIONE AI (AI literacy · Art. 4 AI Act) ========== -->
+      <section class="view" id="view-formazione-ai">
+        <div class="page-head">
+          <div class="eyebrow-pg">
+            <div class="icon-badge merlot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg></div>
+            <div class="tx">
+              <div class="ey">Amministrazione · AI literacy <span class="pill mute" style="margin-left:8px;vertical-align:middle">Art. 4 AI Act</span></div>
+              <h1>Formazione AI del personale</h1>
+              <p>Chi usa gli strumenti AI della piattaforma completa questo percorso: cosa può fare l'AI, cosa non deve fare e come si revisiona un contenuto generato prima della pubblicazione.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid g-2">
+          <div>
+            <div class="card card-pad wash" style="height:100%">
+              <h3 style="font-size:14.5px;margin-bottom:12px">Regole d'uso degli strumenti AI</h3>
+              <div style="display:flex;flex-direction:column;gap:10px;font-size:12.5px;line-height:1.5">
+                <div style="display:flex;gap:8px"><span style="color:var(--good);font-weight:800">✓</span><span><b>L'AI prepara la bozza, tu decidi.</b> Ogni contenuto generato va letto e approvato da un formatore prima di arrivare ai partecipanti.</span></div>
+                <div style="display:flex;gap:8px"><span style="color:var(--good);font-weight:800">✓</span><span><b>Verifica i fatti.</b> Dati, norme e riferimenti proposti dall'AI si controllano sulle fonti ufficiali prima di pubblicarli.</span></div>
+                <div style="display:flex;gap:8px"><span style="color:var(--good);font-weight:800">✓</span><span><b>Etichetta sempre.</b> Slide, immagini e video generati mantengono il contrassegno "Contenuto generato con AI".</span></div>
+                <div style="display:flex;gap:8px"><span style="color:var(--bad);font-weight:800">✗</span><span><b>Mai dati personali nei prompt.</b> Niente nomi di dipendenti, codici fiscali o documenti riservati nelle richieste all'AI.</span></div>
+                <div style="display:flex;gap:8px"><span style="color:var(--bad);font-weight:800">✗</span><span><b>Mai valutazioni automatiche.</b> L'AI non giudica i partecipanti: i quiz li approva un formatore e il punteggio è a correzione deterministica.</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="card" style="height:100%">
+              <div class="card-head"><h3>Percorso formativo interno</h3><span class="pill good"><span class="dot"></span> 3 / 4 moduli</span></div>
+              <div class="card-pad" style="display:flex;flex-direction:column;gap:2px">
+                <div class="chap"><span class="cn">1</span><span class="tt">Cosa sono i modelli generativi e i loro limiti</span><span class="du">20 min · ✓</span></div>
+                <div class="chap"><span class="cn">2</span><span class="tt">Scrivere prompt efficaci per i corsi FNC</span><span class="du">25 min · ✓</span></div>
+                <div class="chap"><span class="cn">3</span><span class="tt">Revisione umana: checklist prima di pubblicare</span><span class="du">15 min · ✓</span></div>
+                <div class="chap"><span class="cn">4</span><span class="tt">AI Act e GDPR nell'uso quotidiano</span><span class="du">30 min · in corso</span></div>
+                <div class="divider"></div>
+                <div class="kv"><span class="k">Operatori formati</span><span class="v tnum">4 su 5</span></div>
+                <div class="kv"><span class="k">Prossimo aggiornamento del percorso</span><span class="v">Gennaio 2027</span></div>
+                <button class="btn primary" style="margin-top:12px" onclick="toast('Attestato di formazione AI scaricato (demo)')">Scarica attestato di completamento</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- ========== GOVERNO ========== -->
       <section class="view" id="view-governo">
         <div class="page-head">
@@ -2255,7 +2305,8 @@
   const titles = { dashboard:'Home', consulente:'Portale Aziende', commerciale:'Proposta Commerciale',
     progettazione:'Progettazione', governo:'Upload Governo', monitoraggio:'Monitoraggio',
     'ai-contenuti':'Progettazione · Contenuti AI', 'ai-slide':'Progettazione · Contenuti AI',
-    'ai-video':'Progettazione · Contenuti AI', 'ai-immagini':'Progettazione · Contenuti AI' };
+    'ai-video':'Progettazione · Contenuti AI', 'ai-immagini':'Progettazione · Contenuti AI',
+    'formazione-ai':'Formazione AI' };
   const aiViews = ['ai-contenuti', 'ai-slide', 'ai-immagini', 'ai-video'];
   function navigate(v, anchor) {
     // risolvi prima la destinazione: se manca, non spegnere la vista corrente
