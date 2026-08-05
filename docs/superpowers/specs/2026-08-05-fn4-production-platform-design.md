@@ -42,8 +42,9 @@ segnala all'utente per approvazione — mai redesign di ciò che già esiste.
 - **Styling**: Tailwind CSS configurato con i design token del mockup; dove il
   porting è più fedele, CSS estratto dal mockup così com'è. Criterio: fedeltà
   visiva prima di purezza tecnica.
-- **Backend**: nuovo progetto **Supabase dedicato** (eu-central-1) — Postgres,
-  Auth, Storage. RLS restrittiva dal primo giorno: accesso solo ad utenti
+- **Backend**: progetto **Supabase dedicato "FN4"** (ref `ferkvngwtiaivqpqfjmy`,
+  eu-west-1, creato dall'utente il 2026-08-05,
+  https://ferkvngwtiaivqpqfjmy.supabase.co) — Postgres, Auth, Storage. RLS restrittiva dal primo giorno: accesso solo ad utenti
   autenticati (a differenza delle vecchie tabelle `fn4_*` aperte ad anon nel
   progetto `timevision_services_hub`, che NON viene riusato).
 - **Deploy**: nuovo progetto Vercel dedicato (es. `fadmanager`), team
