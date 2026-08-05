@@ -712,34 +712,38 @@ git add app/src/lib/supabase/rls.test.ts; git commit -m "test(db): verify RLS bl
 
 ---
 
-### Task 9: Vercel project + preview deploy
+### Task 9: Deploy on the EXISTING Vercel project `fn4`
 
 **Files:**
-- Create: `app/vercel.json` (only if needed for root dir config)
+- Create: `app/public/mockup.html` (copy of root `index.html`, so the mockup stays demo-able)
 
 **Interfaces:**
 - Consumes: working build from Tasks 1–6; env values from Task 3.
-- Produces: Vercel project `fadmanager` (team `espeditos-projects-07141c0e`) serving the app; preview URL shared with the user.
+- Produces: existing Vercel project `fn4` (team `espeditos-projects-07141c0e`) serving the platform at fn4.vercel.app, mockup at fn4.vercel.app/mockup.html. **Do NOT create any new Vercel project** (explicit user instruction, 2026-08-05).
 
-- [ ] **Step 1: Push branch**
+- [ ] **Step 1: Keep the mockup reachable**
+
+Copy `index.html` (repo root, unmodified) to `app/public/mockup.html`. Commit.
+
+- [ ] **Step 2: Push branch**
 
 ```powershell
 git push origin preview
 ```
 
-- [ ] **Step 2: Create the Vercel project & deploy**
+- [ ] **Step 3: Reconfigure the existing `fn4` project**
 
-Use the Vercel MCP tool `deploy_to_vercel` (load via ToolSearch) targeting the `app/` directory as a NEW project named `fadmanager` on team `espeditos-projects-07141c0e` — do NOT touch the existing `fn4` project (it keeps serving the mockup). If the MCP flow can't create a separate project with root directory `app/`, fall back to instructing the user to import the GitHub repo in the Vercel dashboard with Root Directory = `app`, framework Next.js, and report back.
+Update the existing Vercel project `fn4` (team `espeditos-projects-07141c0e`): Root Directory = `app`, Framework Preset = Next.js. Use the Vercel MCP project tools if they support the update; otherwise walk the user through Dashboard → fn4 → Settings → Build & Deployment (a 1-minute change) and wait for their confirmation. Never create a new project.
 
-- [ ] **Step 3: Set env vars on Vercel**
+- [ ] **Step 4: Set env vars on Vercel**
 
 `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` for Production + Preview environments (via MCP/dashboard). Redeploy.
 
-- [ ] **Step 4: Verify online**
+- [ ] **Step 5: Verify online**
 
-Open the deployment URL: `/` redirects to `/login`; login with the internal account works; dashboard shows live counts. Note: preview-branch URLs may sit behind Vercel SSO deployment protection (known team setting) — if so, verify while logged into Vercel and tell the user how to open it, or ask whether to disable protection for this project.
+Open the preview deployment URL for branch `preview`: `/` redirects to `/login`; login with the internal account works; dashboard shows live counts; `/mockup.html` serves the mockup. Note: preview-branch URLs may sit behind Vercel SSO deployment protection (known team setting) — if so, verify while logged into Vercel and tell the user how to open it. fn4.vercel.app (production) keeps serving the old mockup until the user approves a merge to `main`.
 
-- [ ] **Step 5: Commit any config + report**
+- [ ] **Step 6: Commit any config + report**
 
 ```powershell
 git add -A; git commit -m "chore(app): vercel deployment configuration" --allow-empty

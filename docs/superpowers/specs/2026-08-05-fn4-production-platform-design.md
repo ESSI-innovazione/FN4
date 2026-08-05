@@ -47,9 +47,12 @@ segnala all'utente per approvazione — mai redesign di ciò che già esiste.
   https://ferkvngwtiaivqpqfjmy.supabase.co) — Postgres, Auth, Storage. RLS restrittiva dal primo giorno: accesso solo ad utenti
   autenticati (a differenza delle vecchie tabelle `fn4_*` aperte ad anon nel
   progetto `timevision_services_hub`, che NON viene riusato).
-- **Deploy**: nuovo progetto Vercel dedicato (es. `fadmanager`), team
-  `espeditos-projects-07141c0e`. Workflow invariato: push su branch `preview` →
-  URL di anteprima; merge su `main` solo dopo approvazione → produzione.
+- **Deploy**: si riusa il progetto Vercel esistente `fn4` (team
+  `espeditos-projects-07141c0e`) — **nessun nuovo progetto Vercel** (richiesta
+  esplicita utente 2026-08-05). Root Directory → `app`; fn4.vercel.app servirà
+  la piattaforma e il mockup resta raggiungibile su fn4.vercel.app/mockup.html.
+  Workflow invariato: push su branch `preview` → URL di anteprima; merge su
+  `main` solo dopo approvazione → produzione.
 - **Job schedulati**: Vercel Cron per l'Upload Governo delle 09:00.
 - **Lavori lunghi** (build video): funzione asincrona/background su Vercel
   (Fluid Compute), risultato salvato su Supabase Storage, avanzamento visibile
