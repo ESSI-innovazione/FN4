@@ -4,3 +4,5 @@
 .env*
 FNC 3 - 2023_2024 - FASE 1*.csv
 UNIEMENS*.xml
+app/node_modules
+app/.env.local
